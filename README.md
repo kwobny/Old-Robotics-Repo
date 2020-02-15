@@ -23,4 +23,5 @@ Make wait for distance have an Enable Incremental Linear Interpolation option wh
 Make ILI input be none (for slow down to 0 speed), 1 double for speed, 2 doubles for speed in x and y direction, or just a value of true to get the speed information from the rx and ry class fields, which would be set by setting the sync direction to "from motor buffers to aux" and applying various motions so that linTrans is called and applied.
 
 For the last option, make it so that at the end, the values in aux buffer are automatically transfered to main (Universal) and main buffer is synced w/ motors. Also maybe for the last option, set the sync direction back to "from motor buffers to main", but debate about this in head before proceeding
+
 Make sure motor buffer wheel values are all initialized to 0 in beginning
