@@ -4,9 +4,11 @@ Create a private Auxiliary (Aux) buffer which is a second Universal Buffer
 
 Create a public function titled setSyncDirection which sets from which buffer (motor buffers, aux, or universal/main) to which buffer (aux or universal/main) the syncMotors syncs the motors to and from. Make it by creating an enum for buffers (motor buffers, aux, and main/universal). Or just make 2 public fields in Base class detailing which buffer to and from. Use enum for this option.
 
-Edit syncMotors function so that if from is the motor buffers, then another specialized syncing action occurs. Also make it so that automatic syncing of universal buffer to actuators is removed. Make sure is public
+Edit syncMotors function so that if from is the motor buffers, then another specialized syncing action occurs. Also make it so that automatic syncing of universal buffer to actuators is removed. Also edit it so that function runs motorCali if "to" is the universal buffer. Make sure is public.
 
-Drastically decrease the period that motorCali runs. Also multiply the universal/main buffer values by the buffer's scale factor value when uploading those values to the actuator motors.
+In motorCali, multiply the universal/main buffer values by the buffer's scale factor value when uploading those values to the actuator motors.
+
+Also think about what the period of execution should be
 
 Think about combining setSyncDirection and syncMotors, if you are going to do it, and how to do it.
 
