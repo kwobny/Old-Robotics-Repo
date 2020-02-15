@@ -18,10 +18,12 @@ Consider multiplying aux and main buffer values by their respective scale factor
 
 Edit moveLinTrans function so that it stores the values of rx and ry in class fields, so that they can be accessed by wait for distance ILI.
 
-Make wait for distance have an Enable Incremental Linear Interpolation option which allows you to slow down to the next speed that is inputted at the end. Accomplish this by calculating the scale factor (shown below) and setting the universal buffer's motor value multiplier every period/so often to decrease slowly. Make sure to reset this to 1 when done with maneuver/traveled full distance
+Make wait for distance have an Enable Incremental Linear Interpolation option which allows you to slow down to the next speed that is inputted at the end. Accomplish this by calculating the scale factor (shown below) and setting the universal buffer's motor value multiplier every period/so often to decrease slowly. Make sure to reset this to 1 when done with maneuver/traveled full distance.
 
-Make ILI input be none (for slow down to 0 speed), 1 double for speed, 2 doubles for speed in x and y direction, or just a value of true to get the speed information from the rx and ry class fields, which would be set by setting the sync direction to "from motor buffers to aux" and applying various motions so that linTrans is called and applied.
+Also determine your input units for the ILI.
 
-For the last option, make it so that at the end, the values in aux buffer are automatically transfered to main (Universal) and main buffer is synced w/ motors. Also maybe for the last option, set the sync direction back to "from motor buffers to main", but debate about this in head before proceeding
+Make ILI input be 1 double for speed (includes a final speed of 0), 2 doubles for speed in x and y direction, or just a value of true (no doubles) to get the speed information from the rx and ry class fields, which would be set by setting the sync direction to "from motor buffers to aux" and applying various motions so that linTrans is called and applied.
+
+For the last option, make it so that at the end, the values in aux buffer are automatically transfered to main (Universal) and main buffer is synced w/ motors. Also for the last option, set the sync direction back to "from motor buffers to main" once wait function is called and then begins, but debate about this in head before proceeding (you probably will do it).
 
 Make sure motor buffer wheel values are all initialized to 0 in beginning
