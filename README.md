@@ -2,11 +2,17 @@
 # Todo:
 Create a private Auxiliary (Aux) buffer which is a second Universal Buffer
 
-Create a public function titled setSyncDirection which sets from which buffer (motor buffers, aux, or universal/main) to which buffer (aux or universal/main) the syncMotors syncs the motors to and from. Make it by creating an enum for buffers (motor buffers, aux, and main/universal). Or just make 2 public fields in Base class detailing which buffer to and from. Use enum for this option.
+Create a public function titled setSyncDirection which sets from which buffer (motor buffers, aux, or universal/main) to which buffer (aux or universal/main) the syncMotors syncs the motors to and from. Make it by creating an enum for buffers (motor buffers, aux, and main/universal). Make sure that this function stores the from and to enum in 2 class fields, as well as switching the references to each thing.
+
+(Look at above) Or consider just make 2 public fields in Base class detailing which buffer to and from. Use enum for this option.
 
 Edit syncMotors function so that if from is the motor buffers, then another specialized syncing action occurs. Also make it so that automatic syncing of universal buffer to actuators is removed. Also edit it so that function runs motorCali if "to" is the universal buffer. Make sure is public.
 
 In motorCali, multiply the universal/main buffer values by the buffer's scale factor value when uploading those values to the actuator motors.
+
+Make a subclass for the linear translate buffer and other buffers where necessary, which inherits from the base buffer class. Do this to accommodate the 2 sets of rx and ry values for just the linear translation. Look far below for instructions on making lin trans buffer subclass
+
+Think about making 2 periods of execution for native interval commands, one for high frequency call/execute and one for low frequency execution.
 
 Also think about what the period of execution should be. It can be 0.1 seconds or so i guess?
 
@@ -20,7 +26,9 @@ Consider removing syncMotor execution in rotate robot and lintrans function, and
 
 ---
 
-Edit moveLinTrans function so that it stores the values of rx and ry in class fields, so that they can be accessed by wait for distance ILI.
+Put 2 sets of rx and ry values in the lin trans buffer class, one for the main buffer and one for aux buffer. Also Edit moveLinTrans function so that it stores its rx and ry values in the corresponding set of fields depending on which sync direction mode is set. Do this so that values can be accessed by wait for distance ILI.
+
+Accomplish this (task above) in this way: if "from" is the motor buffers, then store the values in the set pointed to by "to". Else, either store the values in the set as pointed in the "from", the "to", or just pick a default set to store in (most likely universal/main set). Most likely, values will be stored in set pointed in the "to", in the case that "from" is not the motor buffers. But still consider the options.
 
 Make wait for distance have an Enable Incremental Linear Interpolation option which allows you to slow down to the next speed that is inputted at the end. Accomplish this by calculating the scale factor (shown below) and setting the universal buffer's motor value multiplier every period/so often to decrease slowly. Make sure to reset this to 1 when done with maneuver/traveled full distance.
 
