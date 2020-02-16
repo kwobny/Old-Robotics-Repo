@@ -8,13 +8,15 @@ Edit syncMotors function so that if from is the motor buffers, then another spec
 
 In motorCali, multiply the universal/main buffer values by the buffer's scale factor value when uploading those values to the actuator motors.
 
-Also think about what the period of execution should be
+Also think about what the period of execution should be. It can be 0.1 seconds or so i guess?
 
 Think about combining setSyncDirection and syncMotors, if you are going to do it, and how to do it.
 
 Consider/think about renaming the Universal buffer to the main buffer.
 
 Consider multiplying aux and main buffer values by their respective scale factors when syncing them to each other.
+
+Consider removing syncMotor execution in rotate robot and lintrans function, and adding syncMotor execution in more comprex commands which use the lintrans and rotate basic functions. Do this so that when using in teleOp and applying both commands, that syncMotors is executed once instead of twice.
 
 ---
 
