@@ -1,4 +1,11 @@
 # RoboticsRepo
+# Notes:
+Main move commands are rotate robot and moveLinTrans. Main wait commands are wait for time, for distance or displacement traveled (you pick which quantity), and for angle traveled/for certain orientation passed.
+
+One complex wait command you can write is wait for degrees traveled in turn drive/rotational translate. This would use wait for distance/displacement
+
+This library is easily applicable to robots with the same library/MadHardware api (would need to rewrite/look over whole code if not), with the same number of wheels (need to rewrite motor buffers and a whole bunch of stuff), and with the same type of wheels (need to rewrite lin trans move if not).
+
 # Todo:
 Create a private Auxiliary (Aux) buffer which is a second Universal Buffer
 
