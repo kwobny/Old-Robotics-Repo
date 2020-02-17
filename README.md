@@ -7,7 +7,11 @@ One complex wait command you can write is wait for degrees traveled in turn driv
 This library is easily applicable to robots with the same library/MadHardware api (would need to rewrite/look over whole code if not), with the same number of wheels (need to rewrite motor buffers and a whole bunch of stuff), and with the same type of wheels (need to rewrite lin trans move if not).
 
 # Todo:
-Create a private Auxiliary (Aux) buffer which is a second Universal Buffer
+Make sure rot drive radius measures radius and power from the center point of the robot.
+
+Make multiple sets of buffers.
+
+Rethink the structure of the multiple buffers concept. Aim for having no second set of buffers. If not possible, then maybe have another set of individual buffers (main, lintrans, and rotate) that are titled experimental buffers.
 
 Create a public function titled setSyncDirection which sets from which buffer (motor buffers, aux, or universal/main) to which buffer (aux or universal/main) the syncMotors syncs the motors to and from. Make it by creating an enum for buffers (motor buffers, aux, and main/universal). Make sure that this function stores the from and to enum in 2 class fields, as well as switching the references to each thing.
 
@@ -18,6 +22,8 @@ Edit syncMotors function so that if from is the motor buffers, then another spec
 In motorCali, multiply the universal/main buffer values by the buffer's scale factor value when uploading those values to the actuator motors.
 
 Make a subclass for the linear translate buffer and other buffers where necessary, which inherits from the base buffer class. Do this to accommodate the 2 sets of rx and ry values for just the linear translation. Look far below for instructions on making lin trans buffer subclass
+
+Think of making an empty wait, or a wait until program ends, so that it can be used at the end of code to continue executing loop functions like motorCali. If implementing, think about integrating this wait into the base code itself instead of outside, to add efficiency.
 
 Think about making 2 periods of execution for native interval commands, one for high frequency call/execute and one for low frequency execution.
 
@@ -30,6 +36,10 @@ Consider/think about renaming the Universal buffer to the main buffer.
 Consider multiplying aux and main buffer values by their respective scale factors when syncing them to each other.
 
 Consider removing syncMotor execution in rotate robot and lintrans function, and adding syncMotor execution in more comprex commands which use the lintrans and rotate basic functions. Do this so that when using in teleOp and applying both commands, that syncMotors is executed once instead of twice.
+
+Consider making wait for distance execute every period of seconds instead of in the loop, to make code more efficient and fast.
+
+Decide whether or not wait for distance is wait for distance, or displacement, or include both. Probably will do distance, because that is just easier to implrement.
 
 ---
 
