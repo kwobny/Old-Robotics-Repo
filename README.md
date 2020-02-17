@@ -56,3 +56,11 @@ Make ILI input be 1 double for speed (includes a final speed of 0), 2 doubles fo
 For the last option, make it so that at the end, the values in aux buffer are automatically transfered to main (Universal) and main buffer is synced w/ motors. Also for the last option, set the sync direction back to "from motor buffers to main" once wait function is called and then begins, but debate about this in head before proceeding (you probably will do it).
 
 Make sure motor buffer wheel values are all initialized to 0 in beginning
+
+# Ideas for wait commands:
+For wait for distance, this is an idea: whenever the poll for the wait distance occurs,
+1. Get the change in the distance (displacement) traveled by each motor. If getPos command for each motor returns the wheel angle, then get the change in the angle (watch out for crossing over from 360 to 0 degrees), and multiply it by a constant (2 * pi * r?) to get change in distance.
+2. Multiply that change by the amount of power the linear translate contributes for that wheel divided by the universal value for that wheel (which would be linTrans/Universal, also take into account the scale factor for the lintrans buffer and how it is considered when adding lintrans to universal). This will extract the linear translation component of the distance traveled. Because this ratio may always change due to a change in linTrans command (for example rotational translate), this is the reason why the total distance must be measured in changes, instead of the whole thing.
+3. Take all four of these change values, and compare them against the current linear translate power values and rx and ry, in some way to come out with a dx and dy value. Make sure to account for inconsistancies in motor readings (maybe take averages for certain quantities?).
+4. Take the dx and dy value and find the resultant of these using pythagorean theorem. This will give you the total distance traversed by the robot from the last time the poll was executed. Sum up all of these change in distance values to get the total distance traversed by the robot since the start.
+5. Compare this total distance with the distance condition given, and return either true or false.
