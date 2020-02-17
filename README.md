@@ -9,6 +9,8 @@ This library is easily applicable to robots with the same library/MadHardware ap
 # Todo:
 IMPORTANT: Consider using the java object wait method, or the Thread.sleep method to execute code in a small period of seconds. Look up the difference between the 2 methods. This will be separate from the wait for time implementation, and will only be used to execute polling code as often as necessary. This will not be used when the robot waits during autonomous. For example, this can be used to execute motorCali every interval instead of the ineffecient polling wait for time command.
 
+If using the above methods, then you will need to take the things executing periodically in execute interval for the system itself, and the methods executing in the loop that are part of they system, and put it in the thing.
+
 Make sure rot drive radius measures radius and power from the center point of the robot.
 
 Make sure motor buffer wheel values are all initialized to 0 in beginning
