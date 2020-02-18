@@ -13,6 +13,8 @@ If using the above methods, then you will need to take the things executing peri
 
 Make a system for implementing your own custom wait code. Make it so that you can poll and generate data for all the waits used through the motions class, and define a structure for custom wait code. Most likely will be a while loop with condition, and inside it the loop method will be executing. For this to work, make sure the loop method is public.
 
+Make this a general rule: When modifying any of the values in the individual motor buffers, always do it with the intent of syncing the motors right after the action occurs. Do this so that individual motor buffer values stay consistant with the universal buffer.
+
 Make sure rot drive radius measures radius and power from the center point of the robot.
 
 Make sure motor buffer wheel values are all initialized to 0 in beginning
