@@ -11,6 +11,8 @@ IMPORTANT: Consider using the java object wait method, or the Thread.sleep metho
 
 If using the above methods, then you will need to take the things executing periodically in execute interval for the system itself, and the methods executing in the loop that are part of they system, and put it in the thing.
 
+Make a system for implementing your own custom wait code. Make it so that you can poll and generate data for all the waits used through the motions class, and define a structure for custom wait code. Most likely will be a while loop with condition, and inside it the loop method will be executing. For this to work, make sure the loop method is public.
+
 Make sure rot drive radius measures radius and power from the center point of the robot.
 
 Make sure motor buffer wheel values are all initialized to 0 in beginning
