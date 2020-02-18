@@ -45,6 +45,8 @@ Put a set of rx and ry values in the lin trans buffer class, so that these value
 
 Make wait for distance have an Enable Incremental Linear Interpolation option which allows you to slow down to the next speed that is inputted at the end. Accomplish this by calculating the scale factor (shown below) and setting the universal buffer's motor value multiplier every period/so often to decrease slowly. Make sure to reset this to 1 when done with maneuver/traveled full distance.
 
+For ILI, make it clear in code, instructions, and documentation that the ILI is only to be used when the magnitude of the linear translation component stays constant. Direction can be non-constant, but the speed of the robot should be constant when calculating for the time taken to travel a distance.
+
 Also determine your input units for the ILI.
 
 Make ILI input be 1 double for speed (includes a final speed of 0), and 2 doubles for speed in x and y direction. There will be no getting values from any aux buffer because it was deemed unnecessary.
