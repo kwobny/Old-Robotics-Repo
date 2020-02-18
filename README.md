@@ -54,3 +54,12 @@ For wait for distance, this is an idea: whenever the poll for the wait distance 
 3. Take all four of these change values, and compare them against the current linear translate power values and rx and ry, in some way to come out with a dx and dy value. Make sure to account for inconsistancies in motor readings (maybe take averages for certain quantities?).
 4. Take the dx and dy value and find the resultant of these using pythagorean theorem. This will give you the total distance traversed by the robot from the last time the poll was executed. Sum up all of these change in distance values to get the total distance traversed by the robot since the start.
 5. Compare this total distance with the distance condition given, and return either true or false.
+
+Additional idea:
+Have a value titled totalDistance. Make sure to reset this at the beginning of every wait for distance thing.
+whenever syncMotors executes, have it execute a function that, if in a distance wait state, gets the distance traversed from the last time syncMotors was called, to now. This will happen using the steps listed above. Do this step before the function executes motorCali and actually uploads values to the wheels.
+Add the distance traversed to total distance.
+Whenever the actual distance poll executes, measure the change in wheel position from the last syncMotor command. Use these values to calculate the displacement from last syncMotor command, but do not add it to the total distance variable. only use it and the total distance to calculate total distance as of now.
+
+Another idea:
+Alongside wait for distance traversed, also make a function which waits for displacement. Do this by getting the change in each wheel distance from the start of the maneuver, and using some sort of algorithm (develop this) to isolate the linear translate portion of the distance. Use this then to find the displacement from the starting position using inverse of the lintrans command.
