@@ -36,7 +36,7 @@ In motorCali, multiply the universal/main buffer values by the buffer's scale fa
 
 Make a subclass for the linear translate buffer and other buffers where necessary, which inherits from the base buffer class. Do this to accommodate the set of rx and ry values for just the linear translation. Look far below for instructions on making lin trans buffer subclass
 
-Think of making an acceleration parameter for the linear translate function, and maybe one for the rotate function, mainly for ILI and adding flexibility into code.
+Think of making a common acceleration system for the code.
 
 Think of making an empty wait, or a wait until program ends, so that it can be used at the end of code to continue executing loop functions like motorCali. If implementing, think about integrating this wait into the base code itself instead of outside, to add efficiency.
 
