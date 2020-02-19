@@ -1,0 +1,289 @@
+/*
+*   Created by Adam Sher on 11/3/18
+*   This class will be used to control the robot during the teleop period.
+*   It will drive in tank mode.
+*
+*   Revision by Yeongjin Kwon, Jacob Jordan, and Adam Sher on 12/13/19
+*   This class now includes important methods for strafing and strafe-related
+*   movement, in addition to controlling this year's arm.
+ */
+
+
+package org.firstinspires.ftc.teamcode.OpModes.Teleop;
+
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
+import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
+import java.lang.Override;
+
+
+
+@TeleOp(name = "TeleOp 1920", group = "TeleOp")   // How opMode is displayed on phones
+public class MainTeleOp extends OpMode {
+
+
+    // Initializing the hardware objects (motors).
+    MadHardware mhw = new MadHardware();
+    // ElapsedTime runtime = new ElapsedTime();
+
+    boolean lock = false;
+    double lockPower = 0;
+    boolean lockWasPressed = false;
+    int oldPos = 0;
+
+
+    // This method is run once when the "INIT" button is pressed on the phone.
+    @Override
+    public void init()
+    {
+        // addData calls are used for debugging.
+        telemetry.addData("Status", "Initializing...");
+
+        // Initialize motor controller (effectively calling MadHardware.init())
+        mhw.init(hardwareMap);
+
+        telemetry.addData("Status", "Initialized, awaiting autonomous start.");
+    }
+
+
+    // This method is run repeatedly after "INIT" being pressed
+    // but before the play button is pressed on the phone.
+    @Override
+    public void init_loop() {
+            telemetry.addData("GYRO STATUS: ", "Ready to start.");
+    }
+
+
+    // This method is run once when the play button is pressed on the phone.
+    @Override
+    public void start() {
+        telemetry.addData("Status", "Teleop start successful.");
+
+        mhw.armShoulder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //mhw.armRightShoulder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        mhw.armShoulder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //mhw.armRightShoulder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        //mhw.armLeftShoulder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //mhw.armRightShoulder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        mhw.armShoulder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //mhw.armRightShoulder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
+//          dont delete the program breaks no idea why
+//        int x = 0;
+//        int y = (x==0 ? 0 : 1);
+//        y = 0 if x is (2 if x is 3 else 3) else 1;
+    }
+
+    //defining variables for motor calibration
+    int positionSet = 0;
+    double lastPosition1;
+    double lastPosition2;
+    double lastPosition3;
+    double lastPosition4;
+    public void motorCali(){
+        //calibrates the motors in accordance to their offset from the average!
+
+        if (positionSet==1000000) {
+            //initialize testing variables and find distance values for power value
+            double dist1 = mhw.leftFront.getCurrentPosition() - lastPosition1;
+            double dist2 = mhw.rightFront.getCurrentPosition() - lastPosition2;
+            double dist3 = mhw.leftRear.getCurrentPosition() - lastPosition3;
+            double dist4 = mhw.rightFront.getCurrentPosition() - lastPosition4;
+            double pow = mhw.leftFront.getPower();
+
+            //set q values and q average
+            double q1 = dist1 / pow;
+            double q2 = dist2 / pow;
+            double q3 = dist3 / pow;
+            double q4 = dist4 / pow;
+            double qavg = (q1 + q2 + q3 + q4) / 4;
+
+            //calculate individual power values
+            double pow1 = pow * (qavg / q1);
+            double pow2 = pow * (qavg / q2);
+            double pow3 = pow * (qavg / q3);
+            double pow4 = pow * (qavg / q4);
+
+            //adjusting motor power
+            mhw.leftFront.setPower(pow1);
+            mhw.rightFront.setPower(pow2);
+            mhw.leftRear.setPower(pow3);
+            mhw.rightRear.setPower(pow4);
+        }
+
+        //saving positions
+        lastPosition1 = mhw.leftFront.getCurrentPosition();
+        lastPosition2 = mhw.rightFront.getCurrentPosition();
+        lastPosition3 = mhw.leftRear.getCurrentPosition();
+        lastPosition4 = mhw.rightRear.getCurrentPosition();
+        positionSet = 1;
+    }
+
+    public void ultraStrafe() {
+        //This method lets the robot strafe!
+
+        //using encoder to find magnitude of joystick x and y
+        double rx = gamepad1.left_stick_x;
+        double ry = gamepad1.left_stick_y;
+
+        //calculating motor powers
+        double a = rx + ry;
+        double b = ry - rx;
+
+        //compensating for errors (a>1 or b<-1)
+        double maxNumber = Math.max(Math.abs(a), Math.abs(b));
+        if (maxNumber > 1) {a /= maxNumber; b /= maxNumber;}
+
+        //sets powers according to compensation
+        mhw.leftFront.setPower(b);
+        mhw.rightFront.setPower(a);
+        mhw.leftRear.setPower(a);
+        mhw.rightRear.setPower(b);
+    }
+
+    @Override
+    public void loop() {
+        telemetry.addData("Status", "Teleop started, driving.");
+
+        final double POWER_MULTIPLIER = 0.4;
+        final double STRAFE_POWER_DEFAULT = 0.5;
+        final double ARM_SHOULDER_POWER = 0.35;
+        final double ARM_ELBOW_POWER = 0.5;
+        final double TRIGGER_THRESHOLD = 0.1;
+
+        // Linear motion
+        double leftPower = gamepad1.left_stick_y;
+        double rightPower = gamepad1.right_stick_y;
+
+        double boostMultiplier = gamepad1.right_bumper ? 1.0 : 0.6;
+
+        mhw.leftFront.setPower(leftPower * POWER_MULTIPLIER * boostMultiplier);
+        mhw.leftRear.setPower(leftPower * POWER_MULTIPLIER * boostMultiplier);
+        mhw.rightFront.setPower(rightPower * POWER_MULTIPLIER * boostMultiplier);
+        mhw.rightRear.setPower(rightPower * POWER_MULTIPLIER * boostMultiplier);
+
+        // Strafing
+        if(gamepad1.right_trigger > TRIGGER_THRESHOLD) { // Strafe right
+            mhw.leftRear.setPower(STRAFE_POWER_DEFAULT);
+            mhw.rightFront.setPower(STRAFE_POWER_DEFAULT);
+            mhw.leftFront.setPower(-STRAFE_POWER_DEFAULT);
+            mhw.rightRear.setPower(-STRAFE_POWER_DEFAULT);
+        } else if(gamepad1.left_trigger > TRIGGER_THRESHOLD) { // Strafe left
+            mhw.leftRear.setPower(-STRAFE_POWER_DEFAULT);
+            mhw.rightFront.setPower(-STRAFE_POWER_DEFAULT);
+            mhw.leftFront.setPower(STRAFE_POWER_DEFAULT);
+            mhw.rightRear.setPower(STRAFE_POWER_DEFAULT);
+        }
+
+
+
+        //mhw.armShoulder.setPower(-(gamepad2.left_stick_y * 1.0));
+        //mhw.armRightShoulder.setPower((gamepad2.left_stick_y * 1.0));
+
+        // Shoulder movement
+
+        if (gamepad2.left_stick_y > 0.7) {
+            mhw.armShoulder.setPower(ARM_SHOULDER_POWER);
+            //mhw.armRightShoulder.setPower(-gamepad2.left_stick_y * ARM_SHOULDER_POWER);
+        }
+        else if (gamepad2.left_stick_y < -0.7) {
+            mhw.armShoulder.setPower(-0.35 * ARM_SHOULDER_POWER);
+            //mhw.armRightShoulder.setPower(-gamepad2.left_stick_y * ARM_SHOULDER_POWER);
+        }
+        else
+        {
+            mhw.armShoulder.setPower(0);
+
+        }
+
+        // Special shoulder controls
+        //if (mhw.armShoulder.getCurrentPosition() < -150) { // Constrain shoulder angle
+            //mhw.armShoulder.setPower(0);
+            //mhw.armRightShoulder.setPower(0);
+        /* else if (gamepad2.left_stick_y < 0.1) { // Drift down slowly
+            mhw.armLeftShoulder.setPower(-0.8f);
+            mhw.armRightShoulder.setPower(0.8f);
+        }
+        oldPos = mhw.armLeftShoulder.getCurrentPosition();
+*/
+
+  /*      // Elbow movement
+        mhw.armLeftElbow.setPower(-gamepad2.right_stick_y * ARM_ELBOW_POWER);
+        mhw.armRightElbow.setPower(gamepad2.right_stick_y * ARM_ELBOW_POWER);
+        if (gamepad2.right_stick_y > 0.1) { // Ensure grabber does not drop rapidly.
+            mhw.armLeftElbow.setPower(mhw.armLeftElbow.getPower() / 5);
+            mhw.armRightElbow.setPower(mhw.armRightElbow.getPower() / 5);
+        }
+*/
+        // Grabber lock button
+        if (gamepad2.left_bumper && !lockWasPressed) {
+            lock = !lock;
+            lockPower = mhw.grabberLeft.getPower();
+            lockWasPressed = true;
+        } else if (!gamepad2.left_bumper) {
+            lockWasPressed = false;
+        }
+
+        // Grabber movement
+        if (lock) {
+            mhw.grabberLeft.setPower(lockPower);
+            mhw.grabberRight.setPower(-lockPower);
+        } else if (gamepad2.left_trigger > TRIGGER_THRESHOLD) {
+            mhw.grabberLeft.setPower(gamepad2.left_trigger);
+            mhw.grabberRight.setPower(-gamepad2.left_trigger);
+        } else if (gamepad2.right_trigger > TRIGGER_THRESHOLD) {
+            mhw.grabberLeft.setPower(-gamepad2.right_trigger);
+            mhw.grabberRight.setPower(gamepad2.right_trigger);
+        } else {
+            mhw.grabberLeft.setPower(0.0);
+            mhw.grabberRight.setPower(1.0);
+        }
+
+
+    }
+
+
+    // This method is run once when the stop button is pressed on the phone.
+    @Override
+    public void stop()
+    {
+		telemetry.addData("Status", "Teleop stop successful.");
+    }
+
+
+    public void hyperStrafe() {
+        /* CALCULATE JOYSTICK ANGLE */
+        double theta = 0;
+        if(gamepad1.left_stick_x != 0) { // This would be bad, dividing by 0. Can skip an iteration in this rare case
+            if (gamepad1.left_stick_x >= 0) { // Arctan outputs an angle between -90 and 90 degrees
+                theta = Math.toDegrees(Math.atan(-gamepad1.left_stick_y / gamepad1.left_stick_x));
+            } else { // Will output angle between 90 and 270 degrees
+                theta = Math.toDegrees(Math.atan(-gamepad1.left_stick_y / gamepad1.left_stick_x)) + 180;
+            }
+        }
+        // Constrain theta just in case
+        if (theta < 0) {
+            theta += 360;
+        } if (theta >= 360) {
+            theta -= 360;
+        }
+
+        /* CALCULATE DESIRED MOTOR POWERS */
+        final double POWER_MULTIPLIER = 0.5;
+        double powerFLBR = Math.cbrt(Math.sin(Math.toRadians(theta + 45))) * POWER_MULTIPLIER;
+        double powerFRBL = Math.cbrt(Math.sin(Math.toRadians(theta - 45))) * POWER_MULTIPLIER;
+
+        /* ASSIGN MOTORS THEIR POWERS */
+        mhw.leftFront.setPower(powerFLBR);
+        mhw.rightRear.setPower(powerFLBR);
+        mhw.rightFront.setPower(powerFRBL);
+        mhw.leftRear.setPower(powerFRBL);
+    }
+} // End of class
