@@ -6,6 +6,13 @@ One complex wait command you can write is wait for degrees traveled in turn driv
 
 This library is easily applicable to robots with the same library/MadHardware api (would need to rewrite/look over whole code if not), with the same number of wheels (need to rewrite motor buffers and a whole bunch of stuff), and with the same type of wheels (need to rewrite lin trans move if not).
 
+# Todos for Todos:
+Create an algorithm to isolate lintrans component from any set of buffer values, for the wait for displacement.
+
+Find how to use the lintrans motor buffer, combined with the lintrans component of the change in distance to generate an rx and ry value, which also accounts for error values in the change in distance buffer.
+
+Find how to get time taken to traverse lengthened distance, for ILI.
+
 # Todo:
 IMPORTANT: Consider using the java object wait method, or the Thread.sleep method to execute code in a small period of seconds. Look up the difference between the 2 methods. This will be separate from the wait for time implementation, and will only be used to execute polling code as often as necessary. This will not be used when the robot waits during autonomous. For example, this can be used to execute motorCali every interval instead of the ineffecient polling wait for time command.
 
