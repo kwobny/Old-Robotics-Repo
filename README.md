@@ -18,6 +18,8 @@ IMPORTANT: Consider using the java object wait method, or the Thread.sleep metho
 
 If using the above methods, then you will need to take the things executing periodically in execute interval for the system itself, and the methods executing in the loop that are part of they system, and put it in the thing.
 
+Also consider making a full on multithreaded version of the motion library
+
 Make a system for implementing your own custom wait code. Make it so that you can poll and generate data for all the waits used through the motions class, and define a structure for custom wait code. Most likely will be a while loop with condition, and inside it the loop method will be executing. For this to work, make sure the loop method is public.
 
 Make this a general rule: When modifying any of the values in the individual motor buffers, always do it with the intent of syncing the motors right after the action occurs. Do this so that individual motor buffer values stay consistant with the universal buffer. This is mainly for the wait for distance lintrans vs. universal buffer ratio calculation.
