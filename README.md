@@ -20,7 +20,7 @@ IMPORTANT: Consider using the java object wait method, or the Thread.sleep metho
 
 If using the above methods, then you will need to take the things executing periodically in execute interval for the system itself, and the methods executing in the loop that are part of they system, and put it in the thing.
 
-Also consider using the sleep() and idle() commands that (might) are built into the ftc library itself
+Also consider using the sleep() and idle() commands that (might) are built into the ftc library itself (linear Opmode)
 
 Also consider making a full on multithreaded version of the motion library
 
