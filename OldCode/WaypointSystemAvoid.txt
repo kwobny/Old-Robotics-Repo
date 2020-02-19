@@ -1,0 +1,91 @@
+/*
+ *   Created by Adam Sher on 1/5/19
+ *   This class will be used to control the waypoint/beacon system, allowing the robot
+ *   to automatically return to a specified position.
+ */
+
+package org.firstinspires.ftc.teamcode.Other;
+
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
+
+public class WaypointSystemAvoid {
+
+    MadHardware mhw = new MadHardware();
+    ElapsedTime runtime = new ElapsedTime();
+
+    public int nM = 0; // Number of movements.
+    public boolean hasInitialized = false;
+
+    boolean movementTypes[] = new boolean[100];
+    double leftPowers[] = new double[100];
+    double rightPowers[] = new double[100];
+    float leftDistances[] = new float[100];
+    float rightDistances[] = new float[100];
+    double durations[] = new double[100];
+    double rotations[] = new double[100];
+
+    public void addWaypoint()
+    {
+        nM = 0;
+        movementTypes = new boolean[100];
+        leftPowers = new double[100];
+        rightPowers = new double[100];
+        leftDistances = new float[100];
+        rightDistances = new float[100];
+        durations = new double[100];
+        rotations = new double[100];
+
+       // if(!hasInitialized)
+            //mhw.init(hardwareMap);
+    }
+
+
+    public void updateMovements(double leftPower, double rightPower, double rotation, float leftDist, float rightDist, double oldLeftPower, double oldRightPower)
+    {
+        if(Math.abs(leftPower - oldLeftPower) > 0.1 || Math.abs(rightPower - oldRightPower) > 0.1) // A new movement was made.
+        {
+            if(oldLeftPower * oldRightPower >= 0) // The movement is linear!
+                addMovement(true, leftPower, rightPower, rotation, leftDist, rightDist, oldLeftPower, oldRightPower);
+            else // The movement is a turn!
+                addMovement(false, leftPower, rightPower, rotation, leftDist, rightDist, oldLeftPower, oldRightPower);
+        }
+    }
+
+
+    public void addMovement(boolean movementType, double leftPower, double rightPower, double rotation, float leftDist, float rightDist, double oldLeftPower, double oldRightPower)
+    {
+        movementTypes[nM] = movementType;
+        leftPowers[nM] = oldLeftPower;
+        rightPowers[nM] = oldRightPower;
+        leftDistances[nM] = leftDist;
+        rightDistances[nM] = rightDist;
+        durations[nM] = runtime.time();
+        rotations[nM] = 360 * (1 - rotation);
+
+        nM++;
+        runtime.reset();
+    }
+
+
+    public int goToWaypoint()
+    {
+        //return nM;
+        nM--;
+
+            for(; nM >= 0; nM--)
+            {
+                runtime.reset();
+                while(runtime.time() < durations[nM])
+                {
+                    //mhw.leftDrive.setPower(-leftPowers[nM]);
+                    //mhw.rightDrive.setPower(-rightPowers[nM]);
+                    mhw.leftDrive.setPower(0f);
+                    mhw.rightDrive.setPower(0f);
+                }
+            }
+            addWaypoint();
+            return nM;
+    }
+}
