@@ -7,7 +7,8 @@ class Base {
   //CLASS WIDE CONSTANTS/VARIABLES:
   public final double robotWidth = 5; //width of robot in centimeters
   public final double robotHeight = 5; //height of robot in centimeters
-  private final double maintInterval = 0.1; //period in which functions like motor cali run
+  protected final double lowMaintInterval = 0.1; //period in which periodic functions like motor cali run (in seconds)
+  protected final double highMaintInterval = 0.01; //period in which very accurate functions run (in seconds)
 
   //CLASS WIDE VARIABLES
   public double motorConversionRate = 0; //the rate of powerOutput/velocity (in centimeters/second)
@@ -18,7 +19,8 @@ class Base {
   protected MadHardware mhw;
 
   protected Base() {
-    addInterval(WaitEnum.TIME, 0, maintInterval);
+    addInterval(WaitEnum.TIME, 1, lowMaintInterval);
+    addInterval(WaitEnum.TIME, 2, highMaintInterval);
   }
 
   //motor buffer functionality
@@ -32,10 +34,15 @@ class Base {
     public double rightRear = 0;
 
     public double speedFactor = 1;
+    public double acceleration = 0; //acceleration in percent of everything per second
+  }
+  protected class linTransBufferClass extends motorBufferClass {
+    public double rx = 0;
+    public double ry = 0;
   }
   //declaring all motor buffers
   protected motorBufferClass rotateBuffer = new motorBufferClass();
-  protected motorBufferClass linTransBuffer = new motorBufferClass();
+  protected linTransBufferClass linTransBuffer = new linTransBufferClass();
   //user controlled buffer
   public motorBufferClass userBuffer = new motorBufferClass();
 

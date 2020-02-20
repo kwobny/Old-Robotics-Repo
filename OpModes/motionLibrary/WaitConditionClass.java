@@ -38,58 +38,6 @@ public class WaitConditionClass
     }
 
     //END WAIT COMMANDS
-
-    //wait example
-    /*
-    public PollInterface exampleWaitCode = new PollInterface() {
-        public Object[] generateData(Object[] args) {
-          return new Object[]{args[0]};
-        }
-
-        public boolean pollCondition(Object[] data) {
-          boolean condition = (Boolean) data[0];
-          return condition;
-          //return true if wait is over, return false if wait is still going on
-        }
-    };
-
-    public void exampleWait(boolean condition) {
-        simpleWait(exampleWaitCode, new Object[]{condition});
-    }
-    public void exampleWait(boolean condition, boolean pauseCodeExecution, CallbackInterface onCondition) {
-        if (pauseCodeExecution) {
-          addWait(exampleWaitCode, new Object[]{condition}, onCondition);
-        }
-        else {
-          setTimeout(exampleWaitCode, new Object[]{condition}, onCondition);
-        }
-    }
-
-    //wait for time
-    public PollInterface waitTimeCode = new PollInterface() {
-        public Object[] generateData(Object[] args) {
-          return new Object[]{10.0, args[0]};
-        }
-
-        public boolean pollCondition(Object[] data) {
-          double condition = (Double) data[0];
-          return true;
-          //return true if wait is over, return false if wait is still going on
-        }
-    };
-
-    public void waitTime(double time) {
-        simpleWait(waitTimeCode, new Object[]{time});
-    }
-    public void waitTime(double time, boolean pauseCodeExecution, CallbackInterface onCondition) {
-        if (pauseCodeExecution) {
-          addWait(waitTimeCode, new Object[]{time}, onCondition);
-        }
-        else {
-          setTimeout(waitTimeCode, new Object[]{time}, onCondition);
-        }
-    }
-    */
 }
 
 class WaitCallbacks
@@ -105,12 +53,18 @@ class WaitCallbacks
     void callback(int which) {
         switch (which) {
             case 1:
-                runBaseInterval();
-                break;
+              runBaseLowInterval();
+              break;
+            case 2:
+              runBaseHighInterval();
+              break;
         }
     }
 
-    private void runBaseInterval() {
-        movements.motorCali();
+    private void runBaseLowInterval() {
+      movements.motorCali();
+    }
+    private void runBaseHighInterval() {
+      //
     }
 }
