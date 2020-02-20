@@ -258,6 +258,13 @@ class Base {
     }
   }
 
+  //function that you call at the end of autonomous sequence to wait for program to end. This should be the absolute last function executed in program.
+  public void endProgram() {
+    while (true) {
+      loop();
+    }
+  }
+
   //universal motor calibration system
   private double[] globalPos = {0.0, 0.0, 0.0, 0.0};
   private void motorCali() {

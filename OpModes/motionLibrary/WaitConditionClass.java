@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 
 import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class WaitConditionClass
 {
     private MadHardware mhw;
     private Motions movements;
+
+    private ElapsedTime runtime = new ElapsedTime();
 
     WaitConditionClass(MadHardware hmw, Motions mot) {
         mhw = hmw;
@@ -31,10 +34,11 @@ public class WaitConditionClass
 
     //START WAIT COMMANDS
     private Object[] generateTimeData(Object[] args) {
-        return new Object[]{};
+      double time = (Double) args[0];
+      return new Object[]{time + runtime.time()};
     }
     private boolean pollTime(Object[] data) {
-        return true;
+      return (double) (Double) data[0] < runtime.time();
     }
 
     //END WAIT COMMANDS
