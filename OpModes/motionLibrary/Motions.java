@@ -118,28 +118,43 @@ public class Motions extends Base {
   //rotational drive (drive robot in a circle around a center point)
 
   //2 wheel sim version
-  public void moveRotDriveTank(double leftWheel, double rightWheel) {
+  //simulates 2 wheels with the same distance apart as the width of robot
+  //moveDirection represents the angle between the direction of movement relative to the robot and the front of the robot. If positive, direction of travel is to the right of heading of robot, negative is to the left. Is in degrees. Is an optional parameter
+  public void moveRotDriveTank(double leftWheel, double rightWheel, double ...moveDirection) {
     final double centerSpeed = (leftWheel + rightWheel)/2;
     final double deviation = (leftWheel - rightWheel)/2;
+    
+    final double x;
+    final double y;
+    if (moveDirection.length == 1) {
+      final double angle = 2.0 * Math.PI * (90.0 - moveDirection[0])/360.0;
+      x = Math.cos(angle);
+      y = Math.sin(angle);
+    } else {
+      x = 0;
+      y = 1;
+    }
 
     moveRotate(deviation, true);
-    moveLinTrans(0, centerSpeed);
+    moveLinTrans(x * centerSpeed, y * centerSpeed);
     syncMotors();
   }
 
   //input radius version
 
   //radius is in relation to the center of the robot wheels (midpoint of the two wheels on two wheel mode)
-  //positive radius goes to the right of robot
-  //negative radius goes to the left of robot
+  //positive radius makes robot go right
+  //negative radius makes robot go left
   //radius is defined in centimeters, or whatever unit the robotWidth is
 
   //power defines the power speed of the center point of the robot wheels
-  public void moveRotDriveRadius(double power, double radius) {
+
+  //moveDirection is same as above
+  public void moveRotDriveRadius(double power, double radius, double ...moveDirection) {
     final double leftWheel = power * (radius + robotWidth/2)/(radius - robotWidth/2);
     final double rightWheel = power * (radius - robotWidth/2)/(radius + robotWidth/2);
 
-    moveRotDriveTank(leftWheel, rightWheel);
+    moveRotDriveTank(leftWheel, rightWheel, moveDirection);
   }
 
   //rotational translate
