@@ -2,13 +2,14 @@ package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 
 import java.util.ArrayList;
 import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 class Base {
   //CLASS WIDE CONSTANTS/VARIABLES:
   public final double robotWidth = 5; //width of robot in centimeters
   public final double robotHeight = 5; //height of robot in centimeters
-  protected final double lowMaintInterval = 0.1; //period in which periodic functions like motor cali run (in seconds)
-  protected final double highMaintInterval = 0.01; //period in which very accurate functions run (in seconds)
+  protected final double pauseExecutionDuration = 0.01; //period in which very accurate functions run (in seconds). Also the amount by which code pauses execution every loop.
+  protected final int lowMaintMult = 10; //number which when multiplied by pauseExecutionDuration gives the period of less periodic functions like motorCali.
 
   //CLASS WIDE VARIABLES
   public double motorConversionRate = 0; //the rate of powerOutput/velocity (in centimeters/second)
@@ -17,11 +18,9 @@ class Base {
   public WaitConditionClass waiters;
   public WaitCallbacks waitCallbacks;
   protected MadHardware mhw;
+  protected ElapsedTime baseRuntime = new ElapsedTime();
 
-  protected Base() {
-    addInterval(WaitEnum.TIME, 1, lowMaintInterval);
-    addInterval(WaitEnum.TIME, 2, highMaintInterval);
-  }
+  protected Base() {}
 
   //motor buffer functionality
   //motor buffers make it possible to superimpose two or more different motions together to achieve a sum of the motions
@@ -172,33 +171,6 @@ class Base {
     }
   }
 
-  //quick/custom wait
-  /*public interface quickWaitInterface {
-    boolean quickPoll();
-  }
-  public void quickWait(quickWaitInterface pollObject) {
-    while (!pollObject.quickPoll()) {
-      loop();
-    }
-  }
-  //boolean pauseCodeExecution specifies whether or not to use wait queue or timeout.
-  public void quickWait(quickWaitInterface pollObject, CallbackInterface callback, boolean pauseCodeExecution) {
-    PollInterface quickPollToAdd = new PollInterface() {
-      public Object[] generateData(Object[] args) {return args;}
-      public boolean pollCondition(Object[] data) {
-        return pollObject.quickPoll();
-      }
-    };
-    
-    if (pauseCodeExecution) {
-      addWait(quickPollToAdd, new Object[0], callback);
-    }
-    else {
-      setTimeout(quickPollToAdd, new Object[0], callback);
-    }
-  }
-  */
-
   //timeout functionality
 
   //important function to remove multiple items from ArrayList
@@ -323,7 +295,7 @@ class Base {
   protected void runBaseHighInterval() {
     //Common acceleration system
     if (!isZero(universalBuffer.acceleration)) {
-      universalBuffer.speedFactor += universalBuffer.acceleration * highMaintInterval;
+      universalBuffer.speedFactor += universalBuffer.acceleration * pauseExecutionDuration;
       motorCali();
     }
   }
@@ -331,9 +303,22 @@ class Base {
   //loop for the motions
   //allows movements which are time dependent, like rotational translation
   //also allows execution of other stuff
+  private double lastTime = 0.0;
+  private int currentIteration = lowMaintMult;
   public void loop() {
     executeIntervals();
     runTimeouts();
+
+    //This piece of code pauses execution for a small second. This will be the piece that is replaced if using thread commands
+    while (baseRuntime.time() - lastTime < pauseExecutionDuration);
+    runBaseHighInterval();
+    
+    if (currentIteration == lowMaintMult) {
+      runBaseLowInterval();
+      currentIteration = 0;
+    }
+
+    currentIteration++;
   }
 
   //END CORE SYSTEMS SETUP
