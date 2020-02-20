@@ -260,7 +260,7 @@ class Base {
 
   //universal motor calibration system
   private double[] globalPos = {0.0, 0.0, 0.0, 0.0};
-  protected void motorCali() {
+  private void motorCali() {
     /* CALCULATE DISTANCES TRAVELLED */
     double d0 = mhw.leftFront.getCurrentPosition() - globalPos[0];
     double d1 = mhw.rightFront.getCurrentPosition() - globalPos[1];
@@ -303,8 +303,23 @@ class Base {
     globalPos[3] = mhw.leftRear.getCurrentPosition();
   }
 
-  //rotational translate stuff
-  protected boolean executeRotTrans = false;
+  //system loop functions
+  private boolean isZero(double value){
+    final double threshold = 0.01;
+    return value >= -threshold && value <= threshold;
+  }
+  protected void runBaseLowInterval() {
+    if (isZero(universalBuffer.acceleration)) {
+      motorCali();
+    }
+  }
+  protected void runBaseHighInterval() {
+    //Common acceleration system
+    if (!isZero(universalBuffer.acceleration)) {
+      universalBuffer.speedFactor += universalBuffer.acceleration * highMaintInterval;
+      motorCali();
+    }
+  }
 
   //loop for the motions
   //allows movements which are time dependent, like rotational translation

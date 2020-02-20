@@ -53,18 +53,11 @@ class WaitCallbacks
     void callback(int which) {
         switch (which) {
             case 1:
-              runBaseLowInterval();
+              movements.runBaseLowInterval();
               break;
             case 2:
-              runBaseHighInterval();
+              movements.runBaseHighInterval();
               break;
         }
-    }
-
-    private void runBaseLowInterval() {
-      movements.motorCali();
-    }
-    private void runBaseHighInterval() {
-      //
     }
 }

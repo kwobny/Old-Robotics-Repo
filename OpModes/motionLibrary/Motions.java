@@ -58,8 +58,6 @@ public class Motions extends Base {
     rotateBuffer.leftRear = power;
     rotateBuffer.rightFront = -power;
     rotateBuffer.rightRear = -power;
-
-    syncMotors();
   }
 
   //linear translate
@@ -126,6 +124,7 @@ public class Motions extends Base {
 
     moveRotate(deviation, true);
     moveLinTrans(0, centerSpeed);
+    syncMotors();
   }
 
   //input radius version
