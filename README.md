@@ -11,6 +11,8 @@ This library is easily applicable to robots with the same library/MadHardware ap
 
 A wait callback of value 0 is no callback
 
+When modifying any of the values in the individual motor buffers, always do it with the intent of syncing the motors right after the action occurs. Do this so that individual motor buffer values stay consistant with the universal buffer.
+
 # Todos for Todos:
 Create an algorithm to isolate lintrans component from any set of buffer values, for the wait for displacement.
 
@@ -31,19 +33,11 @@ Also consider using the sleep() and idle() commands that (might) are built into 
 
 Also consider making a full on multithreaded version of the motion library
 
+---
+
 Make a system for implementing your own custom wait code. Make it so that you can poll and generate data for all the waits used through the motions class, and define a structure for custom wait code. Most likely will be a while loop with condition, and inside it the loop method will be executing. For this to work, make sure the loop method is public.
 
-Make this a general rule: When modifying any of the values in the individual motor buffers, always do it with the intent of syncing the motors right after the action occurs. Do this so that individual motor buffer values stay consistant with the universal buffer. This is mainly for the wait for distance lintrans vs. universal buffer ratio calculation.
-
-Think of making a common acceleration system for the code.
-
 Think of making an empty wait, or a wait until program ends, so that it can be used at the end of code to continue executing loop functions like motorCali. If implementing, think about integrating this wait into the base code itself instead of outside, to add efficiency.
-
-Think about making 2 periods of execution for native interval commands, one for high frequency call/execute and one for low frequency execution.
-
-Also think about what the period of motorCali execution should be. It can be 0.1 seconds or so i guess?
-
-Consider removing syncMotor execution in rotate robot and lintrans function, and adding syncMotor execution in more comprex commands which use the lintrans and rotate basic functions. Do this so that when using in teleOp and applying both commands, that syncMotors is executed once instead of twice.
 
 Consider making wait for distance execute every period of seconds instead of in the loop, to make code more efficient and fast.
 
