@@ -61,6 +61,8 @@ Also consider making a full on multithreaded version of the motion library
 
 Clean up the notes section, and sort them into operation imperative/required notes, and suggestion notes.
 
+Evaluate recent restructuring of system interval execution. Think about making wait for time exempt from the effects of the pause code execution, and also make sure that high period functions execute at a period somewhat close to what the high period value is.
+
 Consider making wait for distance execute every period of seconds instead of in the loop, to make code more efficient and fast.
 
 Decide whether or not wait for distance is wait for distance, or displacement, or include both. Probably will do distance, because that is just easier to implrement.
