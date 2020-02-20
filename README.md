@@ -29,16 +29,6 @@ Make a system for implementing your own custom wait code. Make it so that you ca
 
 Make this a general rule: When modifying any of the values in the individual motor buffers, always do it with the intent of syncing the motors right after the action occurs. Do this so that individual motor buffer values stay consistant with the universal buffer. This is mainly for the wait for distance lintrans vs. universal buffer ratio calculation.
 
-Make sure rot drive radius measures radius and power from the center point of the robot.
-
-Make sure motor buffer wheel values are all initialized to 0 in beginning
-
-Get rid of multiple buffers concept. There will only be a single set of buffers. It was found that ILI for wait for distance does not need to get values from another buffer.
-
-Edit syncMotors so that automatic syncing of universal buffer to actuators is removed. Also edit it so that function runs motorCali instead. Make sure this function is public, so that robot code can execute it.
-
-In motorCali, multiply the universal/main buffer values by the buffer's scale factor value when uploading those values to the actuator motors.
-
 Make a subclass for the linear translate buffer and other buffers where necessary, which inherits from the base buffer class. Do this to accommodate the set of rx and ry values for just the linear translation. Look far below for instructions on making lin trans buffer subclass
 
 Think of making a common acceleration system for the code.
