@@ -56,10 +56,7 @@ class Base {
       universalBuffer.rightRear += i.rightRear * i.speedFactor;
     }
 
-    mhw.leftFront.setPower(universalBuffer.leftFront);
-    mhw.leftRear.setPower(universalBuffer.leftRear);
-    mhw.rightFront.setPower(universalBuffer.rightFront);
-    mhw.rightRear.setPower(universalBuffer.rightRear);
+    motorCali();
   }
   //clear motor buffers function
   public void clearMotors() {
@@ -287,10 +284,10 @@ class Base {
     double rAVG = (r0 + r1 + r2 + r3) / 4;
 
     /* CHANGE MOTOR POWERS */
-    mhw.leftFront.setPower(0.999 * p0 * rAVG / r0);
-    mhw.rightFront.setPower(0.999 * p1 * rAVG / r1);
-    mhw.rightRear.setPower(0.999 * p2 * rAVG / r2);
-    mhw.leftRear.setPower(0.999 * p3 * rAVG / r3);
+    mhw.leftFront.setPower(universalBuffer.speedFactor * 0.999 * p0 * rAVG / r0);
+    mhw.rightFront.setPower(universalBuffer.speedFactor * 0.999 * p1 * rAVG / r1);
+    mhw.rightRear.setPower(universalBuffer.speedFactor * 0.999 * p2 * rAVG / r2);
+    mhw.leftRear.setPower(universalBuffer.speedFactor * 0.999 * p3 * rAVG / r3);
 
     /* SAVE MOTOR POSITIONS */
     globalPos[0] = mhw.leftFront.getCurrentPosition();
