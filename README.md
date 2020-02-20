@@ -13,6 +13,28 @@ A wait callback of value 0 is no callback
 
 When modifying any of the values in the individual motor buffers, always do it with the intent of syncing the motors right after the action occurs. Do this so that individual motor buffer values stay consistant with the universal buffer.
 
+When using the library in teleOp, make sure to call the loop command once every teleOp loop. Also be mindful that the loop command probably waits for some short time before resuming execution.
+
+At the end of the autonomous, make sure to call the endProgram function. This should be the absolute last function called. If you need some extra functionality, the function only consists of a while true loop with the loop function executing inside it. The only wait functions that would be useful after the function is called is set timeout and set interval.
+
+Wait system functionality:
+
+There are 6 different functionalities, 4 which are built in commands and 2 which (are similar) and are used for custom waits:
+1. Simple wait: waits for one condition and pauses all code execution until satisfied
+2. Complex wait: waits for multiple conditions with a choosable completion condition. Executes a callback after each condition ends, pauses all code until completion condition (either AND or OR) is reached.
+3. Set timeout: sets a timeout. is like simple wait, but does not block code execution.
+4. Set interval: sets a wait to start over again after it completes. does not block code execution.
+
+The 2 more functionalities are:
+1. Poll and generate data
+2. custom/manual waits.
+
+To use custom waits:
+
+just put a while loop in your code, with the wait as your condition. Make sure to flip the output of the poll. Inside the loop, make sure to call the loop command from the motion library.
+
+When polling manually for waits, first call the generate data command through the .waiters.generateData function, then poll. a value of true means condition is complete, false means the wait is still continuing.
+
 # Todos for Todos:
 Create an algorithm to isolate lintrans component from any set of buffer values, for the wait for displacement.
 
@@ -37,13 +59,13 @@ Also consider making a full on multithreaded version of the motion library
 
 Use wait for time just like you would use the sleep command if you were using it.
 
-Make a system for implementing your own custom wait code. Make it so that you can poll and generate data for all the waits used through the motions class, and define a structure for custom wait code. Most likely will be a while loop with condition, and inside it the loop method will be executing. For this to work, make sure the loop method is public.
-
-Think of making an empty wait, or a wait until program ends, so that it can be used at the end of code to continue executing loop functions like motorCali. If implementing, think about integrating this wait into the base code itself instead of outside, to add efficiency.
+Clean up the notes section, and sort them into operation imperative/required notes, and suggestion notes.
 
 Consider making wait for distance execute every period of seconds instead of in the loop, to make code more efficient and fast.
 
 Decide whether or not wait for distance is wait for distance, or displacement, or include both. Probably will do distance, because that is just easier to implrement.
+
+If all the wait arguments are doubles, then switch the wait data types from Object to double.
 
 ---
 
