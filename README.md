@@ -7,6 +7,10 @@ One complex wait command you can write is wait for degrees traveled in turn driv
 
 This library is easily applicable to robots with the same library/MadHardware api (would need to rewrite/look over whole code if not), with the same number of wheels (need to rewrite motor buffers and a whole bunch of stuff), and with the same type of wheels (need to rewrite lin trans move if not).
 
+---
+
+A wait callback of value 0 is no callback
+
 # Todos for Todos:
 Create an algorithm to isolate lintrans component from any set of buffer values, for the wait for displacement.
 
@@ -21,6 +25,8 @@ IMPORTANT: Consider using the java object wait method, or the Thread.sleep metho
 
 If using the above methods, then you will need to take the things executing periodically in execute interval for the system itself, and the methods executing in the loop that are part of they system, and put it in the thing.
 
+You will also need to change the access modifiers of involved methods as fit.
+
 Also consider using the sleep() and idle() commands that (might) are built into the ftc library itself (linear Opmode)
 
 Also consider making a full on multithreaded version of the motion library
@@ -28,8 +34,6 @@ Also consider making a full on multithreaded version of the motion library
 Make a system for implementing your own custom wait code. Make it so that you can poll and generate data for all the waits used through the motions class, and define a structure for custom wait code. Most likely will be a while loop with condition, and inside it the loop method will be executing. For this to work, make sure the loop method is public.
 
 Make this a general rule: When modifying any of the values in the individual motor buffers, always do it with the intent of syncing the motors right after the action occurs. Do this so that individual motor buffer values stay consistant with the universal buffer. This is mainly for the wait for distance lintrans vs. universal buffer ratio calculation.
-
-Make a subclass for the linear translate buffer and other buffers where necessary, which inherits from the base buffer class. Do this to accommodate the set of rx and ry values for just the linear translation. Look far below for instructions on making lin trans buffer subclass
 
 Think of making a common acceleration system for the code.
 
