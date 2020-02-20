@@ -35,6 +35,8 @@ Also consider making a full on multithreaded version of the motion library
 
 ---
 
+Use wait for time just like you would use the sleep command if you were using it.
+
 Make a system for implementing your own custom wait code. Make it so that you can poll and generate data for all the waits used through the motions class, and define a structure for custom wait code. Most likely will be a while loop with condition, and inside it the loop method will be executing. For this to work, make sure the loop method is public.
 
 Think of making an empty wait, or a wait until program ends, so that it can be used at the end of code to continue executing loop functions like motorCali. If implementing, think about integrating this wait into the base code itself instead of outside, to add efficiency.
