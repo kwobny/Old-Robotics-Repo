@@ -10,6 +10,9 @@ class Base {
   public final double robotHeight = 5; //height of robot in centimeters
   protected final double lowFreqMaintInterval = 0.2; //period in which low frequency periodic functions like motor cali run (in seconds)
   protected final double highFreqMaintInterval = 0.05; //period in which very high frequency accurate functions run (in seconds)
+  protected final int ticksPerRevolution = 2600;
+  protected final double wheelDiameter = 3; //wheel diameter in centimeters
+  protected final double distancePerTick = (Math.PI*wheelDiameter)/ticksPerRevolution; //how many centimeters wheel runs per wheel tick
 
   //CLASS WIDE VARIABLES
   public double motorConversionRate = 0; //the rate of powerOutput/velocity (in centimeters/second)
@@ -30,19 +33,22 @@ class Base {
   //motor buffer functionality
   //motor buffers make it possible to superimpose two or more different motions together to achieve a sum of the motions
 
-  //motor buffer class
-  public class motorBufferClass {
-    public double leftFront = 0;
-    public double leftRear = 0;
-    public double rightFront = 0;
-    public double rightRear = 0;
+  //base wheelValueDecimal class
+  protected class wheelValueDecimalClass {
+    public double leftFront = 0.0;
+    public double leftRear = 0.0;
+    public double rightFront = 0.0;
+    public double rightRear = 0.0;
+  }
 
-    public double speedFactor = 1;
-    public double acceleration = 0; //acceleration in percent of everything per second
+  //motor buffer class
+  public class motorBufferClass extends wheelValueDecimalClass {
+    public double speedFactor = 1.0;
+    public double acceleration = 0.0; //acceleration in percent of everything per second
   }
   protected class linTransBufferClass extends motorBufferClass {
-    public double rx = 0;
-    public double ry = 0;
+    public double rx = 0.0;
+    public double ry = 0.0;
   }
   //declaring all motor buffers
   protected motorBufferClass rotateBuffer = new motorBufferClass();
@@ -292,26 +298,92 @@ class Base {
 
   //robot position and distance tracking system. All distance values in centimeters
 
-  //execute distance save function
-  protected void saveDistance() {
-    //
+  //class for wheel tick storage
+  private class tickMeasureClass {
+    public int leftFront = 0;
+    public int rightFront = 0;
+    public int leftBack = 0;
+    public int rightBack = 0;
+  }
+
+  //displacement and distance variables
+  private double[] syncDisplacement = {0.0, 0.0}; //0 index is x, 1 is y
+  private double syncDistance = 0.0;
+
+  //wheel position variables
+  private tickMeasureClass lastWheelPos = new tickMeasureClass();
+  private wheelValueDecimalClass wheelPosChange = new wheelValueDecimalClass();
+
+  //get displacement from last sync position
+  private double[] coreDistFunc() {
+    //calculate the lintrans component of the change in distance for each wheel.
+    wheelPosChange.leftFront = (linTransBuffer.leftFront * linTransBuffer.speedFactor/universalBuffer.leftFront) * distancePerTick * (mhw.leftFront.getCurrentPosition() - lastWheelPos.leftFront);
+    wheelPosChange.rightFront = (linTransBuffer.rightFront * linTransBuffer.speedFactor/universalBuffer.rightFront) * distancePerTick * (mhw.rightFront.getCurrentPosition() - lastWheelPos.rightFront);
+    wheelPosChange.leftBack = (linTransBuffer.leftBack * linTransBuffer.speedFactor/universalBuffer.leftBack) * distancePerTick * (mhw.leftBack.getCurrentPosition() - lastWheelPos.leftBack);
+    wheelPosChange.rightBack = (linTransBuffer.rightBack * linTransBuffer.speedFactor/universalBuffer.rightBack) * distancePerTick * (mhw.rightBack.getCurrentPosition() - lastWheelPos.rightBack);
+
+    //inverse function to get dx and dy
+    double dx; double dy;
+
+    return new double[]{dx, dy};
   }
 
   //this function shifts the point of reference by these distances in the x and y direction.
-  public void moveRefPoint(double x, double y) {}
+  public void moveRefPoint(double x, double y) {
+    saveDistance();
+    syncDisplacement[0] -= x;
+    syncDisplacement[1] -= y;
+  }
   //this is an overloaded version which shifts point to current robot position.
-  public void moveRefPoint() {}
+  public void moveRefPoint() {
+    saveDistance();
+    syncDisplacement[0] = 0;
+    syncDisplacement[1] = 0;
+  }
 
   //this function resets the total distance traveled to 0 centimeters.
-  public void resetDistance() {}
+  public void resetDistance() {
+    saveDistance();
+    syncDistance = 0;
+  }
 
   //this function gets the robot's position relative to a certain point, which itself is relative to the reference point.
   //x and y signify a point, relative to current reference point
-  public double getRelPosition(double x, double y) {}
-  public double getRelPosition() {getRelPosition(0.0, 0.0);}
+  private double[] getRelPosition(double[] displArray) {
+    return new double[]{displArray[0] + syncDisplacement[0], displArray[1] + syncDisplacement[1]};
+  }
+  public double[] getRelPosition() {
+    return getRelPosition(coreDistFunc());
+  }
+  public double[] getRelPosition(double x, double y) {
+    double[] temp = getRelPosition();
+    temp[0] -= x;
+    temp[1] -= y;
+    return temp;
+  }
 
   //this function gets the total distance (not displacement) traveled by the robot.
-  public double getDistanceTraveled() {}
+  private double getDistanceTraveled(double[] displArray) {
+    return Math.sqrt(Math.pow(displArray[0], 2) + Math.pow(displArray[1], 2)) + syncDistance;
+  }
+  public double getDistanceTraveled() {
+    return getDistanceTraveled(coreDistFunc());
+  }
+
+  //execute distance and displacement save function:
+  //this function executes everytime a motor buffer is changed by lintrans or rotate command
+  protected void saveDistance() {
+    //add dx and dy to displacement and distance
+    double[] tempArray = coreDistFunc();
+    syncDisplacement = getRelPosition(tempArray);
+    syncDistance = getDistanceTraveled(tempArray);
+
+    //set last wheel ticks to the current one.
+    lastWheelPos.leftFront = mhw.leftFront.getCurrentPosition();
+    lastWheelPos.rightFront = mhw.rightFront.getCurrentPosition();
+    lastWheelPos.leftBack = mhw.leftBack.getCurrentPosition();
+    lastWheelPos.rightBack = mhw.rightBack.getCurrentPosition();
+  }
 
   //END RPS
 
