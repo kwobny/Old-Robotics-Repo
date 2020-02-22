@@ -17,6 +17,10 @@ When using the library in teleOp, make sure to call the loop command once every 
 
 At the end of the autonomous, make sure to call the endProgram function. This should be the absolute last function called. If you need some extra functionality, the function only consists of a while true loop with the loop function executing inside it. The only wait functions that would be useful after the function is called is set timeout and set interval.
 
+For translations: positive x is to the right of robot, and positive y is to the front of robot
+
+For rotations: positive degrees is clockwise, negative degrees is counterclockwise. All is relative to the current heading of robot.
+
 Wait system functionality:
 
 There are 6 different functionalities, 4 which are built in commands and 2 which (are similar) and are used for custom waits:
@@ -49,29 +53,33 @@ IMPORTANT: Consider using the java object wait method, or the Thread.sleep metho
 
 If using the above methods, then you will need to take the things executing periodically in execute interval for the system itself, and the methods executing in the loop that are part of they system, and put it in the thing.
 
-You will only need to change one part of code in the loop function.
+You will only need to add one part of code in the loop function, a sleep function in the loop. Make sure the time slept is much less than high frequency maint period
 
 You will also need to change the access modifiers of involved methods as fit.
 
 Also consider using the sleep() and idle() commands that (might) are built into the ftc library itself (linear Opmode)
 
-Also consider making a full on multithreaded version of the motion library
+Also consider making a full on multithreaded version of the motion library. If doing this, keep in mind the changeInTime value for the wait for time function
 
 ---
 
 Clean up the notes section, and sort them into operation imperative/required notes, and suggestion notes.
 
-Evaluate recent restructuring of system interval execution. Think about making wait for time exempt from the effects of the pause code execution, and also make sure that high period functions execute at a period somewhat close to what the high period value is.
+Think of making wait for time exempt from the pause code execution.
+
+Tweak maint period values
 
 Consider making wait for distance execute every period of seconds instead of in the loop, to make code more efficient and fast.
 
-Decide whether or not wait for distance is wait for distance, or displacement, or include both. Probably will do distance, because that is just easier to implrement.
-
 If all the wait arguments are doubles, then switch the wait data types from Object to double.
 
----
+Create a system which lets you find displacement from starting point or from any point relative to start. Also would let you shift/translate reference point. Also would have a function which returns total distance (not displacement) traveled from start
 
-Put a set of rx and ry values in the lin trans buffer class, so that these values will not have to be recalculated. Do this so that values can be accessed by wait for distance ILI.
+You will implement both wait for distance and wait for displacement.
+
+Think about restructuring the library classes. Maybe put all the wait code (simple wait, complex wait, etc.) in the separate wait class, make a different class for distance processing, and another for move commands, and another for the absolute core features.
+
+---
 
 Make wait for distance have an Enable Incremental Linear Interpolation option which allows you to slow down to the next speed that is inputted at the end. Accomplish this by calculating the scale factor (shown below) and setting the universal buffer's motor value multiplier every period/so often to decrease slowly. Make sure to reset this to 1 when done with maneuver/traveled full distance.
 
