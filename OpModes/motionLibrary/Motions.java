@@ -55,7 +55,7 @@ public class Motions extends Base {
       notNeedSync = false;
     }
 
-    rotateBuffer.speedFactor = 0.1; 
+    rotateBuffer.speedFactor = 0.1;
 
     final double constant = (robotWidth + robotHeight)/robotWidth;
 
