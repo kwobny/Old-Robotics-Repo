@@ -33,12 +33,14 @@ public class WaitConditionClass
     }
 
     //START WAIT COMMANDS
+    public double changeInTime = 0;
     private Object[] generateTimeData(Object[] args) {
       double time = (Double) args[0];
-      return new Object[]{time + runtime.time()};
+      return new Object[]{time, runtime.time()};
     }
     private boolean pollTime(Object[] data) {
-      return (double) (Double) data[0] < runtime.time();
+      changeInTime = runtime.time() - (double) (Double) args[1];
+      return changeInTime > (double) (Double) data[0];
     }
 
     //END WAIT COMMANDS

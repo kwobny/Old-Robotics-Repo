@@ -8,8 +8,8 @@ class Base {
   //CLASS WIDE CONSTANTS/VARIABLES:
   public final double robotWidth = 5; //width of robot in centimeters
   public final double robotHeight = 5; //height of robot in centimeters
-  protected final double lowFreqMaintInterval = 0.1; //period in which low frequency periodic functions like motor cali run (in seconds)
-  protected final double highFreqMaintInterval = 0.01; //period in which very high frequency accurate functions run (in seconds)
+  protected final double lowFreqMaintInterval = 0.2; //period in which low frequency periodic functions like motor cali run (in seconds)
+  protected final double highFreqMaintInterval = 0.05; //period in which very high frequency accurate functions run (in seconds)
 
   //CLASS WIDE VARIABLES
   public double motorConversionRate = 0; //the rate of powerOutput/velocity (in centimeters/second)
@@ -52,6 +52,9 @@ class Base {
   private motorBufferClass[] bufferArray = new motorBufferClass[]{rotateBuffer, linTransBuffer, userBuffer};
   private motorBufferClass universalBuffer = new motorBufferClass();
 
+  //0 index is lintrans, 1 is for rotate
+  protected boolean notNeedSync = true;
+
   public void syncMotors() {
     universalBuffer.leftFront = 0;
     universalBuffer.leftRear = 0;
@@ -66,10 +69,11 @@ class Base {
     }
 
     motorCali();
+
+    notNeedSync = true;
   }
   //clear motor buffers function
   public void clearMotors() {
-    executeRotTrans = false;
     for (motorBufferClass i : bufferArray) {
       i.leftFront = 0;
       i.leftRear = 0;
@@ -285,11 +289,18 @@ class Base {
     globalPos[3] = mhw.leftRear.getCurrentPosition();
   }
 
+  //global position and distance tracking system
+  public void moveRefPoint() {}
+  //x and y signify a point, relative to current reference point
+  public double getRelPosition(double x, double y) {}
+  public double getRelPosition() {getRelPosition(0.0, 0.0);}
+
   //system loop functions
   private boolean isZero(double value){
     final double threshold = 0.01;
     return value >= -threshold && value <= threshold;
   }
+
   protected void runBaseLowInterval() {
     if (isZero(universalBuffer.acceleration)) {
       motorCali();
@@ -298,7 +309,7 @@ class Base {
   protected void runBaseHighInterval() {
     //Common acceleration system
     if (!isZero(universalBuffer.acceleration)) {
-      universalBuffer.speedFactor += universalBuffer.acceleration * highMaintInterval;
+      universalBuffer.speedFactor += universalBuffer.acceleration * waiters.changeInTime;
       motorCali();
     }
   }

@@ -64,6 +64,12 @@ public class Motions extends Base {
 
   //linear translate
   public void moveLinTrans(double rx, double ry, boolean boostOverride) {
+    //storing displacement code only executes once in a string of these motor commands
+    //Inside this if, put code which calculates displacement traveled
+    if (notNeedSync) {
+      notNeedSync = false;
+    }
+
     double BOOOOOST = boostOverride ? 2.0 : 1.0;
     linTransBuffer.speedFactor = 0.1 * BOOOOOST;
 
