@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 
 import java.util.ArrayList;
 import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class Motions extends Base {
   //time system has simple wait, complex wait (add wait and commence wait), set timeout, add interval
@@ -37,8 +36,8 @@ public class Motions extends Base {
 
   public Motions(MadHardware hmw) {
     mhw = hmw;
-    waiters = new WaitConditionClass(hmw, this, baseRuntime);
-    waitCallbacks = new WaitCallbacks(hmw, this, baseRuntime);
+    waiters = new WaitConditionClass(hmw, this);
+    waitCallbacks = new WaitCallbacks(hmw, this);
 
   }
 

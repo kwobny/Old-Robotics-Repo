@@ -7,12 +7,12 @@ public class WaitConditionClass
 {
     private MadHardware mhw;
     private Motions movements;
-    private ElapsedTime runtime;
 
-    WaitConditionClass(MadHardware hmw, Motions mot, ElapsedTime r) {
+    private ElapsedTime runtime = new ElapsedTime();
+
+    WaitConditionClass(MadHardware hmw, Motions mot) {
         mhw = hmw;
         movements = mot;
-        runtime = r;
     }
 
     public Object[] generateData(WaitEnum waitType, Object[] args) {
@@ -44,22 +44,23 @@ public class WaitConditionClass
     //END WAIT COMMANDS
 }
 
-public class WaitCallbacks
+class WaitCallbacks
 {
     private MadHardware mhw;
     private Motions movements;
-    private ElapsedTime runtime;
 
-    WaitCallbacks(MadHardware hmw, Motions mot, ElapsedTime r) {
+    WaitCallbacks(MadHardware hmw, Motions mot) {
         mhw = hmw;
         movements = mot;
-        runtime = r;
     }
 
-    public void callback(int which) {
+    void callback(int which) {
         switch (which) {
             case 1:
-              //first callback, 0 is reserved for no callback
+              movements.runBaseLowInterval();
+              break;
+            case 2:
+              movements.runBaseHighInterval();
               break;
         }
     }
