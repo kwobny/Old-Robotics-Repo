@@ -25,6 +25,8 @@ class Base {
     addInterval(WaitEnum.TIME, 2, highFreqMaintInterval);
   }
 
+  //START MOTOR COMMANDS
+
   //motor buffer functionality
   //motor buffers make it possible to superimpose two or more different motions together to achieve a sum of the motions
 
@@ -52,7 +54,6 @@ class Base {
   private motorBufferClass[] bufferArray = new motorBufferClass[]{rotateBuffer, linTransBuffer, userBuffer};
   private motorBufferClass universalBuffer = new motorBufferClass();
 
-  //0 index is lintrans, 1 is for rotate
   protected boolean notNeedSync = true;
 
   public void syncMotors() {
@@ -83,6 +84,9 @@ class Base {
     syncMotors();
   }
 
+  //END MOTOR COMMANDS
+
+  //START WAIT COMMANDS
 
   //wait functionality
   //the wait queue allows multiple wait commands and callbacks to occur at once, and pauses program execution until all waits have finished.
@@ -237,13 +241,6 @@ class Base {
     }
   }
 
-  //function that you call at the end of autonomous sequence to wait for program to end. This should be the absolute last function executed in program.
-  public void endProgram() {
-    while (true) {
-      loop();
-    }
-  }
-
   //universal motor calibration system
   private double[] globalPos = {0.0, 0.0, 0.0, 0.0};
   private void motorCali() {
@@ -288,12 +285,44 @@ class Base {
     globalPos[2] = mhw.rightRear.getCurrentPosition();
     globalPos[3] = mhw.leftRear.getCurrentPosition();
   }
+  
+  //END WAIT COMMANDS
 
-  //global position and distance tracking system
+  //START RPS (Robot Positioning System)
+
+  //robot position and distance tracking system. All distance values in centimeters
+
+  //execute distance save function
+  protected void saveDistance() {
+    //
+  }
+
+  //this function shifts the point of reference by these distances in the x and y direction.
+  public void moveRefPoint(double x, double y) {}
+  //this is an overloaded version which shifts point to current robot position.
   public void moveRefPoint() {}
+
+  //this function resets the total distance traveled to 0 centimeters.
+  public void resetDistance() {}
+
+  //this function gets the robot's position relative to a certain point, which itself is relative to the reference point.
   //x and y signify a point, relative to current reference point
   public double getRelPosition(double x, double y) {}
   public double getRelPosition() {getRelPosition(0.0, 0.0);}
+
+  //this function gets the total distance (not displacement) traveled by the robot.
+  public double getDistanceTraveled() {}
+
+  //END RPS
+
+  //START BASIC SYSTEM FUNCTIONS
+
+  //function that you call at the end of autonomous sequence to wait for program to end. This should be the absolute last function executed in program.
+  public void endProgram() {
+    while (true) {
+      loop();
+    }
+  }
 
   //system loop functions
   private boolean isZero(double value){
@@ -322,5 +351,5 @@ class Base {
     runTimeouts();
   }
 
-  //END CORE SYSTEMS SETUP
+  //END BASIC SYSTEM FUNCTIONS
 }
