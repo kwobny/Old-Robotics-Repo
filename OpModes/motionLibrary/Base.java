@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 
 import java.util.ArrayList;
 import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 class Base {
   //CLASS WIDE CONSTANTS/VARIABLES:
@@ -17,6 +18,7 @@ class Base {
   public WaitConditionClass waiters;
   public WaitCallbacks waitCallbacks;
   protected MadHardware mhw;
+  protected ElapsedTime baseRuntime;
 
   protected Base() {
     addInterval(WaitEnum.TIME, 1, lowMaintInterval);
@@ -171,33 +173,6 @@ class Base {
       }
     }
   }
-
-  //quick/custom wait
-  /*public interface quickWaitInterface {
-    boolean quickPoll();
-  }
-  public void quickWait(quickWaitInterface pollObject) {
-    while (!pollObject.quickPoll()) {
-      loop();
-    }
-  }
-  //boolean pauseCodeExecution specifies whether or not to use wait queue or timeout.
-  public void quickWait(quickWaitInterface pollObject, CallbackInterface callback, boolean pauseCodeExecution) {
-    PollInterface quickPollToAdd = new PollInterface() {
-      public Object[] generateData(Object[] args) {return args;}
-      public boolean pollCondition(Object[] data) {
-        return pollObject.quickPoll();
-      }
-    };
-    
-    if (pauseCodeExecution) {
-      addWait(quickPollToAdd, new Object[0], callback);
-    }
-    else {
-      setTimeout(quickPollToAdd, new Object[0], callback);
-    }
-  }
-  */
 
   //timeout functionality
 
