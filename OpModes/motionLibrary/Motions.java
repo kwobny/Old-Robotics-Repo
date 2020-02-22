@@ -48,6 +48,13 @@ public class Motions extends Base {
   //rotate robot
   //power is the power of the left front wheel (or left wheel for two wheel sim)
   public void moveRotate(double power, boolean use2WheeledSimulation) {
+    //storing displacement code only executes once in a string of these motor commands
+    //Inside this if, put code which calculates displacement traveled
+    if (notNeedSync) {
+      saveDistance();
+      notNeedSync = false;
+    }
+
     rotateBuffer.speedFactor = 0.1;
 
     final double constant = (robotWidth + robotHeight)/robotWidth;
@@ -64,6 +71,13 @@ public class Motions extends Base {
 
   //linear translate
   public void moveLinTrans(double rx, double ry, boolean boostOverride) {
+    //storing displacement code only executes once in a string of these motor commands
+    //Inside this if, put code which calculates displacement traveled
+    if (notNeedSync) {
+      saveDistance();
+      notNeedSync = false;
+    }
+
     double BOOOOOST = boostOverride ? 2.0 : 1.0;
     linTransBuffer.speedFactor = 0.1 * BOOOOOST;
 

@@ -8,8 +8,8 @@ class Base {
   //CLASS WIDE CONSTANTS/VARIABLES:
   public final double robotWidth = 5; //width of robot in centimeters
   public final double robotHeight = 5; //height of robot in centimeters
-  protected final double lowFreqMaintInterval = 0.1; //period in which low frequency periodic functions like motor cali run (in seconds)
-  protected final double highFreqMaintInterval = 0.01; //period in which very high frequency accurate functions run (in seconds)
+  protected final double lowFreqMaintInterval = 0.2; //period in which low frequency periodic functions like motor cali run (in seconds)
+  protected final double highFreqMaintInterval = 0.05; //period in which very high frequency accurate functions run (in seconds)
 
   //CLASS WIDE VARIABLES
   public double motorConversionRate = 0; //the rate of powerOutput/velocity (in centimeters/second)
@@ -24,6 +24,8 @@ class Base {
     addInterval(WaitEnum.TIME, 1, lowFreqMaintInterval);
     addInterval(WaitEnum.TIME, 2, highFreqMaintInterval);
   }
+
+  //START MOTOR COMMANDS
 
   //motor buffer functionality
   //motor buffers make it possible to superimpose two or more different motions together to achieve a sum of the motions
@@ -52,6 +54,8 @@ class Base {
   private motorBufferClass[] bufferArray = new motorBufferClass[]{rotateBuffer, linTransBuffer, userBuffer};
   private motorBufferClass universalBuffer = new motorBufferClass();
 
+  protected boolean notNeedSync = true;
+
   public void syncMotors() {
     universalBuffer.leftFront = 0;
     universalBuffer.leftRear = 0;
@@ -66,10 +70,11 @@ class Base {
     }
 
     motorCali();
+
+    notNeedSync = true;
   }
   //clear motor buffers function
   public void clearMotors() {
-    executeRotTrans = false;
     for (motorBufferClass i : bufferArray) {
       i.leftFront = 0;
       i.leftRear = 0;
@@ -79,6 +84,9 @@ class Base {
     syncMotors();
   }
 
+  //END MOTOR COMMANDS
+
+  //START WAIT COMMANDS
 
   //wait functionality
   //the wait queue allows multiple wait commands and callbacks to occur at once, and pauses program execution until all waits have finished.
@@ -233,13 +241,6 @@ class Base {
     }
   }
 
-  //function that you call at the end of autonomous sequence to wait for program to end. This should be the absolute last function executed in program.
-  public void endProgram() {
-    while (true) {
-      loop();
-    }
-  }
-
   //universal motor calibration system
   private double[] globalPos = {0.0, 0.0, 0.0, 0.0};
   private void motorCali() {
@@ -284,12 +285,51 @@ class Base {
     globalPos[2] = mhw.rightRear.getCurrentPosition();
     globalPos[3] = mhw.leftRear.getCurrentPosition();
   }
+  
+  //END WAIT COMMANDS
+
+  //START RPS (Robot Positioning System)
+
+  //robot position and distance tracking system. All distance values in centimeters
+
+  //execute distance save function
+  protected void saveDistance() {
+    //
+  }
+
+  //this function shifts the point of reference by these distances in the x and y direction.
+  public void moveRefPoint(double x, double y) {}
+  //this is an overloaded version which shifts point to current robot position.
+  public void moveRefPoint() {}
+
+  //this function resets the total distance traveled to 0 centimeters.
+  public void resetDistance() {}
+
+  //this function gets the robot's position relative to a certain point, which itself is relative to the reference point.
+  //x and y signify a point, relative to current reference point
+  public double getRelPosition(double x, double y) {}
+  public double getRelPosition() {getRelPosition(0.0, 0.0);}
+
+  //this function gets the total distance (not displacement) traveled by the robot.
+  public double getDistanceTraveled() {}
+
+  //END RPS
+
+  //START BASIC SYSTEM FUNCTIONS
+
+  //function that you call at the end of autonomous sequence to wait for program to end. This should be the absolute last function executed in program.
+  public void endProgram() {
+    while (true) {
+      loop();
+    }
+  }
 
   //system loop functions
   private boolean isZero(double value){
     final double threshold = 0.01;
     return value >= -threshold && value <= threshold;
   }
+
   protected void runBaseLowInterval() {
     if (isZero(universalBuffer.acceleration)) {
       motorCali();
@@ -298,7 +338,7 @@ class Base {
   protected void runBaseHighInterval() {
     //Common acceleration system
     if (!isZero(universalBuffer.acceleration)) {
-      universalBuffer.speedFactor += universalBuffer.acceleration * highMaintInterval;
+      universalBuffer.speedFactor += universalBuffer.acceleration * waiters.changeInTime;
       motorCali();
     }
   }
@@ -311,5 +351,5 @@ class Base {
     runTimeouts();
   }
 
-  //END CORE SYSTEMS SETUP
+  //END BASIC SYSTEM FUNCTIONS
 }
