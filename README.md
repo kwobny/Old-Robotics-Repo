@@ -77,6 +77,8 @@ Create a system which lets you find displacement from starting point or from any
 
 You will implement both wait for distance and wait for displacement.
 
+Think about restructuring the library classes. Maybe put all the wait code (simple wait, complex wait, etc.) in the separate wait class, make a different class for distance processing, and another for move commands, and another for the absolute core features.
+
 ---
 
 Make wait for distance have an Enable Incremental Linear Interpolation option which allows you to slow down to the next speed that is inputted at the end. Accomplish this by calculating the scale factor (shown below) and setting the universal buffer's motor value multiplier every period/so often to decrease slowly. Make sure to reset this to 1 when done with maneuver/traveled full distance.
