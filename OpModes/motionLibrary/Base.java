@@ -8,8 +8,8 @@ class Base {
   //CLASS WIDE CONSTANTS/VARIABLES:
   public final double robotWidth = 5; //width of robot in centimeters
   public final double robotHeight = 5; //height of robot in centimeters
-  protected final double lowMaintInterval = 0.1; //period in which periodic functions like motor cali run (in seconds)
-  protected final double highMaintInterval = 0.01; //period in which very accurate functions run (in seconds)
+  protected final double lowFreqMaintInterval = 0.1; //period in which low frequency periodic functions like motor cali run (in seconds)
+  protected final double highFreqMaintInterval = 0.01; //period in which very high frequency accurate functions run (in seconds)
 
   //CLASS WIDE VARIABLES
   public double motorConversionRate = 0; //the rate of powerOutput/velocity (in centimeters/second)
@@ -21,8 +21,8 @@ class Base {
   protected ElapsedTime baseRuntime;
 
   protected Base() {
-    addInterval(WaitEnum.TIME, 1, lowMaintInterval);
-    addInterval(WaitEnum.TIME, 2, highMaintInterval);
+    addInterval(WaitEnum.TIME, 1, lowFreqMaintInterval);
+    addInterval(WaitEnum.TIME, 2, highFreqMaintInterval);
   }
 
   //motor buffer functionality
