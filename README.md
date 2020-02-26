@@ -7,8 +7,6 @@ One complex wait command you can write is wait for degrees traveled in turn driv
 
 This library is easily applicable to robots with the same library/MadHardware api (would need to rewrite/look over whole code if not), with the same number of wheels (need to rewrite motor buffers and a whole bunch of stuff), and with the same type of wheels (need to rewrite lin trans move if not).
 
-test
-
 ---
 
 A wait callback of value 0 is no callback
@@ -75,13 +73,15 @@ Consider making wait for distance execute every period of seconds instead of in 
 
 If all the wait arguments are doubles, then switch the wait data types from Object to double.
 
-Create a system which lets you find displacement from starting point or from any point relative to start. Also would let you shift/translate reference point. Also would have a function which returns total distance (not displacement) traveled from start
-
 You will implement both wait for distance and wait for displacement.
 
 Think about restructuring the library classes. Maybe put all the wait code (simple wait, complex wait, etc.) in the separate wait class, make a different class for distance processing, and another for move commands, and another for the absolute core features.
 
 Consider making interval wait be based upon set timeout instead of being its own thing
+
+Make sure that lin trans function has wheel value overflow protection. Make it so that it also accounts for the speed factor (ie. will shorten if wheel value **times speedfactor**)
+
+For teleop, make a coasting system which slowly decelerates the robot when the controller is in the middle. Also make the robot accelerate slowly instead of abruptly speeding up.
 
 ---
 
@@ -109,3 +109,23 @@ Whenever the actual distance poll executes, measure the change in wheel position
 
 Another idea:
 Alongside wait for distance traversed, also make a function which waits for displacement. Do this by getting the change in each wheel distance from the start of the maneuver, and using some sort of algorithm (develop this) to isolate the linear translate portion of the distance. Use this then to find the displacement from the starting position using inverse of the lintrans command.
+
+Robot Positioning System (RPS):
+
+is a system which lets you find displacement from starting point or from any point relative to start. Also would let you shift/translate reference point. Also would have a function which returns total distance (not displacement) traveled from start
+
+If not using new method of isolating lin trans, then when isolating linear translate part of distance, watch out for if the universal buffer part of wheel value is 0, to avoid dividing by 0. Also check if the whole ratio is 0, because then the distance traveled by that motor must be 0.
+
+Think of using gyro for finding rotational component of change in wheel distances
+
+Think of using arrays instead of objects for storing last tick and change in wheel data. If not doing this, then also think of using java collections for motor buffer base class
+
+The two scenarios to test are: the robot always changing linTrans component with no rotation, and the robot going in a direction while turning.
+
+In the turning scenario, find a way to find displacement, accounting for the rotation. Do this because there could be a forward lintrans component, while having a non-forward displacement.
+
+New method for syncing distance:
+1. In every sync motor command, call the sync distance function, as long as the number of ticks traveled by at least one wheel exceeds a threshold value.
+2. Firstly, take the distances traveled by each wheel and put them in some sort of formula (motor buffer independent) to isolate rotational and translational components
+3. Then put these components into an algorithm to determine the total distance traveled, and also the displacement. Make sure to account for rotation of robot when calculating for displacement.
+4. Now you are done
