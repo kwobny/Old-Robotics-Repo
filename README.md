@@ -73,15 +73,35 @@ Consider making wait for distance execute every period of seconds instead of in 
 
 If all the wait arguments are doubles, then switch the wait data types from Object to double.
 
-You will implement both wait for distance and wait for displacement.
-
 Think about restructuring the library classes. Maybe put all the wait code (simple wait, complex wait, etc.) in the separate wait class, make a different class for distance processing, and another for move commands, and another for the absolute core features.
 
 Consider making interval wait be based upon set timeout instead of being its own thing
 
-Make sure that lin trans function has wheel value overflow protection. Make it so that it also accounts for the speed factor (ie. will shorten if wheel value **times speedfactor**)
+Get rid of the overflow protection (if wheel value goes above 1 or below -1) in lin trans function, and instead make overflow protection in the syncMotors function, where entire thing will be scaled down if one of the motors in the universal buffer exceeds amount. Also include protection when accelerating the speed factor.
+
+Consider collapsing the 3 different buffer classes back into one, because the new rx and ry would probably be unneeded, and the base class would also be unneeded because of the use of arrays to store changes in wheel ticks.
+
+think of extending the acceleration system to the individual motor buffers themselves, for greater flexibility.
+
+Consider putting the universal buffer in as the first buffer in the buffer array, for easier looping through the buffers (primarily when accelerating the speedfactor for each buffer).
+
+Make a function separate from motorcali which syncs the universal buffer values to the wheels according to what the motor cali set, so that motor calibration is not called everytime a motor upload is needed. Make sure this function is called every time sync motors is called, instead of motor cali, and also in the acceleration system (maybe, see below).
+
+Also in the acceleration system, call the syncMotors command instead of the upload motors function, depending on if the lintrans or rotate buffer is modified, and depending on if the distance system executes every sync motor command.
+
+For acceleration system, make the speed factor stop accelerating once it has gone past the bounds of a min speed factor and a max speed factor.
+
+In motorcali, make a system which detects if a motor is being held back or stopped, by tracking the distance to power ratio of each of the 4 motors over time to see if they fluctuate. Do this to prevent motor burnout. If the system determines that this is happening, make it stop the robot, and reset the motor accelerations, speedfactors, and motor values immediately, until something like a button is pressed.
 
 For teleop, make a coasting system which slowly decelerates the robot when the controller is in the middle. Also make the robot accelerate slowly instead of abruptly speeding up.
+
+For teleop, make a control model where one of the joysticks translates the robot in any direction, and the dpad strafes or drives in 4 distinct directions. Make one of the 2 forward buttons a toggle switch for driving translating to a certain constant angle, or translating relative to the heading of the robot. Make the other button a toggle switch for coasting accelerate and decelerate. also have the abcd pad have buttons to activate certain features.
+
+In the control model, the gunner also controls the rotation of the robot, but this control is overrided when the driver turns the robot, or something else etc.
+
+One of the features will be a thing which automatically sets the relative translating angle, using a distance sensor, according to the slant of the object in front of it. Also have it auto rotate the robot towards the slant.
+
+Make a toggle which controls if the robot drives slowly or fastly.
 
 ---
 
@@ -114,15 +134,21 @@ Robot Positioning System (RPS):
 
 is a system which lets you find displacement from starting point or from any point relative to start. Also would let you shift/translate reference point. Also would have a function which returns total distance (not displacement) traveled from start
 
+Make a way to shift the orientation/angle of the coordinate plane/y axis, alongside shifting the origin point.
+
 If not using new method of isolating lin trans, then when isolating linear translate part of distance, watch out for if the universal buffer part of wheel value is 0, to avoid dividing by 0. Also check if the whole ratio is 0, because then the distance traveled by that motor must be 0.
 
 Think of using gyro for finding rotational component of change in wheel distances
+
+Decide whether sync distance will execute every number of ticks traveled or on every sync motor command.
 
 Think of using arrays instead of objects for storing last tick and change in wheel data. If not doing this, then also think of using java collections for motor buffer base class
 
 The two scenarios to test are: the robot always changing linTrans component with no rotation, and the robot going in a direction while turning.
 
 In the turning scenario, find a way to find displacement, accounting for the rotation. Do this because there could be a forward lintrans component, while having a non-forward displacement.
+
+Make a system for getting the **distance** traveled in the x and y direction, alongside the total distance.
 
 New method for syncing distance:
 1. In every sync motor command, call the sync distance function, as long as the number of ticks traveled by at least one wheel exceeds a threshold value.
