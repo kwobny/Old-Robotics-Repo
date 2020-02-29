@@ -5,7 +5,7 @@ Main move commands are rotate robot and moveLinTrans. Main wait commands are wai
 
 One complex wait command you can write is wait for degrees traveled in turn drive/rotational translate. This would use wait for distance/displacement
 
-This library is easily applicable to robots with the same library/MadHardware api (would need to rewrite/look over whole code if not), with the same number of wheels (need to rewrite motor buffers and a whole bunch of stuff), and with the same type of wheels (need to rewrite lin trans move if not).
+This library is easily applicable to robots with the same library/MadHardware api (would need to rewrite/look over whole code if not), with the same number of wheels (need to rewrite motor buffers and a whole bunch of stuff), and with the same type of wheels (need to rewrite lin trans move if not), and with the robot going forwards with positive power on the wheels.
 
 ---
 
@@ -73,9 +73,11 @@ Consider making wait for distance execute every period of seconds instead of in 
 
 If all the wait arguments are doubles, then switch the wait data types from Object to double.
 
-Think about restructuring the library classes. Maybe put all the wait code (simple wait, complex wait, etc.) in the separate wait class, make a different class for distance processing, and another for move commands, and another for the absolute core features.
+Think about restructuring the library classes. Maybe put all the wait code (simple wait, complex wait, etc.) in the separate wait class, make a different class for distance processing, and another for move commands, and another for the absolute core features. Also think about making a complex motions class which extends motions class. This class will contain complex methods such as path finding and drawing.
 
 Consider making interval wait be based upon set timeout instead of being its own thing
+
+In the code, make it clear that the width of the robot is the perpendicular distance between the wheel's axis of movement, and the length is the parallel distance. Make it clear that the width and length are the distances between the contact points of the wheels to the ground.
 
 Get rid of the overflow protection (if wheel value goes above 1 or below -1) in lin trans function, and instead make overflow protection in the syncMotors function, where entire thing will be scaled down if one of the motors in the universal buffer exceeds amount. Also include protection when accelerating the speed factor.
 
