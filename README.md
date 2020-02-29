@@ -140,6 +140,8 @@ If not using new method of isolating lin trans, then when isolating linear trans
 
 Think of using gyro for finding rotational component of change in wheel distances
 
+Also think of using the built in distance/acceleration tracker to compare with distance traveled from the wheels.
+
 Decide whether sync distance will execute every number of ticks traveled or on every sync motor command.
 
 Think of using arrays instead of objects for storing last tick and change in wheel data. If not doing this, then also think of using java collections for motor buffer base class
