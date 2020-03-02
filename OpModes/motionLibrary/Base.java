@@ -6,8 +6,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 class Base {
   //CLASS WIDE CONSTANTS/VARIABLES:
-  public final double robotWidth = 5; //width of robot in centimeters
-  public final double robotHeight = 5; //height of robot in centimeters
+  public final double robotWidth = 5; //width of robot in centimeters. Is the width between back 2 wheels
+  public final double robotLength = 5; //length of robot in centimeters. Is the length of the robot between 1 front wheel and 1 back wheel
+  //Both distances are the distances between the points of contact between the wheels and ground.
   protected final double lowFreqMaintInterval = 0.2; //period in which low frequency periodic functions like motor cali run (in seconds)
   protected final double highFreqMaintInterval = 0.05; //period in which very high frequency accurate functions run (in seconds)
   protected final int ticksPerRevolution = 2600;
@@ -45,6 +46,9 @@ class Base {
   public class motorBufferClass extends wheelValueDecimalClass {
     public double speedFactor = 1.0;
     public double acceleration = 0.0; //acceleration in percent of everything per second
+
+    public double minFactor = -1.0;
+    public double maxFactor = 1.0;
   }
   protected class linTransBufferClass extends motorBufferClass {
     public double rx = 0.0;
@@ -57,8 +61,8 @@ class Base {
   public motorBufferClass userBuffer = new motorBufferClass();
 
   //upload motor buffer function
-  private motorBufferClass[] bufferArray = new motorBufferClass[]{rotateBuffer, linTransBuffer, userBuffer};
   private motorBufferClass universalBuffer = new motorBufferClass();
+  private motorBufferClass[] bufferArray = new motorBufferClass[]{universalBuffer, rotateBuffer, linTransBuffer, userBuffer};
 
   protected boolean notNeedSync = true;
 
@@ -68,14 +72,17 @@ class Base {
     universalBuffer.rightFront = 0;
     universalBuffer.rightRear = 0;
 
-    for (motorBufferClass i : bufferArray) {
-      universalBuffer.leftFront += i.leftFront * i.speedFactor;
-      universalBuffer.leftRear += i.leftRear * i.speedFactor;
-      universalBuffer.rightFront += i.rightFront * i.speedFactor;
-      universalBuffer.rightRear += i.rightRear * i.speedFactor;
+    for (int i = 1; i < bufferArray.length; i++) {
+      universalBuffer.leftFront += bufferArray[i].leftFront * bufferArray[i].speedFactor;
+
+      universalBuffer.leftRear += bufferArray[i].leftRear * bufferArray[i].speedFactor;
+
+      universalBuffer.rightFront += bufferArray[i].rightFront * bufferArray[i].speedFactor;
+
+      universalBuffer.rightRear += bufferArray[i].rightRear * bufferArray[i].speedFactor;
     }
 
-    motorCali();
+    uploadToMotors();
 
     notNeedSync = true;
   }
@@ -247,8 +254,12 @@ class Base {
     }
   }
 
+  //END WAIT COMMANDS
+
   //universal motor calibration system
-  private double[] globalPos = {0.0, 0.0, 0.0, 0.0};
+  private double[] globalPos = new double[4];
+  private double[] caliPowerFactor = new double[4];
+
   private void motorCali() {
     /* CALCULATE DISTANCES TRAVELLED */
     double d0 = mhw.leftFront.getCurrentPosition() - globalPos[0];
@@ -279,11 +290,13 @@ class Base {
     double r3 = Math.abs(d3 / p3);
     double rAVG = (r0 + r1 + r2 + r3) / 4;
 
-    /* CHANGE MOTOR POWERS */
-    mhw.leftFront.setPower(universalBuffer.speedFactor * 0.999 * p0 * rAVG / r0);
-    mhw.rightFront.setPower(universalBuffer.speedFactor * 0.999 * p1 * rAVG / r1);
-    mhw.rightRear.setPower(universalBuffer.speedFactor * 0.999 * p2 * rAVG / r2);
-    mhw.leftRear.setPower(universalBuffer.speedFactor * 0.999 * p3 * rAVG / r3);
+    /* CHANGE MOTOR POWER FACTORS */
+    caliPowerFactor[0] = 0.999 * rAVG / r0;
+    caliPowerFactor[1] = 0.999 * rAVG / r1;
+    caliPowerFactor[2] = 0.999 * rAVG / r2;
+    caliPowerFactor[3] = 0.999 * rAVG / r3;
+
+    uploadToMotors();
 
     /* SAVE MOTOR POSITIONS */
     globalPos[0] = mhw.leftFront.getCurrentPosition();
@@ -291,8 +304,16 @@ class Base {
     globalPos[2] = mhw.rightRear.getCurrentPosition();
     globalPos[3] = mhw.leftRear.getCurrentPosition();
   }
-  
-  //END WAIT COMMANDS
+
+  private void uploadToMotors() {
+    mhw.leftFront.setPower(universalBuffer.speedFactor * universalBuffer.leftFront * caliPowerFactor[0]);
+
+    mhw.rightFront.setPower(universalBuffer.speedFactor * universalBuffer.rightFront * caliPowerFactor[1]);
+
+    mhw.rightRear.setPower(universalBuffer.speedFactor * universalBuffer.rightRear * caliPowerFactor[2]);
+    
+    mhw.leftRear.setPower(universalBuffer.speedFactor * universalBuffer.leftRear * caliPowerFactor[3]);
+  }
 
   //START RPS (Robot Positioning System)
 
@@ -403,15 +424,29 @@ class Base {
   }
 
   protected void runBaseLowInterval() {
-    if (isZero(universalBuffer.acceleration)) {
-      motorCali();
-    }
+    motorCali();
   }
   protected void runBaseHighInterval() {
     //Common acceleration system
-    if (!isZero(universalBuffer.acceleration)) {
-      universalBuffer.speedFactor += universalBuffer.acceleration * waiters.changeInTime;
-      motorCali();
+    boolean accel = false;
+    for (motorBufferClass i : bufferArray) {
+      if (!isZero(i.acceleration)) {
+        i.speedFactor += i.acceleration * waiters.changeInTime;
+        
+        if (i.speedFactor > i.maxFactor) {
+          i.speedFactor = i.maxFactor;
+          i.acceleration = 0.0;
+        }
+        if (i.speedFactor < i.minFactor) {
+          i.speedFactor = i.minFactor;
+          i.acceleration = 0.0;
+        }
+
+        accel = true;
+      }
+    }
+    if (accel) {
+      syncMotors();
     }
   }
 

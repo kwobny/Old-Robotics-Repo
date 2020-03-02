@@ -41,6 +41,13 @@ public class Motions extends Base {
     waiters = new WaitConditionClass(hmw, this, baseRuntime);
     waitCallbacks = new WaitCallbacks(hmw, this, baseRuntime);
 
+    //set up lin trans and rotate buffer speed factor settings
+    rotateBuffer.maxFactor = 0.1;
+    rotateBuffer.minFactor = -0.1;
+
+    linTransBuffer.maxFactor = 2.0;
+    linTransBuffer.minFactor = -2.0;
+
   }
 
   //START MOVE COMMANDS
@@ -54,10 +61,10 @@ public class Motions extends Base {
       saveDistance();
       notNeedSync = false;
     }
-
+    
     rotateBuffer.speedFactor = 0.1;
 
-    final double constant = (robotWidth + robotHeight)/robotWidth;
+    final double constant = (robotWidth + robotLength)/robotWidth;
 
     if (use2WheeledSimulation) {
       power *= constant;
