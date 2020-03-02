@@ -428,7 +428,7 @@ class Base {
   }
   protected void runBaseHighInterval() {
     //Common acceleration system
-    boolean accel = false;
+    byte accel = 0;
     for (motorBufferClass i : bufferArray) {
       if (!isZero(i.acceleration)) {
         i.speedFactor += i.acceleration * waiters.changeInTime;
@@ -442,10 +442,16 @@ class Base {
           i.acceleration = 0.0;
         }
 
-        accel = true;
+        if (i == universalBuffer) {
+          accel = 1;
+        } else {
+          accel = 2;
+        }
       }
     }
-    if (accel) {
+    if (accel == 1) {
+      uploadToMotors();
+    } else if (accel == 2) {
       syncMotors();
     }
   }
