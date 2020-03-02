@@ -77,21 +77,11 @@ Think about restructuring the library classes. Maybe put all the wait code (simp
 
 Consider making interval wait be based upon set timeout instead of being its own thing
 
-In the code, make it clear that the width of the robot is the perpendicular distance between the wheel's axis of movement, and the length is the parallel distance. Make it clear that the width and length are the distances between the contact points of the wheels to the ground.
-
 Get rid of the overflow protection (if wheel value goes above 1 or below -1) in lin trans function, and instead make overflow protection in the syncMotors function, where entire thing will be scaled down if one of the motors in the universal buffer exceeds amount. Also include protection when accelerating the speed factor.
 
 Consider collapsing the 3 different buffer classes back into one, because the new rx and ry would probably be unneeded, and the base class would also be unneeded because of the use of arrays to store changes in wheel ticks.
 
-think of extending the acceleration system to the individual motor buffers themselves, for greater flexibility.
-
-Consider putting the universal buffer in as the first buffer in the buffer array, for easier looping through the buffers (primarily when accelerating the speedfactor for each buffer).
-
-Make a function separate from motorcali which syncs the universal buffer values to the wheels according to what the motor cali set, so that motor calibration is not called everytime a motor upload is needed. Make sure this function is called every time sync motors is called, instead of motor cali, and also in the acceleration system (maybe, see below).
-
-Also in the acceleration system, call the syncMotors command instead of the upload motors function, depending on if the lintrans or rotate buffer is modified, and depending on if the distance system executes every sync motor command.
-
-For acceleration system, make the speed factor stop accelerating once it has gone past the bounds of a min speed factor and a max speed factor.
+Make the motorCali function more efficient.
 
 In motorcali, make a system which detects if a motor is being held back or stopped, by tracking the distance to power ratio of each of the 4 motors over time to see if they fluctuate. Do this to prevent motor burnout. If the system determines that this is happening, make it stop the robot, and reset the motor accelerations, speedfactors, and motor values immediately, until something like a button is pressed.
 
