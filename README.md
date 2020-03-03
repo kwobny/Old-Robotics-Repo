@@ -75,6 +75,8 @@ If all the wait arguments are doubles, then switch the wait data types from Obje
 
 Think about restructuring the library classes. Maybe put all the wait code (simple wait, complex wait, etc.) in the separate wait class, make a different class for distance processing, and another for move commands, and another for the absolute core features. Also think about making a complex motions class which extends motions class. This class will contain complex methods such as path finding and drawing.
 
+A potential class system candidate is to break all semi independent features (RPS, wait, etc.) into their own classes, and have one common binding class.
+
 Consider making interval wait be based upon set timeout instead of being its own thing
 
 In motorcali, make a system which detects if a motor is being held back or stopped, by tracking the distance to power ratio of each of the 4 motors over time to see if they fluctuate. Do this to prevent motor burnout. If the system determines that this is happening, make it stop the robot, and reset the motor accelerations, speedfactors, and motor values immediately, until something like a button is pressed.
@@ -130,6 +132,10 @@ Make a way to shift the orientation/angle of the coordinate plane/y axis, alongs
 
 Alongside a shift origin command, maybe have a shift robot position command for calibration
 
+A potential system would be a function to change the position of the robot in relation ot the origin, and a function to change the robot's orientation.
+
+Consider having a separate class for reading robot position that is similar to ellapsed time, in the way that you can reset it without affecting other instances of distance readers.
+
 Decide whether sync distance will execute every number of ticks traveled or on every sync motor command.
 
 The two scenarios to test are: the robot always changing linTrans component with no rotation, and the robot going in a direction while turning.
@@ -137,6 +143,8 @@ The two scenarios to test are: the robot always changing linTrans component with
 In the turning scenario, find a way to find displacement, accounting for the rotation. Do this because there could be a forward lintrans component, while having a non-forward displacement.
 
 Make a system for getting the **distance** traveled in the x and y direction, alongside the total distance.
+
+Make sure that saveDistances only executes when at least one wheel travels enough distance.
 
 New method for syncing distance:
 1. In every sync motor command, call the sync distance function, as long as the number of ticks traveled by at least one wheel exceeds a threshold value.
