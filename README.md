@@ -144,6 +144,8 @@ In the turning scenario, find a way to find displacement, accounting for the rot
 
 Make a system for getting the **distance** traveled in the x and y direction, alongside the total distance.
 
+Find some way to connect the rotational difference threshold to the motor cali factors and to the total error of the wheel encoders themselves.
+
 Make sure that saveDistances only executes when at least one wheel travels enough distance.
 
 New method for syncing distance:
