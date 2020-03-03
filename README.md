@@ -77,8 +77,6 @@ Think about restructuring the library classes. Maybe put all the wait code (simp
 
 Consider making interval wait be based upon set timeout instead of being its own thing
 
-Get rid of the overflow protection (if wheel value goes above 1 or below -1) in lin trans function, and instead make overflow protection in the syncMotors function, where entire thing will be scaled down if one of the motors in the universal buffer exceeds amount. Also include protection when accelerating the speed factor.
-
 Consider collapsing the 3 different buffer classes back into one, because the new rx and ry would probably be unneeded, and the base class would also be unneeded because of the use of arrays to store changes in wheel ticks.
 
 Make the motorCali function more efficient.
