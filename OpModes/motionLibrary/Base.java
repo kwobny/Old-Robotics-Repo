@@ -306,13 +306,45 @@ class Base {
   }
 
   private void uploadToMotors() {
-    mhw.leftFront.setPower(universalBuffer.speedFactor * universalBuffer.leftFront * caliPowerFactor[0]);
+    double[] powers = new double[4];
 
-    mhw.rightFront.setPower(universalBuffer.speedFactor * universalBuffer.rightFront * caliPowerFactor[1]);
+    powers[0] = universalBuffer.speedFactor * universalBuffer.leftFront * caliPowerFactor[0];
 
-    mhw.rightRear.setPower(universalBuffer.speedFactor * universalBuffer.rightRear * caliPowerFactor[2]);
-    
-    mhw.leftRear.setPower(universalBuffer.speedFactor * universalBuffer.leftRear * caliPowerFactor[3]);
+    powers[1] = universalBuffer.speedFactor * universalBuffer.rightFront * caliPowerFactor[1];
+
+    powers[2] = universalBuffer.speedFactor * universalBuffer.rightRear * caliPowerFactor[2];
+
+    powers[3] = universalBuffer.speedFactor * universalBuffer.leftRear * caliPowerFactor[3];
+
+    //CHECK IF POWERS EXCEEDS BOUNDARIES
+    //if they do, then power values and universal speed factor are adjusted, and acceleration is set to 0 if going out of bounds.
+
+    double limit = 1.0;
+    for (double i : powers) {
+      if (Math.abs(i) > limit) {
+        limit = Math.abs(i);
+      }
+    }
+    if (limit != 1.0) {
+      double multiplier = 0.999 / limit;
+      for (int i = 0; i < powers.length; i++) {
+        powers[i] *= multiplier;
+      }
+
+      universalBuffer.speedFactor *= multiplier;
+
+      for (motorBufferClass j : bufferArray) {
+        if (j.acceleration * j.speedFactor > 0.0) {
+          j.acceleration = 0.0;
+        }
+      }
+      
+    }
+
+    mhw.leftFront.setPower(powers[0]);
+    mhw.rightFront.setPower(powers[1]);
+    mhw.rightRear.setPower(powers[2]);
+    mhw.leftRear.setPower(powers[3]);
   }
 
   //START RPS (Robot Positioning System)

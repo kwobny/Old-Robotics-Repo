@@ -98,13 +98,6 @@ public class Motions extends Base {
     double a = rx + ry;
     double b = ry - rx;
 
-    //compensating for errors (a>1 or b<-1)
-    double maxNumber = Math.max(Math.abs(a), Math.abs(b));
-    if (maxNumber > 1) {
-      a /= maxNumber;
-      b /= maxNumber;
-    }
-
     //sets powers according to compensation
     linTransBuffer.leftFront = a;
     //globalPow[0] = 0.1 * BOOOOOST * a;
