@@ -77,10 +77,6 @@ Think about restructuring the library classes. Maybe put all the wait code (simp
 
 Consider making interval wait be based upon set timeout instead of being its own thing
 
-Consider collapsing the 3 different buffer classes back into one, because the new rx and ry would probably be unneeded, and the base class would also be unneeded because of the use of arrays to store changes in wheel ticks.
-
-Make the motorCali function more efficient.
-
 In motorcali, make a system which detects if a motor is being held back or stopped, by tracking the distance to power ratio of each of the 4 motors over time to see if they fluctuate. Do this to prevent motor burnout. If the system determines that this is happening, make it stop the robot, and reset the motor accelerations, speedfactors, and motor values immediately, until something like a button is pressed.
 
 For teleop, make a coasting system which slowly decelerates the robot when the controller is in the middle. Also make the robot accelerate slowly instead of abruptly speeding up.
@@ -124,17 +120,17 @@ Robot Positioning System (RPS):
 
 is a system which lets you find displacement from starting point or from any point relative to start. Also would let you shift/translate reference point. Also would have a function which returns total distance (not displacement) traveled from start
 
-Make a way to shift the orientation/angle of the coordinate plane/y axis, alongside shifting the origin point.
-
 If not using new method of isolating lin trans, then when isolating linear translate part of distance, watch out for if the universal buffer part of wheel value is 0, to avoid dividing by 0. Also check if the whole ratio is 0, because then the distance traveled by that motor must be 0.
 
 Think of using gyro for finding rotational component of change in wheel distances
 
 Also think of using the built in distance/acceleration tracker to compare with distance traveled from the wheels.
 
-Decide whether sync distance will execute every number of ticks traveled or on every sync motor command.
+Make a way to shift the orientation/angle of the coordinate plane/y axis, alongside shifting the origin point.
 
-Think of using arrays instead of objects for storing last tick and change in wheel data. If not doing this, then also think of using java collections for motor buffer base class
+Alongside a shift origin command, maybe have a shift robot position command for calibration
+
+Decide whether sync distance will execute every number of ticks traveled or on every sync motor command.
 
 The two scenarios to test are: the robot always changing linTrans component with no rotation, and the robot going in a direction while turning.
 
