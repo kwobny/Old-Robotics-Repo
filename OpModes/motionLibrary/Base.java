@@ -34,29 +34,23 @@ class Base {
   //motor buffer functionality
   //motor buffers make it possible to superimpose two or more different motions together to achieve a sum of the motions
 
-  //base wheelValueDecimal class
-  protected class wheelValueDecimalClass {
+  //motor buffer class
+  public class motorBufferClass {
     public double leftFront = 0.0;
     public double leftRear = 0.0;
     public double rightFront = 0.0;
     public double rightRear = 0.0;
-  }
 
-  //motor buffer class
-  public class motorBufferClass extends wheelValueDecimalClass {
     public double speedFactor = 1.0;
     public double acceleration = 0.0; //acceleration in percent of everything per second
 
     public double minFactor = -1.0;
     public double maxFactor = 1.0;
   }
-  protected class linTransBufferClass extends motorBufferClass {
-    public double rx = 0.0;
-    public double ry = 0.0;
-  }
+
   //declaring all motor buffers
   protected motorBufferClass rotateBuffer = new motorBufferClass();
-  protected linTransBufferClass linTransBuffer = new linTransBufferClass();
+  protected motorBufferClass linTransBuffer = new linTransBufferClass();
   //user controlled buffer
   public motorBufferClass userBuffer = new motorBufferClass();
 
@@ -351,21 +345,14 @@ class Base {
 
   //robot position and distance tracking system. All distance values in centimeters
 
-  //class for wheel tick storage
-  private class tickMeasureClass {
-    public int leftFront = 0;
-    public int rightFront = 0;
-    public int leftBack = 0;
-    public int rightBack = 0;
-  }
-
   //displacement and distance variables
   private double[] syncDisplacement = {0.0, 0.0}; //0 index is x, 1 is y
   private double syncDistance = 0.0;
 
   //wheel position variables
-  private tickMeasureClass lastWheelPos = new tickMeasureClass();
-  private wheelValueDecimalClass wheelPosChange = new wheelValueDecimalClass();
+  //left front, right front, left rear, right rear
+  private int[] lastWheelPos = new int[4];
+  private double[] wheelPosChange = new double[4];
 
   //get displacement from last sync position
   private double[] coreDistFunc() {

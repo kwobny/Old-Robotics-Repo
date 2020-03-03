@@ -107,9 +107,6 @@ public class Motions extends Base {
     //globalPow[3] = 0.1 * BOOOOOST * b;
     linTransBuffer.rightRear = a;
     //globalPow[2] = 0.1 * BOOOOOST * a;
-
-    linTransBuffer.rx = rx;
-    linTransBuffer.ry = ry;
   }
   public void moveLinTrans(double rx, double ry) {
     moveLinTrans(rx, ry, false);
