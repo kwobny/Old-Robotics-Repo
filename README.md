@@ -148,6 +148,8 @@ Find some way to connect the rotational difference threshold to the motor cali f
 
 Make sure that saveDistances only executes when at least one wheel travels enough distance.
 
+Make code which handles situations where the wheel error value is determined to be too large, and make a way to detect such error, and classify it against a threshold.
+
 New method for syncing distance:
 1. In every sync motor command, call the sync distance function, as long as the number of ticks traveled by at least one wheel exceeds a threshold value.
 2. Firstly, take the distances traveled by each wheel and put them in some sort of formula (motor buffer independent) to isolate rotational and translational components
