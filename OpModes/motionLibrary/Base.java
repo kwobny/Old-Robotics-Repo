@@ -14,7 +14,6 @@ class Base {
   protected final int ticksPerRevolution = 2600;
   protected final double wheelDiameter = 3; //wheel diameter in centimeters
   protected final double distancePerTick = (Math.PI*wheelDiameter)/ticksPerRevolution; //how many centimeters wheel runs per wheel tick
-  protected final double RPSRotDiffThreshold = 0.3; //the threshold of the difference of the rotational component for RPS, where the RPS signals that something is wrong.
 
   //CLASS WIDE VARIABLES
   public double motorConversionRate = 0; //the rate of powerOutput/velocity (in centimeters/second)
