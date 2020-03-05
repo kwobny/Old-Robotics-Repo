@@ -61,6 +61,13 @@ Also consider using the sleep() and idle() commands that (might) are built into 
 
 Also consider making a full on multithreaded version of the motion library. If doing this, keep in mind the changeInTime value for the wait for time function
 
+Also think of retesting the java reflection library, maybe missed something:
+
+Method method = Activity.class.getDeclaredMethod("convertToTranslucent",
+                translucentConversionListenerClazz);
+
+Maybe forgot the second parameter in get declared method call. Here is the link to the actual example code: https://www.programcreek.com/java-api-examples/?class=java.lang.reflect.Method&method=setAccessible
+
 ---
 
 Clean up the notes section, and sort them into operation imperative/required notes, and suggestion notes.
