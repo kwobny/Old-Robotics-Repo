@@ -157,7 +157,7 @@ Make sure that saveDistances only executes when at least one wheel travels enoug
 
 Make code which handles situations where the wheel error value is determined to be too large, and make a way to detect such error, and classify it against a threshold. To sum it up, still need to work on interpreting the difference between the 2 rotational values, and what they mean in relation to the error. Also need to work on the error threshold, and what to do if that threshold is exceeded.
 
-Maybe find some way to determine the maximum error of the displacement and distance values.
+Maybe find some way to determine the maximum error of the displacement and distance values using the angular displacement from gyro in conjunction with the difference in rotational values
 
 New method for syncing distance:
 1. In every sync motor command, call the sync distance function, as long as the number of ticks traveled by at least one wheel exceeds a threshold value.
