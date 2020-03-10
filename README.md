@@ -61,6 +61,13 @@ Also consider using the sleep() and idle() commands that (might) are built into 
 
 Also consider making a full on multithreaded version of the motion library. If doing this, keep in mind the changeInTime value for the wait for time function
 
+Also think of retesting the java reflection library, maybe missed something:
+
+Method method = Activity.class.getDeclaredMethod("convertToTranslucent",
+                translucentConversionListenerClazz);
+
+Maybe forgot the second parameter in get declared method call. Here is the link to the actual example code: https://www.programcreek.com/java-api-examples/?class=java.lang.reflect.Method&method=setAccessible
+
 ---
 
 Clean up the notes section, and sort them into operation imperative/required notes, and suggestion notes.
@@ -149,6 +156,8 @@ Find some way to connect the rotational difference threshold to the motor cali f
 Make sure that saveDistances only executes when at least one wheel travels enough distance.
 
 Make code which handles situations where the wheel error value is determined to be too large, and make a way to detect such error, and classify it against a threshold. To sum it up, still need to work on interpreting the difference between the 2 rotational values, and what they mean in relation to the error. Also need to work on the error threshold, and what to do if that threshold is exceeded.
+
+Maybe find some way to determine the maximum error of the displacement and distance values using the angular displacement from gyro in conjunction with the difference in rotational values
 
 New method for syncing distance:
 1. In every sync motor command, call the sync distance function, as long as the number of ticks traveled by at least one wheel exceeds a threshold value.
