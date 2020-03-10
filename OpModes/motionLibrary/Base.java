@@ -353,8 +353,6 @@ class Base {
   //left front, right front, left back, right back
   private int[] lastWheelPos = new int[4];
   private double[] wheelPosChange = new double[4];
-  private double[] componentValues = new double[3]; //order is a, b, r.
-  //a is value of LF and RB wheels, b is the value of RF and LB wheels, and r is the rotational value, with a positive value going clockwise
 
   //get displacement from last sync position
   private double[] coreDistFunc() {
@@ -365,11 +363,13 @@ class Base {
     wheelPosChange[3] = mhw.rightBack.getCurrentPosition() - lastWheelPos[3];
 
     //isolate components
-    componentValues[0] = (wheelPosChange[0] + wheelPosChange[3])/2.0;
-    componentValues[1] = (wheelPosChange[1] + wheelPosChange[2])/2.0;
-    double aR = wheelPosChange[0] - componentValues[0];
-    double bR = wheelPosChange[2] - componentValues[1];
-    componentValues[2] = (aR + bR)/2.0;
+    //a is value of LF and RB wheels, b is the value of RF and LB wheels, and r is the rotational value, with a positive value going clockwise
+    double a; double b; double r;
+    a = (wheelPosChange[0] + wheelPosChange[3])/2.0;
+    b = (wheelPosChange[1] + wheelPosChange[2])/2.0;
+    double aR = wheelPosChange[0] - a;
+    double bR = wheelPosChange[2] - b;
+    r = (aR + bR)/2.0;
 
     //inverse function to get dx and dy
     double dx; double dy;
