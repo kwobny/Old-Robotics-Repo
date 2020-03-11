@@ -390,6 +390,24 @@ class Base {
     syncDisplacement[1] = 0;
   }
 
+  public double refAngle = 0;
+
+  //sets the reference angle. a value of true for relToRefAngle parameter sets it relative to the current reference angle, a value of false sets it relative to the current robot orientation.
+  //val is the value to shift angle by, measured in degrees. Positive is clockwise, negative is counterclockwise
+  public double setRefAngle(double val, boolean relToRefAngle) {
+    if (relToRefAngle) {
+      refAngle += val;
+    } else {
+      refAngle = angle() + val;
+    }
+  }
+
+  //gets the current angle relative to the reference angle
+  //positive return val means robot is number of degrees clockwise to ref angle.
+  public double getAngle() {
+    return angle() - refAngle;
+  }
+
   //this function resets the total distance traveled to 0 centimeters.
   public void resetDistance() {
     saveDistance();
