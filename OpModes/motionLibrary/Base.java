@@ -348,7 +348,7 @@ class Base {
 
   //displacement and distance variables
   private double[] syncDisplacement = {0.0, 0.0}; //0 index is x, 1 is y
-  private double syncDistance = 0.0;
+  private double[] syncDistance = new double[3]; //order is total distance, x distance, and y distance
   private double syncAngle = 0.0; // in degrees, positive is clockwise
 
   //wheel position variables
@@ -357,7 +357,7 @@ class Base {
   private double[] wheelPosChange = new double[4];
 
   //get displacement from last sync position
-  private double[] coreDistFunc() {
+  public double[] coreDistFunc() {
     //get change in wheel position
     wheelPosChange[0] = mhw.leftFront.getCurrentPosition() - lastWheelPos[0];
     wheelPosChange[1] = mhw.rightFront.getCurrentPosition() - lastWheelPos[1];
@@ -377,14 +377,54 @@ class Base {
     double bR = wheelPosChange[2] - b;
     r = (aR + bR)/2.0;
 
-    return new double[]{a, b, r};
+    //determine dx, dy, and dAngle
+    double dx = (a - b)/2.0;
+    double dy = (a + b)/2.0;
+    double dAngle = (2 * r / robotWidth) * (180.0/Math.PI);
+
+    return new double[]{dx, dy, dAngle};
   }
 
-  public double getAbsAngle(double[] varArray) {
-    return syncAngle + (2 * varArray[2] / robotWidth) * (180.0/Math.PI);
+  //get the current angle orientation of the robot
+  public double getAngle(double[] varArray) {
+    return syncAngle + varArray[2];
   }
-  public double getAbsAngle() {
+  public double getAngle() {
     return getAbsAngle(coreDistFunc());
+  }
+
+  //this function returns an array with the total distance (not displacement) traveled by the robot. index 0 is total distance, 1 is x distance, 2 is y distance
+  //x and y is relative to robot itself
+  public double[] getDistanceTraveled(double[] displArray) {
+    double totalDistance = syncDistance[0] + Math.sqrt(Math.pow(displArray[0], 2) + Math.pow(displArray[1], 2));
+    double xDistance = syncDistance[1] + Math.abs(displArray[0]);
+    double yDistance = syncDistance[2] + Math.abs(displArray[1]);
+    
+    return new double[] {totalDistance, xDistance, yDistance};
+  }
+  public double[] getDistanceTraveled() {
+    return getDistanceTraveled(coreDistFunc());
+  }
+
+  //this function gets the robot's position relative to a certain point, which itself is relative to the reference point.
+  //order is x, then y
+  //x and y signify a point, relative to current reference point
+  public double[] getRelPosition(double[] displArray) {
+    return new double[]{displArray[0] + syncDisplacement[0], displArray[1] + syncDisplacement[1]};
+  }
+  public double[] getRelPosition() {
+    return getRelPosition(coreDistFunc());
+  }
+  public double[] getRelPosition(double x, double y) {
+    double[] temp = getRelPosition();
+    temp[0] -= x;
+    temp[1] -= y;
+    return temp;
+  }
+
+  //sets the angle
+  public void setAngle() {
+    //
   }
 
   //this function shifts the point of reference by these distances in the x and y direction.
@@ -400,51 +440,10 @@ class Base {
     syncDisplacement[1] = 0;
   }
 
-  public double refAngle = 0.0;
-
-  //sets the reference angle. a value of true for relToRefAngle parameter sets it relative to the current reference angle, a value of false sets it relative to the current robot orientation.
-  //val is the value to shift angle by, measured in degrees. Positive is clockwise, negative is counterclockwise
-  public double setRefAngle(double val, boolean relToRefAngle) {
-    if (relToRefAngle) {
-      refAngle += val;
-    } else {
-      refAngle = angle() + val;
-    }
-  }
-
-  //gets the current angle relative to the reference angle
-  //positive return val means robot is number of degrees clockwise to ref angle.
-  public double getAngle() {
-    return angle() - refAngle;
-  }
-
   //this function resets the total distance traveled to 0 centimeters.
   public void resetDistance() {
     saveDistance();
     syncDistance = 0;
-  }
-
-  //this function gets the robot's position relative to a certain point, which itself is relative to the reference point.
-  //x and y signify a point, relative to current reference point
-  private double[] getRelPosition(double[] displArray) {
-    return new double[]{displArray[0] + syncDisplacement[0], displArray[1] + syncDisplacement[1]};
-  }
-  public double[] getRelPosition() {
-    return getRelPosition(coreDistFunc());
-  }
-  public double[] getRelPosition(double x, double y) {
-    double[] temp = getRelPosition();
-    temp[0] -= x;
-    temp[1] -= y;
-    return temp;
-  }
-
-  //this function gets the total distance (not displacement) traveled by the robot.
-  private double getDistanceTraveled(double[] displArray) {
-    return Math.sqrt(Math.pow(displArray[0], 2) + Math.pow(displArray[1], 2)) + syncDistance;
-  }
-  public double getDistanceTraveled() {
-    return getDistanceTraveled(coreDistFunc());
   }
 
   //execute distance and displacement save function:
