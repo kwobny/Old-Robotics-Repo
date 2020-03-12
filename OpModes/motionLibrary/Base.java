@@ -16,6 +16,8 @@ class Base {
   protected final double wheelDiameter = 3; //wheel diameter in centimeters
   protected final double distancePerTick = (Math.PI*wheelDiameter)/ticksPerRevolution; //how many centimeters wheel runs per wheel tick
 
+  protected final double turnThreshold = 1.0; //the amount of rotation in degrees where the robot is considered to have turned.
+
   //CLASS WIDE VARIABLES
   public double motorConversionRate = 0; //the rate of powerOutput/velocity (in centimeters/second)
 
@@ -339,7 +341,7 @@ class Base {
     mhw.leftRear.setPower(powers[3]);
 
     //save the distance only if at least one of the changes is above tick threshold.
-    saveDistance();
+    saveCurrentPosition();
   }
 
   //START RPS (Robot Positioning System)
@@ -386,6 +388,7 @@ class Base {
   }
 
   //get the current angle orientation of the robot
+  //positive is clockwise, negative is counterclockwise
   public double getAngle(double[] varArray) {
     return syncAngle + varArray[2];
   }
@@ -406,17 +409,20 @@ class Base {
     return getDistanceTraveled(coreDistFunc());
   }
 
-  //this function gets the robot's position relative to a certain point, which itself is relative to the reference point.
+  //these functions get the position of the robot relative to the reference point
   //order is x, then y
-  //x and y signify a point, relative to current reference point
-  public double[] getRelPosition(double[] displArray) {
+  private double angleSum = 0.0;
+  private double[] tempDisplacement = new double[2];
+  public double[] getPosition(double[] displArray) {
     return new double[]{displArray[0] + syncDisplacement[0], displArray[1] + syncDisplacement[1]};
   }
-  public double[] getRelPosition() {
-    return getRelPosition(coreDistFunc());
+  public double[] getPosition() {
+    return getPosition(coreDistFunc());
   }
+  //this function gets the robot's position relative to a certain point, which itself is relative to the reference point.
+  //x and y signify a point, relative to current reference point
   public double[] getRelPosition(double x, double y) {
-    double[] temp = getRelPosition();
+    double[] temp = getPosition();
     temp[0] -= x;
     temp[1] -= y;
     return temp;
@@ -442,17 +448,20 @@ class Base {
 
   //this function resets the total distance traveled to 0 centimeters.
   public void resetDistance() {
-    saveDistance();
-    syncDistance = 0;
+    saveCurrentPosition();
+    for (int i = 0; i < 3; i++) {
+      syncDistance[i] = 0.0;
+    }
   }
 
   //execute distance and displacement save function:
   //Run this function on every upload to motors command or at every number of ticks traveled.
-  protected void saveDistance() {
+  private void saveCurrentPosition() {
     //add dx and dy to displacement and distance
     double[] tempArray = coreDistFunc();
-    syncDisplacement = getRelPosition(tempArray);
+    syncDisplacement = getPosition(tempArray);
     syncDistance = getDistanceTraveled(tempArray);
+    syncAngle = getAngle(tempArray);
 
     //set last wheel ticks to the current one.
     lastWheelPos[0] = mhw.leftFront.getCurrentPosition();
