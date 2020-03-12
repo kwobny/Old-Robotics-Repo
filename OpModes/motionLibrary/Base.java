@@ -9,6 +9,7 @@ class Base {
   public final double robotWidth = 5; //width of robot in centimeters. Is the width between back 2 wheels
   public final double robotLength = 5; //length of robot in centimeters. Is the length of the robot between 1 front wheel and 1 back wheel
   //Both distances are the distances between the points of contact between the wheels and ground.
+  public final double robotDiagonalLen = Math.sqrt(Math.pow(robotWidth, 2) + Math.pow(robotLength, 2));
   protected final double lowFreqMaintInterval = 0.2; //period in which low frequency periodic functions like motor cali run (in seconds)
   protected final double highFreqMaintInterval = 0.05; //period in which very high frequency accurate functions run (in seconds)
   protected final int ticksPerRevolution = 2600;
@@ -348,6 +349,7 @@ class Base {
   //displacement and distance variables
   private double[] syncDisplacement = {0.0, 0.0}; //0 index is x, 1 is y
   private double syncDistance = 0.0;
+  private double syncAngle = 0.0; // in degrees, positive is clockwise
 
   //wheel position variables
   //left front, right front, left back, right back
@@ -362,6 +364,10 @@ class Base {
     wheelPosChange[2] = mhw.leftBack.getCurrentPosition() - lastWheelPos[2];
     wheelPosChange[3] = mhw.rightBack.getCurrentPosition() - lastWheelPos[3];
 
+    for (int i = 0; i < 4; i++) {
+      wheelPosChange[i] *= distancePerTick;
+    }
+
     //isolate components
     //a is value of LF and RB wheels, b is the value of RF and LB wheels, and r is the rotational value, with a positive value going clockwise
     double a; double b; double r;
@@ -371,10 +377,14 @@ class Base {
     double bR = wheelPosChange[2] - b;
     r = (aR + bR)/2.0;
 
-    //inverse function to get dx and dy
-    double dx; double dy;
+    return new double[]{a, b, r};
+  }
 
-    return new double[]{dx, dy};
+  public double getAbsAngle(double[] varArray) {
+    return syncAngle + (2 * varArray[2] / robotWidth) * (180.0/Math.PI);
+  }
+  public double getAbsAngle() {
+    return getAbsAngle(coreDistFunc());
   }
 
   //this function shifts the point of reference by these distances in the x and y direction.
@@ -390,7 +400,7 @@ class Base {
     syncDisplacement[1] = 0;
   }
 
-  public double refAngle = 0;
+  public double refAngle = 0.0;
 
   //sets the reference angle. a value of true for relToRefAngle parameter sets it relative to the current reference angle, a value of false sets it relative to the current robot orientation.
   //val is the value to shift angle by, measured in degrees. Positive is clockwise, negative is counterclockwise
