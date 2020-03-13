@@ -382,15 +382,16 @@ class Base {
     //determine dx, dy, and dAngle
     double dx = (a - b)/2.0;
     double dy = (a + b)/2.0;
+    double dHyp = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
     double dAngle = (2 * r / robotWidth) * (180.0/Math.PI);
 
-    return new double[]{dx, dy, dAngle};
+    return new double[]{dx, dy, dHyp, dAngle};
   }
 
   //get the current angle orientation of the robot
   //positive is clockwise, negative is counterclockwise
   public double getAngle(double[] varArray) {
-    return syncAngle + varArray[2];
+    return syncAngle + varArray[3];
   }
   public double getAngle() {
     return getAbsAngle(coreDistFunc());
@@ -399,7 +400,7 @@ class Base {
   //this function returns an array with the total distance (not displacement) traveled by the robot. index 0 is total distance, 1 is x distance, 2 is y distance
   //x and y is relative to robot itself
   public double[] getDistanceTraveled(double[] displArray) {
-    double totalDistance = syncDistance[0] + Math.sqrt(Math.pow(displArray[0], 2) + Math.pow(displArray[1], 2));
+    double totalDistance = syncDistance[0] + displArray[2]
     double xDistance = syncDistance[1] + Math.abs(displArray[0]);
     double yDistance = syncDistance[2] + Math.abs(displArray[1]);
     
@@ -414,7 +415,7 @@ class Base {
   private double angleSum = 0.0;
   private double[] tempDisplacement = new double[2];
   public double[] getPosition(double[] displArray) {
-    return new double[]{displArray[0] + syncDisplacement[0], displArray[1] + syncDisplacement[1]};
+    double originalAngle = syncAngle + Math.atan2(displArray[0], displArray[1]) * (180/Math.PI);
   }
   public double[] getPosition() {
     return getPosition(coreDistFunc());
