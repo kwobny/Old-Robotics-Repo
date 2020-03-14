@@ -400,7 +400,7 @@ class Base {
   //this function returns an array with the total distance (not displacement) traveled by the robot. index 0 is total distance, 1 is x distance, 2 is y distance
   //x and y is relative to robot itself
   public double[] getDistanceTraveled(double[] displArray) {
-    double totalDistance = syncDistance[0] + displArray[2]
+    double totalDistance = syncDistance[0] + displArray[2];
     double xDistance = syncDistance[1] + Math.abs(displArray[0]);
     double yDistance = syncDistance[2] + Math.abs(displArray[1]);
     
