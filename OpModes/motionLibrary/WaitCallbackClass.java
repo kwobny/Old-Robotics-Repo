@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-public class WaitCallbacks
+public class WaitCallbackClass
 {
     private MadHardware mhw;
     private Motions movements;

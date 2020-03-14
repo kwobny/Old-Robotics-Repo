@@ -22,14 +22,16 @@ class Base {
   public double motorConversionRate = 0; //the rate of powerOutput/velocity (in centimeters/second)
 
   //wait class stuff
-  public WaitConditionClass waiters;
-  public WaitCallbacks waitCallbacks;
+  protected WaitCore wait;
   protected MadHardware mhw;
   protected ElapsedTime baseRuntime;
 
   protected Base() {
-    addInterval(WaitEnum.TIME, 1, lowFreqMaintInterval);
-    addInterval(WaitEnum.TIME, 2, highFreqMaintInterval);
+    
+  }
+  protected void initializeBase() {
+    wait.addInterval(WaitEnum.TIME, 1, lowFreqMaintInterval);
+    wait.addInterval(WaitEnum.TIME, 2, highFreqMaintInterval);
   }
 
   //START MOTOR COMMANDS

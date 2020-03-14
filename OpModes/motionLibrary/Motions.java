@@ -38,8 +38,8 @@ public class Motions extends Base {
   public Motions(MadHardware hmw) {
     mhw = hmw;
     baseRuntime = new ElapsedTime();
-    waiters = new WaitConditionClass(hmw, this, baseRuntime);
-    waitCallbacks = new WaitCallbacks(hmw, this, baseRuntime);
+    wait = new WaitCore();
+    initializeBase();
 
     //set up lin trans and rotate buffer speed factor settings
     rotateBuffer.maxFactor = 0.1;
