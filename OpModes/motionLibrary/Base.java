@@ -416,6 +416,7 @@ class Base {
   private double[] tempDisplacement = new double[2];
   public double[] getPosition(double[] displArray) {
     double originalAngle = syncAngle + Math.atan2(displArray[0], displArray[1]) * (180/Math.PI);
+    //science league afterschool, get clarinet, check email about distance learning, bring all the necessary stuff from binders home, disney trip canceled, check genesis
   }
   public double[] getPosition() {
     return getPosition(coreDistFunc());
