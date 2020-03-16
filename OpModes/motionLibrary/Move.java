@@ -1,10 +1,9 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 
-import java.util.ArrayList;
 import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-public class Motions extends Base {
+public class Move extends MoveCore {
   //time system has simple wait, complex wait (add wait and commence wait), set timeout, add interval
   //concerns with time system: instantiate wait class and wait callbacks outside of motions function?
   //motor cali
@@ -35,7 +34,7 @@ public class Motions extends Base {
   //consider including compound timeout (multiple polls in one callback)
   //restructure/organize/increase efficiency of wait api
 
-  public Motions(MadHardware hmw, WaitCore waitAPI) {
+  public Move(MadHardware hmw, WaitCore waitAPI) {
     mhw = hmw;
     baseRuntime = new ElapsedTime();
     wait = waitAPI;

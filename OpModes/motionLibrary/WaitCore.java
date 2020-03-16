@@ -7,17 +7,19 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class WaitCore {
   public WaitConditionClass waiters;
   public WaitCallbackClass waitCallbacks;
+  public Main main;
 
-  WaitCore(WaitConditionClass a, WaitCallbackClass b) {
+  WaitCore(Main c, WaitConditionClass a, WaitCallbackClass b) {
     waiters = a;
     waitCallbacks = b;
+    main = c;
   }
 
   //simple wait functionality
   public void simpleWait(WaitEnum waitCondition, Object ...args) {
     Object[] dataForWait = waiters.generateData(waitCondition, args);
     while (!waiters.pollCondition(waitCondition, dataForWait)) {
-      loop();
+      main.loop();
     }
   }
 
@@ -64,7 +66,7 @@ public class WaitCore {
           conditionSatisfied.set(i, true);
         }
       }
-      loop();
+      main.loop();
 
       switch (compMode) {
         case AND: {

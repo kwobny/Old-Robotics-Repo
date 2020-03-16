@@ -1,10 +1,9 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 
-import java.util.ArrayList;
 import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-class Base {
+class MoveCore {
   //CLASS WIDE CONSTANTS/VARIABLES:
   public final double robotWidth = 5; //width of robot in centimeters. Is the width between back 2 wheels
   public final double robotLength = 5; //length of robot in centimeters. Is the length of the robot between 1 front wheel and 1 back wheel
@@ -26,7 +25,7 @@ class Base {
   protected MadHardware mhw;
   protected ElapsedTime baseRuntime;
 
-  protected Base() {
+  protected MoveCore() {
     
   }
   protected void initializeBase() {

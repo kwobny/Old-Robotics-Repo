@@ -6,10 +6,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class WaitConditionClass
 {
     private MadHardware mhw;
-    private Motions movements;
+    private Move movements;
     private ElapsedTime runtime;
 
-    WaitConditionClass(MadHardware hmw, Motions mot, ElapsedTime r) {
+    WaitConditionClass(MadHardware hmw, Move mot, ElapsedTime r) {
         mhw = hmw;
         movements = mot;
         runtime = r;

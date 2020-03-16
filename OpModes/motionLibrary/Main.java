@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 
-import java.util.ArrayList;
 import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -11,14 +10,12 @@ public class Main {
   public WaitConditionClass waitConditions = new WaitConditionClass();
   public WaitCallbackClass waitCallbacks = new WaitCallbackClass();
 
-  public WaitCore wait = new WaitCore(waitConditions, waitCallbacks);
-  public Motions move;
+  public WaitCore wait = new WaitCore(this, waitConditions, waitCallbacks);
+  public Move move = new Move(mhw, wait);
   public RPS rps = new RPS();
 
   public Main(MadHardware hmw) {
     mhw = hmw;
-
-    move = new Motions(mhw, wait);
   }
 
   //loop for the motions

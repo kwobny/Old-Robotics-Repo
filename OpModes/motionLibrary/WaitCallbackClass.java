@@ -6,10 +6,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class WaitCallbackClass
 {
     private MadHardware mhw;
-    private Motions movements;
+    private Move movements;
     private ElapsedTime runtime;
 
-    WaitCallbacks(MadHardware hmw, Motions mot, ElapsedTime r) {
+    WaitCallbacks(MadHardware hmw, Move mot, ElapsedTime r) {
         mhw = hmw;
         movements = mot;
         runtime = r;
