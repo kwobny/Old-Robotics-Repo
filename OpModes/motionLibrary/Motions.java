@@ -35,10 +35,10 @@ public class Motions extends Base {
   //consider including compound timeout (multiple polls in one callback)
   //restructure/organize/increase efficiency of wait api
 
-  public Motions(MadHardware hmw) {
+  public Motions(MadHardware hmw, WaitCore waitAPI) {
     mhw = hmw;
     baseRuntime = new ElapsedTime();
-    wait = new WaitCore();
+    wait = waitAPI;
     initializeBase();
 
     //set up lin trans and rotate buffer speed factor settings
