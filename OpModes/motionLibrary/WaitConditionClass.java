@@ -5,14 +5,18 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class WaitConditionClass
 {
+    //RESOURCE OBJECTS
     private MadHardware mhw;
     private Move movements;
-    private ElapsedTime runtime;
+    private ElapsedTime runtime = new ElapsedTime();
 
-    WaitConditionClass(MadHardware hmw, Move mot, ElapsedTime r) {
-        mhw = hmw;
-        movements = mot;
-        runtime = r;
+    public WaitConditionClass() {
+      
+    }
+
+    public void initialize(MadHardware hmw, Move mot) {
+      mhw = hmw;
+      movements = mot;
     }
 
     public Object[] generateData(WaitEnum waitType, Object[] args) {

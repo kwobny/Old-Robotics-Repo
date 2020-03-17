@@ -5,14 +5,18 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class WaitCallbackClass
 {
+    //RESOURCE OBJECTS
     private MadHardware mhw;
     private Move movements;
-    private ElapsedTime runtime;
+    private ElapsedTime runtime = new ElapsedTime();
 
-    WaitCallbacks(MadHardware hmw, Move mot, ElapsedTime r) {
-        mhw = hmw;
-        movements = mot;
-        runtime = r;
+    public WaitCallbackClass() {
+      
+    }
+
+    public void initialize(MadHardware hmw, Move mot) {
+      mhw = hmw;
+      movements = mot;
     }
 
     public void callback(int which) {

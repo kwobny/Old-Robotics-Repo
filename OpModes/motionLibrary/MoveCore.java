@@ -20,15 +20,16 @@ class MoveCore {
   //CLASS WIDE VARIABLES
   public double motorConversionRate = 0; //the rate of powerOutput/velocity (in centimeters/second)
 
-  //wait class stuff
+  //RESOURCE OBJECTS
+  protected WaitConditionClass waiters;
   protected WaitCore wait;
   protected MadHardware mhw;
-  protected ElapsedTime baseRuntime;
+  protected ElapsedTime baseRuntime = new ElapsedTime();
 
   protected MoveCore() {
     
   }
-  protected void initializeBase() {
+  protected void initializeCore() {
     wait.addInterval(WaitEnum.TIME, 1, lowFreqMaintInterval);
     wait.addInterval(WaitEnum.TIME, 2, highFreqMaintInterval);
   }

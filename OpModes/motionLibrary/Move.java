@@ -34,11 +34,15 @@ public class Move extends MoveCore {
   //consider including compound timeout (multiple polls in one callback)
   //restructure/organize/increase efficiency of wait api
 
-  public Move(MadHardware hmw, WaitCore waitAPI) {
+  public Move() {
+
+  }
+
+  public void initialize(MadHardware hmw, WaitCore waitAPI, WaitConditionClass waiters) {
     mhw = hmw;
-    baseRuntime = new ElapsedTime();
     wait = waitAPI;
-    initializeBase();
+    this.waiters = waiters;
+    initializeCore();
 
     //set up lin trans and rotate buffer speed factor settings
     rotateBuffer.maxFactor = 0.1;
@@ -46,7 +50,6 @@ public class Move extends MoveCore {
 
     linTransBuffer.maxFactor = 2.0;
     linTransBuffer.minFactor = -2.0;
-
   }
 
   //START MOVE COMMANDS

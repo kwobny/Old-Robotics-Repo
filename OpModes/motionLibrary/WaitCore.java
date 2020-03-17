@@ -5,11 +5,16 @@ import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class WaitCore {
+
+  //RESOURCE OBJECTS
   public WaitConditionClass waiters;
   public WaitCallbackClass waitCallbacks;
   public Main main;
 
-  WaitCore(Main c, WaitConditionClass a, WaitCallbackClass b) {
+  public WaitCore() {
+  }
+
+  public void initialize(Main c, WaitConditionClass a, WaitCallbackClass b) {
     waiters = a;
     waitCallbacks = b;
     main = c;
@@ -122,7 +127,7 @@ public class WaitCore {
     timeoutCallbacks.add(callback);
     timeoutData.add(waiters.generateData(addCode, args));
   }
-  default void runTimeouts() {
+  void runTimeouts() {
     for (int i = 0; i < timeoutPolls.size(); i++) {
       if (waiters.pollCondition(timeoutPolls.get(i), timeoutData.get(i))) {
         waitCallbacks.callback(timeoutCallbacks.get(i));
@@ -149,7 +154,7 @@ public class WaitCore {
     intervalData.add(waiters.generateData(addIntervalCode, args));
     intervalCallbacks.add(intervalCallback);
   }
-  default void executeIntervals() {
+  void executeIntervals() {
     for (int i = 0; i < intervalPolls.size(); i++) {
       if (waiters.pollCondition(intervalPolls.get(i), intervalData.get(i))) {
         waitCallbacks.callback(intervalCallbacks.get(i));

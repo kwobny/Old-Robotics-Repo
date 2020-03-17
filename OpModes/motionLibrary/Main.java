@@ -4,23 +4,36 @@ import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class Main {
-  // sub objects
+  // RESOURCE OBJECTS
+
+  //mad hardware
   public MadHardware mhw;
 
+  //this next grouping of stuff is a group of three parts, which are all triangularly dependent on each other, and madhardware.
   public WaitConditionClass waitConditions = new WaitConditionClass();
   public WaitCallbackClass waitCallbacks = new WaitCallbackClass();
 
-  public WaitCore wait = new WaitCore(this, waitConditions, waitCallbacks);
-  public Move move = new Move(mhw, wait);
+  public Move move = new Move();
+  public WaitCore wait = new WaitCore();
+
   public RPS rps = new RPS();
+
+  //CONSTRUCTOR
 
   public Main(MadHardware hmw) {
     mhw = hmw;
+
+    //order of initialization is the wait conditions and callbacks, then wait core, then move core.
+    waitConditions.initialize(mhw, move);
+    waitCallbacks.initialize(mhw, move);
+
+    wait.initialize(this, waitConditions, waitCallbacks);
+    move.initialize(mhw, wait, waitConditions);
   }
 
+  //OTHER FUNCTIONS AND STUFF
+
   // loop for the motions
-  // allows movements which are time dependent, like rotational translation
-  // also allows execution of other stuff
   public void loop() {
     wait.executeIntervals();
     wait.runTimeouts();
