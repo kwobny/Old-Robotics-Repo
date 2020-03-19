@@ -28,7 +28,9 @@ public class Main {
     waitCallbacks.initialize(mhw, move);
 
     wait.initialize(this, waitConditions, waitCallbacks);
-    move.initialize(mhw, wait, waitConditions);
+    move.initialize(mhw, wait, waitConditions, rps);
+
+    rps.initialize(mhw, move);
   }
 
   //OTHER FUNCTIONS AND STUFF
