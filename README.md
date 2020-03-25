@@ -164,3 +164,10 @@ New method for syncing distance:
 2. Firstly, take the distances traveled by each wheel and put them in some sort of formula (motor buffer independent) to isolate rotational and translational components
 3. Then put these components into an algorithm to determine the total distance traveled, and also the displacement. Make sure to account for rotation of robot when calculating for displacement.
 4. Now you are done
+
+Speed Control System (SCS?):
+allows you to adjust the universal speedFactor in complex ways as a piecewise function with a variable x axis for each piece.
+
+This system will have advanced pieces such as PID control
+
+consider moving the common acceleration system to this class
