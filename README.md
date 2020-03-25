@@ -171,3 +171,5 @@ allows you to adjust the universal speedFactor in complex ways as a piecewise fu
 This system will have advanced pieces such as PID control
 
 consider moving the common acceleration system to this class
+
+Make sure to look over code in upload motors which controls how the function reacts to overflows in motor value.
