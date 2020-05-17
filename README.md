@@ -9,6 +9,13 @@ This library is easily applicable to robots with the same library/MadHardware ap
 
 ---
 
+How the code library classes are structured (elements listed in order of where they appear in class definition, with 1 being at the top and 3 being at the bottom):
+1. class wide settings variables and normal variables
+2. resource objects
+3. class methods
+
+What the main class is in charge of: the main class is basically the hub for all of the individual classes, and is the way the user interacts with library. the main class also is in charge of **setup of the library and the looping of the library.**
+
 A wait callback of value 0 is no callback
 
 When modifying any of the values in the individual motor buffers, always do it with the intent of syncing the motors right after the action occurs. Do this so that individual motor buffer values stay consistant with the universal buffer.
