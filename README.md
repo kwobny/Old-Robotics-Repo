@@ -1,5 +1,16 @@
 # RoboticsRepo
 [![Run on Repl.it](https://repl.it/badge/github/kwobny/RoboticsRepo)](https://repl.it/github/kwobny/RoboticsRepo)
+
+# How to resolve repl it git issues:
+Not committing:
+1. Open the repl it bash shell by pressing Ctrl+Shift+P, searching "open shell" and clicking it
+2. Try to commit the changes. Do this by typing "git commit -a -m 'whatever commit message'". the -a flag says commit all changes, and the -m flag represents the commit message.
+3. If you get an error that says something like another process is running in the repository, try to resolve the issue by deleting the index.lock file in the .git directory. Type in the shell, "rm -f .git/index.lock", and execute. Then repeat step 2 and see if the issue is resolved
+4. Now, push the committed changes from the local repository into the remote repository. Execute "git push origin 'whatever branch name'".
+5. The issue should be resolved
+
+How to delete a branch from local repository:
+
 # Notes:
 Main move commands are rotate robot and moveLinTrans. Main wait commands are wait for time, for distance or displacement traveled (you pick which quantity), and for angle traveled/for certain orientation passed.
 
