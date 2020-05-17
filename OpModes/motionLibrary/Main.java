@@ -24,13 +24,14 @@ public class Main {
   //CONSTRUCTOR
 
   public Main(MadHardware hmw, WaitCallbackClass waitCallbacks) {
+    //SUB OBJECT INITIALIZATION
     mhw = hmw;
 
     //order of initialization is the wait conditions and callbacks, then wait core, then move core.
     waitConditions.initialize(mhw, move);
 
     wait.initialize(this, waitConditions, waitCallbacks);
-    move.initialize(mhw, wait, waitConditions, rps);
+    move.initialize(mhw, rps);
 
     rps.initialize(mhw, move);
 

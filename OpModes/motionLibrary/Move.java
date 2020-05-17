@@ -36,12 +36,9 @@ public class Move extends MoveCore {
 
   Move() {} //default access constructor, cannot be instantiated outside of package
 
-  public void initialize(MadHardware hmw, WaitCore waitAPI, WaitConditionClass waiters, RPS rps) {
+  public void initialize(MadHardware hmw, RPS rps) {
     mhw = hmw;
-    wait = waitAPI;
-    this.waiters = waiters;
     rpss = rps;
-    initializeCore();
 
     //set up lin trans and rotate buffer speed factor settings
     rotateBuffer.maxFactor = 0.1;
