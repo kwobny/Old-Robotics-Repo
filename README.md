@@ -9,7 +9,9 @@ Not committing:
 4. Now, push the committed changes from the local repository into the remote repository. Execute "git push origin 'whatever branch name'".
 5. The issue should be resolved
 
-How to delete a branch from local repository:
+How to delete a branch from local repository: execute "git branch -d 'branch name'"
+
+If all else fails: just make a new repl it and reconnect it to github. Make sure that the .replit file has correct information. if not, then delete it
 
 # Notes:
 Main move commands are rotate robot and moveLinTrans. Main wait commands are wait for time, for distance or displacement traveled (you pick which quantity), and for angle traveled/for certain orientation passed.
