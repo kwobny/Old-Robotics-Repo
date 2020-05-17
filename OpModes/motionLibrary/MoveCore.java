@@ -4,33 +4,15 @@ import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 class MoveCore {
-  //CLASS WIDE CONSTANTS/VARIABLES:
-  public final double robotWidth = 5; //width of robot in centimeters. Is the width between back 2 wheels
-  public final double robotLength = 5; //length of robot in centimeters. Is the length of the robot between 1 front wheel and 1 back wheel
-  //Both distances are the distances between the points of contact between the wheels and ground.
-  public final double robotDiagonalLen = Math.sqrt(Math.pow(robotWidth, 2) + Math.pow(robotLength, 2));
-  protected final double lowFreqMaintInterval = 0.2; //period in which low frequency periodic functions like motor cali run (in seconds)
-  protected final double highFreqMaintInterval = 0.05; //period in which very high frequency accurate functions run (in seconds)
-  protected final int ticksPerRevolution = 2600;
-  protected final double wheelDiameter = 3; //wheel diameter in centimeters
-  protected final double distancePerTick = (Math.PI*wheelDiameter)/ticksPerRevolution; //how many centimeters wheel runs per wheel tick
-
+  //SETTING VARIABLES
   protected final double turnThreshold = 1.0; //the amount of rotation in degrees where the robot is considered to have turned.
-
-  //CLASS WIDE VARIABLES
+  
   public double motorConversionRate = 0; //the rate of powerOutput/velocity (in centimeters/second)
 
   //RESOURCE OBJECTS
-  protected WaitConditionClass waiters;
   protected RPS rpss;
-  protected WaitCore wait;
   protected MadHardware mhw;
   protected ElapsedTime baseRuntime = new ElapsedTime();
-
-  protected void initializeCore() {
-    wait.addInterval(WaitEnum.TIME, -1, lowFreqMaintInterval);
-    wait.addInterval(WaitEnum.TIME, -2, highFreqMaintInterval);
-  }
 
   //START MOTOR COMMANDS
 
@@ -97,7 +79,7 @@ class MoveCore {
   private double[] globalPos = new double[4];
   private double[] caliPowerFactor = new double[4];
 
-  private void motorCali() {
+  void motorCali() {
     /* CALCULATE DISTANCES TRAVELLED */
     double d0 = mhw.leftFront.getCurrentPosition() - globalPos[0];
     double d1 = mhw.rightFront.getCurrentPosition() - globalPos[1];
@@ -187,27 +169,14 @@ class MoveCore {
     rpss.saveCurrentPosition();
   }
 
-  //START RPS (Robot Positioning System)
-
-  //END RPS
-
   //START BASIC SYSTEM FUNCTIONS
 
-  //system loop functions
-  private boolean isZero(double value){
-    final double threshold = 0.01;
-    return value >= -threshold && value <= threshold;
-  }
-
-  protected void runBaseLowInterval() {
-    motorCali();
-  }
-  protected void runBaseHighInterval() {
-    //Common acceleration system
+  void runCommonAccelerationSystem(double changeInTime) {
+    //This function is run in the high interval
     byte accel = 0;
     for (motorBufferClass i : bufferArray) {
-      if (!isZero(i.acceleration)) {
-        i.speedFactor += i.acceleration * waiters.changeInTime;
+      if (i.acceleration != 0) {
+        i.speedFactor += i.acceleration * changeInTime;
         
         if (i.speedFactor > i.maxFactor) {
           i.speedFactor = i.maxFactor;

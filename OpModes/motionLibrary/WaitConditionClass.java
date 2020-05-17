@@ -10,9 +10,7 @@ public class WaitConditionClass
     private Move movements;
     private ElapsedTime runtime = new ElapsedTime();
 
-    public WaitConditionClass() {
-      
-    }
+    WaitConditionClass() {} //cannot be instantiated outside of package
 
     public void initialize(MadHardware hmw, Move mot) {
       mhw = hmw;

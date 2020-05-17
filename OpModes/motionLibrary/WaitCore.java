@@ -11,6 +11,8 @@ public class WaitCore {
   public WaitCallbackClass waitCallbacks;
   public Main main;
 
+  Waitcore() {} //cannot be instantiated outside of package
+
   public void initialize(Main c, WaitConditionClass a, WaitCallbackClass b) {
     waiters = a;
     waitCallbacks = b;
@@ -24,10 +26,10 @@ public class WaitCore {
           //no callback
           break;
         case -1:
-          main.move.runBaseLowInterval();
+          main.runLowInterval();
           break;
         case -2:
-          main.move.runBaseHighInterval();
+          main.runHighInterval();
           break;
         default:
           waitCallbacks.callback(which);

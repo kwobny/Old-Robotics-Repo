@@ -34,6 +34,8 @@ public class Move extends MoveCore {
   //consider including compound timeout (multiple polls in one callback)
   //restructure/organize/increase efficiency of wait api
 
+  Move() {} //default access constructor, cannot be instantiated outside of package
+
   public void initialize(MadHardware hmw, WaitCore waitAPI, WaitConditionClass waiters, RPS rps) {
     mhw = hmw;
     wait = waitAPI;
@@ -53,13 +55,12 @@ public class Move extends MoveCore {
 
   //rotate robot
   //power is the power of the left front wheel (or left wheel for two wheel sim)
+  private final double ROTATE_CONSTANT = (Constants.robotWidth + Constants.robotLength)/Constants.robotWidth;
   public void moveRotate(double power, boolean use2WheeledSimulation) {
     rotateBuffer.speedFactor = 0.1;
 
-    final double constant = (robotWidth + robotLength)/robotWidth;
-
     if (use2WheeledSimulation) {
-      power *= constant;
+      power *= ROTATE_CONSTANT;
     }
     
     rotateBuffer.leftFront = power;
@@ -149,8 +150,8 @@ public class Move extends MoveCore {
 
   //moveDirection is same as above
   public void moveRotDriveRadius(double power, double radius, double ...moveDirection) {
-    final double leftWheel = power * (radius + robotWidth/2)/(radius - robotWidth/2);
-    final double rightWheel = power * (radius - robotWidth/2)/(radius + robotWidth/2);
+    final double leftWheel = power * (radius + Constants.robotWidth/2)/(radius - Constants.robotWidth/2);
+    final double rightWheel = power * (radius - Constants.robotWidth/2)/(radius + Constants.robotWidth/2);
 
     moveRotDriveTank(leftWheel, rightWheel, moveDirection);
   }

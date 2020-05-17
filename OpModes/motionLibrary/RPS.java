@@ -7,6 +7,8 @@ public class RPS {
   private MadHardware mhw;
   private Move moveObj;
 
+  RPS() {} //cannot be instantiated outside of package
+
   public void initialize(MadHardware hmw, Move obj) {
     mhw = hmw;
     moveObj = obj;
@@ -33,7 +35,7 @@ public class RPS {
     wheelPosChange[3] = mhw.rightBack.getCurrentPosition() - lastWheelPos[3];
 
     for (int i = 0; i < 4; i++) {
-      wheelPosChange[i] *= distancePerTick;
+      wheelPosChange[i] *= Constants.distancePerTick;
     }
 
     //isolate components
@@ -49,7 +51,7 @@ public class RPS {
     double dx = (a - b)/2.0;
     double dy = (a + b)/2.0;
     double dHyp = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-    double dAngle = (2 * r / robotWidth) * (180.0/Math.PI);
+    double dAngle = (2 * r / Constants.robotWidth) * (180.0/Math.PI);
 
     return new double[]{dx, dy, dHyp, dAngle};
   }
