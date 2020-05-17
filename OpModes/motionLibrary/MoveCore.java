@@ -27,10 +27,22 @@ class MoveCore {
     public double rightRear = 0.0;
 
     public double speedFactor = 1.0;
+    public double defaultSpeedFactor = 1.0;
     public double acceleration = 0.0; //acceleration in percent of everything per second
+    public double threshold = 0.0; //acceleration stops when speedfactor passes threshold.
+    public boolean thresholdEnabled = false;
+    public void resetSpeedFactor() {
+      speedFactor = defaultSpeedFactor;
+      acceleration = 0.0;
+    }
+    public void setThreshold(double value) {
+      threshold = value;
+      thresholdEnabled = true;
+    }
 
     public double minFactor = -1.0;
     public double maxFactor = 1.0;
+    //min and max factor are meant to be constants, unlike the variable threshold variable.
   }
 
   //declaring all motor buffers
@@ -40,7 +52,7 @@ class MoveCore {
   public motorBufferClass userBuffer = new motorBufferClass();
 
   //upload motor buffer function
-  private motorBufferClass universalBuffer = new motorBufferClass();
+  protected motorBufferClass universalBuffer = new motorBufferClass();
   private motorBufferClass[] bufferArray = new motorBufferClass[]{universalBuffer, rotateBuffer, linTransBuffer, userBuffer};
 
   public void syncMotors() {
@@ -144,19 +156,19 @@ class MoveCore {
         limit = Math.abs(i);
       }
     }
-    if (limit != 1.0) {
+    if (limit > 1.0) {
       double multiplier = 0.999 / limit;
       for (int i = 0; i < powers.length; i++) {
         powers[i] *= multiplier;
       }
 
-      universalBuffer.speedFactor *= multiplier;
+      //universalBuffer.speedFactor *= multiplier;
 
-      for (motorBufferClass j : bufferArray) {
+      /*for (motorBufferClass j : bufferArray) {
         if (j.acceleration * j.speedFactor > 0.0) {
           j.acceleration = 0.0;
         }
-      }
+      }*/
       
     }
 
@@ -175,23 +187,36 @@ class MoveCore {
     //This function is run in the high interval
     byte accel = 0;
     for (motorBufferClass i : bufferArray) {
-      if (i.acceleration != 0) {
+      if (i.acceleration != 0.0) {
         i.speedFactor += i.acceleration * changeInTime;
-        
-        if (i.speedFactor > i.maxFactor) {
-          i.speedFactor = i.maxFactor;
-          i.acceleration = 0.0;
-        }
-        if (i.speedFactor < i.minFactor) {
-          i.speedFactor = i.minFactor;
-          i.acceleration = 0.0;
-        }
 
         if (i == universalBuffer) {
           accel = 1;
         } else {
           accel = 2;
         }
+
+        if (i.thresholdEnabled) {
+          if (i.acceleration > 0.0) {
+            if (i.speedFactor > i.threshold) {
+              i.speedFactor = i.threshold;
+              i.acceleration = 0.0;
+              i.thresholdEnabled = false;
+            }
+          } else if (i.speedFactor < i.threshold) {
+            i.speedFactor = i.threshold;
+            i.acceleration = 0.0;
+            i.thresholdEnabled = false;
+          }
+        }
+      }
+      if (i.speedFactor > i.maxFactor) {
+        i.speedFactor = i.maxFactor;
+        i.acceleration = 0.0;
+      }
+      else if (i.speedFactor < i.minFactor) {
+        i.speedFactor = i.minFactor;
+        i.acceleration = 0.0;
       }
     }
     if (accel == 1) {

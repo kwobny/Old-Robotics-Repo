@@ -46,6 +46,9 @@ public class Move extends MoveCore {
 
     linTransBuffer.maxFactor = 2.0;
     linTransBuffer.minFactor = -2.0;
+
+    universalBuffer.speedFactor = 0.1;
+    universalBuffer.defaultSpeedFactor = 0.1;
   }
 
   //START MOVE COMMANDS
@@ -54,7 +57,6 @@ public class Move extends MoveCore {
   //power is the power of the left front wheel (or left wheel for two wheel sim)
   private final double ROTATE_CONSTANT = (Constants.robotWidth + Constants.robotLength)/Constants.robotWidth;
   public void moveRotate(double power, boolean use2WheeledSimulation) {
-    rotateBuffer.speedFactor = 0.1;
 
     if (use2WheeledSimulation) {
       power *= ROTATE_CONSTANT;
@@ -68,8 +70,7 @@ public class Move extends MoveCore {
 
   //linear translate
   public void moveLinTrans(double rx, double ry, boolean boostOverride) {
-    double BOOOOOST = boostOverride ? 2.0 : 1.0;
-    linTransBuffer.speedFactor = 0.1 * BOOOOOST;
+    linTransBuffer.speedFactor = boostOverride ? 2.0 : 1.0;
 
     //using encoder to find magnitude of joystick x and y
     /*if (gamepadControl) {
