@@ -11,7 +11,6 @@ public class Main {
 
   //this next grouping of stuff is a group of three parts, which are all triangularly dependent on each other, and madhardware.
   public WaitConditionClass waitConditions = new WaitConditionClass();
-  public WaitCallbackClass waitCallbacks = new WaitCallbackClass();
 
   public Move move = new Move();
   public WaitCore wait = new WaitCore();
@@ -20,12 +19,11 @@ public class Main {
 
   //CONSTRUCTOR
 
-  public Main(MadHardware hmw) {
+  public Main(MadHardware hmw, WaitCallbackClass waitCallbacks) {
     mhw = hmw;
 
     //order of initialization is the wait conditions and callbacks, then wait core, then move core.
     waitConditions.initialize(mhw, move);
-    waitCallbacks.initialize(mhw, move);
 
     wait.initialize(this, waitConditions, waitCallbacks);
     move.initialize(mhw, wait, waitConditions, rps);

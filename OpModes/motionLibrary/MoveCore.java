@@ -27,12 +27,9 @@ class MoveCore {
   protected MadHardware mhw;
   protected ElapsedTime baseRuntime = new ElapsedTime();
 
-  protected MoveCore() {
-    
-  }
   protected void initializeCore() {
-    wait.addInterval(WaitEnum.TIME, 1, lowFreqMaintInterval);
-    wait.addInterval(WaitEnum.TIME, 2, highFreqMaintInterval);
+    wait.addInterval(WaitEnum.TIME, -1, lowFreqMaintInterval);
+    wait.addInterval(WaitEnum.TIME, -2, highFreqMaintInterval);
   }
 
   //START MOTOR COMMANDS
@@ -41,7 +38,7 @@ class MoveCore {
   //motor buffers make it possible to superimpose two or more different motions together to achieve a sum of the motions
 
   //motor buffer class
-  public class motorBufferClass {
+  public static class motorBufferClass {
     public double leftFront = 0.0;
     public double leftRear = 0.0;
     public double rightFront = 0.0;

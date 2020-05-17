@@ -11,13 +11,27 @@ public class WaitCore {
   public WaitCallbackClass waitCallbacks;
   public Main main;
 
-  public WaitCore() {
-  }
-
   public void initialize(Main c, WaitConditionClass a, WaitCallbackClass b) {
     waiters = a;
     waitCallbacks = b;
     main = c;
+  }
+
+  //system callbacks always have a negative id, to reserve the positive ids for user callbacks.
+  private void systemCallback(int which) {
+    switch (which) {
+        case 0:
+          //no callback
+          break;
+        case -1:
+          main.move.runBaseLowInterval();
+          break;
+        case -2:
+          main.move.runBaseHighInterval();
+          break;
+        default:
+          waitCallbacks.callback(which);
+    }
   }
 
   //simple wait functionality
@@ -67,7 +81,7 @@ public class WaitCore {
     while (true) {
       for (int i = 0; i < polls.size(); i++) {
         if (!conditionSatisfied.get(i) && waiters.pollCondition(polls.get(i), dataList.get(i))) {
-          waitCallbacks.callback(callbacks.get(i));
+          systemCallback(callbacks.get(i));
           conditionSatisfied.set(i, true);
         }
       }
@@ -130,7 +144,7 @@ public class WaitCore {
   void runTimeouts() {
     for (int i = 0; i < timeoutPolls.size(); i++) {
       if (waiters.pollCondition(timeoutPolls.get(i), timeoutData.get(i))) {
-        waitCallbacks.callback(timeoutCallbacks.get(i));
+        systemCallback(timeoutCallbacks.get(i));
         indices.add(i);
       }
     }
@@ -157,7 +171,7 @@ public class WaitCore {
   void executeIntervals() {
     for (int i = 0; i < intervalPolls.size(); i++) {
       if (waiters.pollCondition(intervalPolls.get(i), intervalData.get(i))) {
-        waitCallbacks.callback(intervalCallbacks.get(i));
+        systemCallback(intervalCallbacks.get(i));
 
         intervalData.set(i, waiters.generateData(intervalPolls.get(i), intervalArgs.get(i)));
       }
