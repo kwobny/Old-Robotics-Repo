@@ -102,9 +102,7 @@ If all the wait arguments are doubles, then switch the wait data types from Obje
 
 Think about making subpackages in the library to reduce clutter
 
-Think about restructuring the library classes. Maybe put all the wait code (simple wait, complex wait, etc.) in the separate wait class, make a different class for distance processing, and another for move commands, and another for the absolute core features. Also think about making a complex motions class which extends motions class. This class will contain complex methods such as path finding and drawing.
-
-A potential class system candidate is to break all semi independent features (RPS, wait, etc.) into their own classes, and have one common binding class.
+Think about having separate wait condition classes, one for each subsystem (RPS, SCS, Sensors, Arm, etc.) and one common wait core class to process them all. In this way, all of the waits are not stored on one class.
 
 Consider making interval wait be based upon set timeout instead of being its own thing
 
