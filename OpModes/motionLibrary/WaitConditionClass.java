@@ -46,4 +46,12 @@ public class WaitConditionClass
     }
 
     //END WAIT COMMANDS
+
+    //WAIT FOR DISTANCE
+    private Object[] generateDistanceData(Object[] args) {
+      //
+    }
+    private boolean pollDistance(Object[] data) {
+      //
+    }
 }
