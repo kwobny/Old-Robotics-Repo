@@ -3,6 +3,12 @@ package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
 
 public class RPS {
+  //NOTES
+  /*
+  1. When setting state, you need to explicitly call saveCurrentPosition, or have the second parameter of the first call to state setting function be true.
+  2. When you are measuring multiple quantities, it is helpful to call coreDistFunc explicitly, so that it is only called once and extra computation time is not wasted.
+  */
+
   //SETTING VARIABLES
   public final double totalAngleMeasure = 360; //the number of angle units in a full circle
 
@@ -88,6 +94,14 @@ public class RPS {
     return getDistanceTraveled(coreDistFunc());
   }
 
+  //this function resets the total distance traveled to 0 centimeters.
+  public void resetDistance(boolean saveState) {
+    if (saveState) saveCurrentPosition();
+    for (int i = 0; i < 3; i++) {
+      syncDistance[i] = 0.0;
+    }
+  }
+
   //these functions get the position of the robot relative to the reference point
   //order is x, then y
   private double angleSum = 0.0;
@@ -107,25 +121,23 @@ public class RPS {
     return temp;
   }
 
-  //this function shifts the point of reference by these distances in the x and y direction.
-  public void moveRefPoint(double x, double y) {
-    saveDistance();
-    syncDisplacement[0] -= x;
-    syncDisplacement[1] -= y;
-  }
-  //this is an overloaded version which shifts point to current robot position.
-  public void moveRefPoint() {
-    saveDistance();
-    syncDisplacement[0] = 0;
-    syncDisplacement[1] = 0;
+  //This function sets the robot's current position.
+  public void setPosition(double x, double y, boolean saveState) {
+    if (saveState) saveCurrentPosition();
+    syncDisplacement[0] = x;
+    syncDisplacement[1] = y;
   }
 
-  //this function resets the total distance traveled to 0 centimeters.
-  public void resetDistance() {
-    saveCurrentPosition();
-    for (int i = 0; i < 3; i++) {
-      syncDistance[i] = 0.0;
+  //This function shifts the position/changes it
+  //if the shiftRefPoint flag is set, then this function acts as a shift reference point function instead.
+  public void shiftPosition(double x, double y, boolean shiftRefPoint, boolean saveState) {
+    if (saveState) saveCurrentPosition();
+    if (shiftRefPoint) {
+      x *= -1.0;
+      y *= -1.0;
     }
+    syncDisplacement[0] += x;
+    syncDisplacement[1] += y;
   }
 
   //execute distance and displacement save function:
