@@ -59,6 +59,10 @@ just put a while loop in your code, with the wait as your condition. Make sure t
 
 When polling manually for waits, first call the generate data command through the .waiters.generateData function, then poll. a value of true means condition is complete, false means the wait is still continuing.
 
+**Notes about RPS**
+1. When setting state, you need to explicitly call saveCurrentPosition, or have the second parameter of the first call to state setting function be true.
+2. When you are measuring multiple quantities, it is helpful to call coreDistFunc explicitly, so that it is only called once and extra computation time is not wasted.
+
 # Todos for Todos:
 Create an algorithm to isolate lintrans component from any set of buffer values, for the wait for displacement.
 
