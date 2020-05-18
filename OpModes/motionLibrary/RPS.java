@@ -3,6 +3,9 @@ package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
 
 public class RPS {
+  //SETTING VARIABLES
+  public final double totalAngleMeasure = 360; //the number of angle units in a full circle
+
   //RESOURCE OBJECTS
   private MadHardware mhw;
   private Move moveObj;
@@ -18,8 +21,8 @@ public class RPS {
 
   //displacement and distance variables
   private double[] syncDisplacement = {0.0, 0.0}; //0 index is x, 1 is y
-  private double[] syncDistance = new double[3]; //order is total distance, x distance, and y distance
-  private double syncAngle = 0.0; // in degrees, positive is clockwise
+  private double[] syncDistance = new double[3]; //order is total distance, x distance, and y distance. positive x and y are in the right and up direction on the coordinate plane
+  private double syncAngle = 0.0; // in degrees, positive is clockwise, negative is counterclockwise. a direction of 0 indicates robot is facing upwards direction on coordinate plane
 
   //wheel position variables
   //left front, right front, left back, right back
@@ -62,7 +65,14 @@ public class RPS {
     return syncAngle + varArray[3];
   }
   public double getAngle() {
-    return getAbsAngle(coreDistFunc());
+    return syncAngle + coreDistFunc()[3];
+  }
+
+  //sets the robot angle at the current heading.
+  //for everytime state variables are changed, save current position has to be called once and once only. the second parameter is a safeguard to make sure that happens.
+  public void setAngle(double angle, boolean saveState) {
+    if (saveState) saveCurrentPosition();
+    syncAngle = angle % totalAngleMeasure;
   }
 
   //this function returns an array with the total distance (not displacement) traveled by the robot. index 0 is total distance, 1 is x distance, 2 is y distance
@@ -84,7 +94,6 @@ public class RPS {
   private double[] tempDisplacement = new double[2];
   public double[] getPosition(double[] displArray) {
     double originalAngle = syncAngle + Math.atan2(displArray[0], displArray[1]) * (180/Math.PI);
-    //science league afterschool, get clarinet, check email about distance learning, bring all the necessary stuff from binders home, disney trip canceled, check genesis
   }
   public double[] getPosition() {
     return getPosition(coreDistFunc());
@@ -96,11 +105,6 @@ public class RPS {
     temp[0] -= x;
     temp[1] -= y;
     return temp;
-  }
-
-  //sets the angle
-  public void setAngle() {
-    //
   }
 
   //this function shifts the point of reference by these distances in the x and y direction.
@@ -126,7 +130,7 @@ public class RPS {
 
   //execute distance and displacement save function:
   //Run this function on every upload to motors command or at every number of ticks traveled.
-  void saveCurrentPosition() {
+  public void saveCurrentPosition() {
     //add dx and dy to displacement and distance
     double[] tempArray = coreDistFunc();
     syncDisplacement = getPosition(tempArray);
