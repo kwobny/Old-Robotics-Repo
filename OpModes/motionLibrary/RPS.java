@@ -100,7 +100,7 @@ public class RPS {
   }
 
   //these functions get the position of the robot relative to the reference point
-  //order is x, then y
+  //return value array order is x, then y (in cm)
   private double angleSum = 0.0;
   private double[] tempDisplacement = new double[2];
   public double[] getPosition(double[] displArray) {
