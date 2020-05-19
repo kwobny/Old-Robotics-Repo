@@ -36,13 +36,15 @@ public class WaitConditionClass
     }
 
     //START WAIT COMMANDS
+    //parameters:
+    //1. amount of time to wait for (in seconds)
+
     public double changeInTime = 0;
     private Object[] generateTimeData(Object[] args) {
-      double time = (Double) args[0];
-      return new Object[]{time, runtime.time()};
+      return new Object[]{args[0], runtime.time()};
     }
     private boolean pollTime(Object[] data) {
-      changeInTime = runtime.time() - (double) (Double) args[1];
+      changeInTime = runtime.time() - (double) (Double) data[1];
       return changeInTime > (double) (Double) data[0];
     }
 
@@ -54,7 +56,7 @@ public class WaitConditionClass
     //2. flag if measuring change in distance (true) or just plain distance (false)
     private Object[] generateDistanceData(Object[] args) {
       if ((Boolean) args[1]) {
-        return new Object[]{(Double) args[0] + main.rps.getDistanceTraveled()};
+        return new Object[]{(Double) args[0] + main.rps.getDistanceTraveled()[0]};
       }
       else {
         return new Object[]{args[0]};
@@ -71,21 +73,28 @@ public class WaitConditionClass
     //3. flag if waiting until at position (false) or waiting until displacement traveled (true)
     //4 & 5. Optional. Are booleans representing which quadrant of the coordinate plane the robot has to be on relative to the point. The two parameters are x and y in that order. True represents positive direction, and false represents negative. Default is the quandrant facing away from the current robot location.
     private Object[] generateDisplacementData(Object[] args) {
-      boolean quadrantX, quadrantY;
+      Object quadrantX, quadrantY;
       double[] pos = main.rps.getPosition();
-      if (args.length == 3) {
-        quadrantX = (Double) args[0] > pos[0];
-        
-      }
-      else {
-        quadrantX = args[3];
-        quadrantY = args[4];
-      }
       if (args[2]) {
-        return new Object[]{(Double) args[0] + pos[0], (Double) args[1] + pos[1], (Double) args[0]};
+        if (args.length == 3) {
+          quadrantX = (Double) args[0] > 0.0;
+          quadrantY = (Double) args[1] > 0.0;
+        }
+        else {
+          quadrantX = args[3];
+          quardantY = args[4];
+        }
+        return new Object[]{(Double) args[0] + pos[0], (Double) args[1] + pos[1], quadrantX, quadrantY};
       }
       else {
-        //
+        if (args.length == 3) {
+          quadrantX = (Double) args[0] > pos[0];
+          quadrantY = (Double) args[1] > pos[1];
+        }
+        else {
+          quadrantX = args[3];
+          quardantY = args[4];
+        }
       }
     }
     private boolean pollDisplacement(Object[] data) {
