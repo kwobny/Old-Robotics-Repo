@@ -28,7 +28,7 @@ public class Main {
     mhw = hmw;
 
     //order of initialization is the wait conditions and callbacks, then wait core, then move core.
-    waitConditions.initialize(mhw, move);
+    waitConditions.initialize(mhw, this);
 
     wait.initialize(this, waitConditions, waitCallbacks);
     move.initialize(mhw, rps);
