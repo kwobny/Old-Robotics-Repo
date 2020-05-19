@@ -72,6 +72,11 @@ public class WaitConditionClass
     //2. y-position/displacement (in cm, double)
     //3. flag if waiting until at position (false) or waiting until displacement traveled (true)
     //4 & 5. Optional. Are booleans representing which quadrant of the coordinate plane the robot has to be on relative to the point. The two parameters are x and y in that order. True represents positive direction, and false represents negative. Default is the quandrant facing away from the current robot location.
+    
+    //Three things needed to be done:
+    //1. work out the total angle unit situation (if you are using boolean to represent if using radians or some other unit, maybe have a unit to radians conversion factor constant)
+    //2. work out how displacement is going to work
+    //3. work out how wait for angle is going to work.
     private Object[] generateDisplacementData(Object[] args) {
       Object quadrantX, quadrantY;
       double[] pos = main.rps.getPosition();
