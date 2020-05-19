@@ -108,6 +108,8 @@ Think about making subpackages in the library to reduce clutter
 
 Think about having separate wait condition classes, one for each subsystem (RPS, SCS, Sensors, Arm, etc.) and one common wait core class to process them all. In this way, all of the waits are not stored on one class.
 
+When designing RPS, choose what point on the robot will be considered its position (most likely going to be center of robot in between wheels)
+
 Consider making interval wait be based upon set timeout instead of being its own thing
 
 In motorcali, make a system which detects if a motor is being held back or stopped, by tracking the distance to power ratio of each of the 4 motors over time to see if they fluctuate. Do this to prevent motor burnout. If the system determines that this is happening, make it stop the robot, and reset the motor accelerations, speedfactors, and motor values immediately, until something like a button is pressed.
