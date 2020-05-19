@@ -9,9 +9,6 @@ public class RPS {
   2. When you are measuring multiple quantities, it is helpful to call coreDistFunc explicitly, so that it is only called once and extra computation time is not wasted.
   */
 
-  //SETTING VARIABLES
-  public final double totalAngleMeasure = 360; //the number of angle units in a full circle
-
   //RESOURCE OBJECTS
   private MadHardware mhw;
   private Move moveObj;
@@ -78,7 +75,7 @@ public class RPS {
   //for everytime state variables are changed, save current position has to be called once and once only. the second parameter is a safeguard to make sure that happens.
   public void setAngle(double angle, boolean saveState) {
     if (saveState) saveCurrentPosition();
-    syncAngle = angle % totalAngleMeasure;
+    syncAngle = angle % Constants.totalAngleMeasure;
   }
 
   //this function returns an array with the total distance (not displacement) traveled by the robot. index 0 is total distance, 1 is x distance, 2 is y distance
