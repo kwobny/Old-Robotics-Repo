@@ -110,6 +110,8 @@ Think about having separate wait condition classes, one for each subsystem (RPS,
 
 When designing RPS, choose what point on the robot will be considered its position (most likely going to be center of robot in between wheels)
 
+Make sure that the upload motors function only calls saveCurrentPosition if the amount of ticks traveled by 1 wheel exceeds a certain value. Or, in saveCurrentPosition, make sure that the position is saved only if a certain amount of distance/displacement is covered between the last save.
+
 Consider making interval wait be based upon set timeout instead of being its own thing
 
 In motorcali, make a system which detects if a motor is being held back or stopped, by tracking the distance to power ratio of each of the 4 motors over time to see if they fluctuate. Do this to prevent motor burnout. If the system determines that this is happening, make it stop the robot, and reset the motor accelerations, speedfactors, and motor values immediately, until something like a button is pressed.
