@@ -55,6 +55,7 @@ public class Move extends MoveCore {
 
   //rotate robot
   //power is the power of the left front wheel (or left wheel for two wheel sim)
+  //in two wheel sim mode, the robot is abstracted as a machine with two wheels, which are the robot's width distance apart.
   private final double ROTATE_CONSTANT = (Constants.robotWidth + Constants.robotLength)/Constants.robotWidth;
   public void moveRotate(double power, boolean use2WheeledSimulation) {
 
