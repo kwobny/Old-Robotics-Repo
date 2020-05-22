@@ -118,6 +118,8 @@ Get rid of the while true condition in the end program function, and replace it 
 
 Integrate total angle measure into rps, move and any other modules. Complete these parts too
 
+Make sure that all settings variables are listed in the constants class only, so that settings are all in one place.
+
 Consider making interval wait be based upon set timeout instead of being its own thing
 
 In motorcali, make a system which detects if a motor is being held back or stopped, by tracking the distance to power ratio of each of the 4 motors over time to see if they fluctuate. Do this to prevent motor burnout. If the system determines that this is happening, make it stop the robot, and reset the motor accelerations, speedfactors, and motor values immediately, until something like a button is pressed.
