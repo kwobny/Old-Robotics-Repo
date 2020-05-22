@@ -148,7 +148,7 @@ class MoveCore {
     powers[3] = universalBuffer.speedFactor * universalBuffer.leftRear * caliPowerFactor[3];
 
     //CHECK IF POWERS EXCEEDS BOUNDARIES
-    //if they do, then power values and universal speed factor are adjusted, and acceleration is set to 0 if going out of bounds.
+    //if they do, then power values (and only temporary power values) are adjusted.
 
     double limit = 1.0;
     for (double i : powers) {
