@@ -71,7 +71,7 @@ public class WaitConditionClass
     //1. x-position/displacement (in cm, double)
     //2. y-position/displacement (in cm, double)
     //3. flag if waiting until at position (false) or waiting until displacement traveled (true)
-    //4 & 5. Optional. Are booleans representing which quadrant of the coordinate plane the robot has to be on relative to the point. The two parameters are x and y in that order. True represents positive direction, and false represents negative. Default is the quandrant facing away from the current robot location.
+    //4 & 5. Optional parameters. Are angle measures which indicate what sector surrounding the target position/displacement the robot has to be in for the condition to be satisfied. The sector starts at the first parameter and ends at the second parameter. Default is a sector with its bisector being parallel to the line connecting the robot position to target, its size being predefined in the constants.
     
     //Three things needed to be done:
     //1. work out the total angle unit situation (if you are using boolean to represent if using radians or some other unit, maybe have a unit to radians conversion factor constant)

@@ -9,4 +9,5 @@ public class Constants {
   public static final double wheelDiameter = 3; //wheel diameter in centimeters
   public static final double distancePerTick = (Math.PI*wheelDiameter)/ticksPerRevolution; //how many centimeters wheel runs per wheel tick
   public static final double totalAngleMeasure = 360; //the number of angle units in a full circle
+  public static final double defaultSectorSize = 90; //The default size of the sector for wait for displacement.
 }
