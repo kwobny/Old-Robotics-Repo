@@ -1,6 +1,8 @@
 # RoboticsRepo
 [![Run on Repl.it](https://repl.it/badge/github/kwobny/RoboticsRepo)](https://repl.it/github/kwobny/RoboticsRepo)
 
+# think about implementing futures in Java
+
 # How to resolve repl it git issues:
 Not committing:
 1. Open the repl it bash shell by pressing Ctrl+Shift+P, searching "open shell" and clicking it
@@ -71,10 +73,6 @@ Find how to use the lintrans motor buffer, combined with the lintrans component 
 Find how to get time taken to traverse lengthened distance, for ILI.
 
 # Todo:
-
-think about implementing futures in Java
-
----
 
 Think of integrating PID control into the robot's movements.
 
