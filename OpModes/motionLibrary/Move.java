@@ -1,10 +1,9 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 
-import java.util.ArrayList;
 import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-public class Motions extends Base {
+public class Move extends MoveCore {
   //time system has simple wait, complex wait (add wait and commence wait), set timeout, add interval
   //concerns with time system: instantiate wait class and wait callbacks outside of motions function?
   //motor cali
@@ -35,11 +34,11 @@ public class Motions extends Base {
   //consider including compound timeout (multiple polls in one callback)
   //restructure/organize/increase efficiency of wait api
 
-  public Motions(MadHardware hmw) {
+  Move() {} //default access constructor, cannot be instantiated outside of package
+
+  public void initialize(MadHardware hmw, RPS rps) {
     mhw = hmw;
-    baseRuntime = new ElapsedTime();
-    waiters = new WaitConditionClass(hmw, this, baseRuntime);
-    waitCallbacks = new WaitCallbacks(hmw, this, baseRuntime);
+    rpss = rps;
 
     //set up lin trans and rotate buffer speed factor settings
     rotateBuffer.maxFactor = 0.1;
@@ -48,19 +47,20 @@ public class Motions extends Base {
     linTransBuffer.maxFactor = 2.0;
     linTransBuffer.minFactor = -2.0;
 
+    universalBuffer.speedFactor = 0.1;
+    universalBuffer.defaultSpeedFactor = 0.1;
   }
 
   //START MOVE COMMANDS
 
   //rotate robot
   //power is the power of the left front wheel (or left wheel for two wheel sim)
+  //in two wheel sim mode, the robot is abstracted as a machine with two wheels, which are the robot's width distance apart.
+  private final double ROTATE_CONSTANT = (Constants.robotWidth + Constants.robotLength)/Constants.robotWidth;
   public void moveRotate(double power, boolean use2WheeledSimulation) {
-    rotateBuffer.speedFactor = 0.1;
-
-    final double constant = (robotWidth + robotLength)/robotWidth;
 
     if (use2WheeledSimulation) {
-      power *= constant;
+      power *= ROTATE_CONSTANT;
     }
     
     rotateBuffer.leftFront = power;
@@ -71,8 +71,7 @@ public class Motions extends Base {
 
   //linear translate
   public void moveLinTrans(double rx, double ry, boolean boostOverride) {
-    double BOOOOOST = boostOverride ? 2.0 : 1.0;
-    linTransBuffer.speedFactor = 0.1 * BOOOOOST;
+    linTransBuffer.speedFactor = boostOverride ? 2.0 : 1.0;
 
     //using encoder to find magnitude of joystick x and y
     /*if (gamepadControl) {
@@ -150,8 +149,8 @@ public class Motions extends Base {
 
   //moveDirection is same as above
   public void moveRotDriveRadius(double power, double radius, double ...moveDirection) {
-    final double leftWheel = power * (radius + robotWidth/2)/(radius - robotWidth/2);
-    final double rightWheel = power * (radius - robotWidth/2)/(radius + robotWidth/2);
+    final double leftWheel = power * (radius + Constants.robotWidth/2)/(radius - Constants.robotWidth/2);
+    final double rightWheel = power * (radius - Constants.robotWidth/2)/(radius + Constants.robotWidth/2);
 
     moveRotDriveTank(leftWheel, rightWheel, moveDirection);
   }
