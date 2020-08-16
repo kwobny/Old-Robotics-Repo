@@ -1,1 +1,2 @@
-
+language="java10"
+run="javac --release 7"

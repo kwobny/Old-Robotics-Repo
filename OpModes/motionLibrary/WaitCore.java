@@ -7,118 +7,82 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class WaitCore {
 
   //RESOURCE OBJECTS
-  public WaitConditionClass waiters;
-  public WaitCallbackClass waitCallbacks;
   public Main main;
 
   Waitcore() {} //cannot be instantiated outside of package
 
-  public void initialize(Main c, WaitConditionClass a, WaitCallbackClass b) {
-    waiters = a;
-    waitCallbacks = b;
+  public void initialize(Main c) {
     main = c;
   }
 
-  //system callbacks always have a negative id, to reserve the positive ids for user callbacks.
-  private void systemCallback(int which) {
-    switch (which) {
-        case 0:
-          //no callback
-          break;
-        case -1:
-          main.runLowInterval();
-          break;
-        case -2:
-          main.runHighInterval();
-          break;
-        default:
-          waitCallbacks.callback(which);
-    }
-  }
-
   //simple wait functionality
-  public void simpleWait(WaitEnum waitCondition, Object ...args) {
-    Object[] dataForWait = waiters.generateData(waitCondition, args);
-    while (!waiters.pollCondition(waitCondition, dataForWait)) {
+  public void simpleWait(WaitCondition waitCondition) {
+    while (!waiters.pollCondition()) {
       main.loop();
     }
   }
 
   //arrays of waits/conditions to loop through
-  private ArrayList<WaitEnum> polls = new ArrayList<WaitEnum>();
-  private ArrayList<Integer> callbacks = new ArrayList<Integer>();
-  //data for polls
-  private ArrayList<Object[]> dataList = new ArrayList<Object[]>();
-  //array of booleans which specify whether or not condition has been satisfied
-  private ArrayList<Boolean> conditionSatisfied = new ArrayList<Boolean>();
+  private ArrayList<WaitCondition> polls = new ArrayList<WaitCondition>();
+  private ArrayList<Callback> callbacks = new ArrayList<Integer>();
 
   //the name of this method is self explanatory
-  public void addWait(WaitEnum pollToAdd, Integer callbackToAdd, Object ...args) {
+  public void addWait(WaitCondition pollToAdd, Callback callbackToAdd) {
     polls.add(pollToAdd);
     callbacks.add(callbackToAdd);
-    dataList.add(args);
-
-    conditionSatisfied.add(false);
   }
 
   //the name of this method is self explanatory
-  public void commenceWait(Comparator ...args) {
-    Comparator compMode;
-    if (args.length == 0) {
-      compMode = Comparator.AND;
-    }
-    else if (args.length == 1) {
-      compMode = args[0];
-    }
-    else {
-      return;
-    }
+  public void commenceWait() {
+    commenceWait(Comparator.AND);
+  }
+  public void commenceWait(Comparator compMode) {
 
-    boolean condition = false;
+    switch (compMode) {
+      case AND:
+        boolean[] conditionSatisfied = new boolean[polls.length];
+        while (true) {
+          for (int i = 0; i < polls.size(); i++) {
 
-    for (int i = 0; i < dataList.size(); i++) {
-      dataList.set(i, waiters.generateData(polls.get(i), dataList.get(i)));
-    }
+            if (!conditionSatisfied[i] && polls.get(i).pollCondition()) {
+              callbacks.get(i).run(polls.get(i));
+              conditionSatisfied[i] = true;
+            }
 
-    while (true) {
-      for (int i = 0; i < polls.size(); i++) {
-        if (!conditionSatisfied.get(i) && waiters.pollCondition(polls.get(i), dataList.get(i))) {
-          systemCallback(callbacks.get(i));
-          conditionSatisfied.set(i, true);
-        }
-      }
-      main.loop();
+          }
+          main.loop();
 
-      switch (compMode) {
-        case AND: {
-          condition = true;
+          boolean condition = true;
           for (boolean bool : conditionSatisfied) {
             if (!bool) {
               condition = false;
               break;
             }
           }
-          break;
-        }
-        case OR: {
-          condition = false;
-          for (boolean bool : conditionSatisfied) {
-            if (bool) {
-              condition = true;
-              break;
-            }
+          if (condition) {
+            break;
           }
-          break;
         }
-      }
-      if (condition) {
-        polls.clear();
-        callbacks.clear();
-        dataList.clear();
-        conditionSatisfied.clear();
+
         break;
-      }
+      case OR:
+        outer:
+        while (true) {
+          for (int i = 0; i < polls.size(); i++) {
+
+            if (polls.get(i).pollCondition()) {
+              callbacks.get(i).run();
+              break outer;
+            }
+
+          }
+          main.loop();
+        }
+
+        break;
     }
+
+    
   }
 
   //timeout functionality
@@ -134,40 +98,36 @@ public class WaitCore {
   }
 
   //allows things to execute once condition met, does not pause code execution
-  private ArrayList<WaitEnum> timeoutPolls = new ArrayList<WaitEnum>();
-  private ArrayList<Integer> timeoutCallbacks = new ArrayList<Integer>();
-  private ArrayList<Object[]> timeoutData = new ArrayList<Object[]>();
+  private ArrayList<WaitCondition> timeoutPolls = new ArrayList<WaitEnum>();
+  private ArrayList<Callback> timeoutCallbacks = new ArrayList<Integer>();
   
-  public void setTimeout(WaitEnum addCode, Integer callback, Object ...args) {
+  public void setTimeout(WaitCondition addCode, Callback callback) {
     timeoutPolls.add(addCode);
     timeoutCallbacks.add(callback);
-    timeoutData.add(waiters.generateData(addCode, args));
   }
   void runTimeouts() {
     for (int i = 0; i < timeoutPolls.size(); i++) {
-      if (waiters.pollCondition(timeoutPolls.get(i), timeoutData.get(i))) {
-        systemCallback(timeoutCallbacks.get(i));
+      if (timeoutPolls.get(i).pollCondition()) {
+        timeoutCallbacks.get(i).run(timeoutPolls.get(i));
         indices.add(i);
       }
     }
     removeFromArray(timeoutPolls, indices);
     removeFromArray(timeoutCallbacks, indices);
-    removeFromArray(timeoutData, indices);
     indices.clear();
   }
 
   //interval functionality
   //allows things to execute every so often
+  //currently turned off
 
-  private ArrayList<WaitEnum> intervalPolls = new ArrayList<WaitEnum>();
+  /*private ArrayList<WaitEnum> intervalPolls = new ArrayList<WaitEnum>();
   private ArrayList<Object[]> intervalData = new ArrayList<Object[]>();
   private ArrayList<Object[]> intervalArgs = new ArrayList<Object[]>();
   private ArrayList<Integer> intervalCallbacks = new ArrayList<Integer>();
 
-  public void addInterval(WaitEnum addIntervalCode, Integer intervalCallback, Object ...args) {
-    intervalPolls.add(addIntervalCode);
-    intervalArgs.add(args);
-    intervalData.add(waiters.generateData(addIntervalCode, args));
+  public void addInterval(WaitCondition poll, Callback intervalCallback) {
+    intervalPolls.add(poll);
     intervalCallbacks.add(intervalCallback);
   }
   void executeIntervals() {
@@ -178,5 +138,5 @@ public class WaitCore {
         intervalData.set(i, waiters.generateData(intervalPolls.get(i), intervalArgs.get(i)));
       }
     }
-  }
+  }*/
 }

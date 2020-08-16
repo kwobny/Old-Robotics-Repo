@@ -3,6 +3,32 @@ package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+class SystemCallbacks {
+
+  Main main;
+
+  public SystemCallbacks(Main m) {
+    main = m;
+  }
+
+  public final Callback LowInterval = new Callback() {
+    @override
+    public void run(WaitCondition cond) {
+      main.runLowInterval(cond.changeInTime);
+      main.wait.setTimeout(new main.common_waits.Time(), this);
+    }
+  };
+
+  public final Callback HighInterval = new Callback() {
+    @override
+    public void run(WaitCondition cond) {
+      main.runHighInterval(cond.changeInTime);
+      main.wait.setTimeout(new main.common_waits.Time(), this);
+    }
+  };
+
+}
+
 public class Main {
   //SETTING VARIABLES
   public final double lowFreqMaintInterval = 0.2; //period in which low frequency periodic functions like motor cali run (in seconds)
@@ -14,7 +40,8 @@ public class Main {
   public MadHardware mhw;
 
   //this next grouping of stuff is a group of three parts, which are all triangularly dependent on each other, and madhardware.
-  public WaitConditionClass waitConditions = new WaitConditionClass();
+  public CommonWaits common_waits = new CommonWaits(this);
+  private SystemCallbacks system_callbacks = new SystemCallbacks(this);
 
   public Move move = new Move();
   public WaitCore wait = new WaitCore();
@@ -36,23 +63,22 @@ public class Main {
     rps.initialize(mhw, move);
 
     //SETUP
-    wait.addInterval(WaitEnum.TIME, -1, lowFreqMaintInterval);
-    wait.addInterval(WaitEnum.TIME, -2, highFreqMaintInterval);
+    wait.setTimeout(new common_waits.Time(lowFreqMaintInterval), system_callbacks.LowInterval);
+    wait.setTimeout(new common_waits.Time(highFreqMaintInterval), system_callbacks.HighInterval);
   }
 
   //OTHER FUNCTIONS AND STUFF
 
   // loop for the motions
   public void loop() {
-    wait.executeIntervals();
     wait.runTimeouts();
   }
 
-  void runLowInterval() {
+  void runLowInterval(final double change_in_time) {
     move.motorCali();
   }
-  void runHighInterval() {
-    move.runCommonAccelerationSystem(waitConditions.changeInTime);
+  void runHighInterval(final double change_in_time) {
+    move.runCommonAccelerationSystem(change_in_time);
   }
 
   // function that you call at the end of autonomous sequence to wait for program
