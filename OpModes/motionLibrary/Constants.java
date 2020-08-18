@@ -1,3 +1,5 @@
+//is a class that includes universal constants as well as universal utility methods
+
 public class Constants {
   private Constants() {}
 
@@ -10,4 +12,13 @@ public class Constants {
   public static final double distancePerTick = (Math.PI*wheelDiameter)/ticksPerRevolution; //how many centimeters wheel runs per wheel tick
   public static final double totalAngleMeasure = 360; //the number of angle units in a full circle
   public static final double defaultSectorSize = 90; //The default size of the sector for wait for displacement.
+
+  static void removeFromArray(ArrayList<?> primaryArray, ArrayList<Integer> indexArray) {
+    //the index array is expected to be sorted from least to greatest
+    int valueDecrease = 0;
+    for (int i : indexArray) {
+      primaryArray.remove(i-valueDecrease);
+      valueDecrease += 1;
+    }
+  }
 }

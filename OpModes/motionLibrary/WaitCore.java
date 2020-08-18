@@ -23,11 +23,11 @@ public class WaitCore {
   }
 
   //arrays of waits/conditions to loop through
-  private ArrayList<WaitCondition> polls = new ArrayList<WaitCondition>();
-  private ArrayList<Callback> callbacks = new ArrayList<Integer>();
+  private ArrayList<WaitCondition> polls = new ArrayList<>();
+  private ArrayList<WaitCallback> callbacks = new ArrayList<>();
 
   //the name of this method is self explanatory
-  public void addWait(WaitCondition pollToAdd, Callback callbackToAdd) {
+  public void addWait(WaitCondition pollToAdd, WaitCallback callbackToAdd) {
     polls.add(pollToAdd);
     callbacks.add(callbackToAdd);
   }
@@ -87,21 +87,14 @@ public class WaitCore {
 
   //timeout functionality
 
-  //important function to remove multiple items from ArrayList
+  //indices to pass to remove indices function
   private ArrayList<Integer> indices = new ArrayList<Integer>();
-  private void removeFromArray(ArrayList<?> primaryArray, ArrayList<Integer> indexArray) {
-    int valueDecrease = 0;
-    for (int i : indexArray) {
-      primaryArray.remove(i-valueDecrease);
-      valueDecrease += 1;
-    }
-  }
 
   //allows things to execute once condition met, does not pause code execution
   private ArrayList<WaitCondition> timeoutPolls = new ArrayList<WaitEnum>();
-  private ArrayList<Callback> timeoutCallbacks = new ArrayList<Integer>();
+  private ArrayList<WaitCallback> timeoutCallbacks = new ArrayList<Integer>();
   
-  public void setTimeout(WaitCondition addCode, Callback callback) {
+  public void setTimeout(WaitCondition addCode, WaitCallback callback) {
     timeoutPolls.add(addCode);
     timeoutCallbacks.add(callback);
   }
@@ -112,8 +105,8 @@ public class WaitCore {
         indices.add(i);
       }
     }
-    removeFromArray(timeoutPolls, indices);
-    removeFromArray(timeoutCallbacks, indices);
+    Constants.removeFromArray(timeoutPolls, indices);
+    Constants.removeFromArray(timeoutCallbacks, indices);
     indices.clear();
   }
 
@@ -126,7 +119,7 @@ public class WaitCore {
   private ArrayList<Object[]> intervalArgs = new ArrayList<Object[]>();
   private ArrayList<Integer> intervalCallbacks = new ArrayList<Integer>();
 
-  public void addInterval(WaitCondition poll, Callback intervalCallback) {
+  public void addInterval(WaitCondition poll, WaitCallback intervalCallback) {
     intervalPolls.add(poll);
     intervalCallbacks.add(intervalCallback);
   }

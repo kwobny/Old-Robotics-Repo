@@ -1,14 +1,13 @@
-class Base {
-  void Test(final boolean a) {
-    //
-  }
+abstract class Base {
+  abstract void Test(Base lol);
 
   int b = 3;
 }
 
 class Derived extends Base {
-  void Test(boolean b) {
-    //
+  @Override
+  void Test(Derived lola) {
+    System.out.println(lola.b);
   }
 
   int b = 5;
@@ -19,11 +18,10 @@ public class TestFile {
     /*int[] lol;
     lol = new int[4];
     System.out.println(lol[2]);*/
+    //
+  }
 
-    Derived d = new Derived();
-    Base b = (Base) d;
-
-    System.out.println(d.b);
-    System.out.println(b.b);
+  public static void TestFunc(Derived intsas) {
+    System.out.println(intsas);
   }
 }

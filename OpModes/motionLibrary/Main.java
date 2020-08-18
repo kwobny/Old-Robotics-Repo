@@ -11,18 +11,18 @@ class SystemCallbacks {
     main = m;
   }
 
-  public final Callback LowInterval = new Callback() {
+  public final WaitCallback LowInterval = new WaitCallback() {
     @override
     public void run(WaitCondition cond) {
-      main.runLowInterval(cond.changeInTime);
+      main.runLowInterval(( (CommonWaits.Time) cond ).changeInTime);
       main.wait.setTimeout(new main.common_waits.Time(), this);
     }
   };
 
-  public final Callback HighInterval = new Callback() {
+  public final WaitCallback HighInterval = new WaitCallback() {
     @override
     public void run(WaitCondition cond) {
-      main.runHighInterval(cond.changeInTime);
+      main.runHighInterval(( (CommonWaits.Time) cond ).changeInTime);
       main.wait.setTimeout(new main.common_waits.Time(), this);
     }
   };

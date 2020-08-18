@@ -1,4 +1,4 @@
-import MathFunctions.*
+import MathFunctions.*;
 
 public class SCSOpUnit {
 
@@ -9,17 +9,19 @@ public class SCSOpUnit {
 
   public double refInput; //reference input
 
+  boolean isRunning;
+
   public SCSOpUnit(final InputSource input, final OutputSink output, final MathFunction graphFunc) {
     this.input = input;
     this.output = output;
     this.graphFunc = graphFunc;
   }
 
-  public void calibrate(final double refInput) {
-    this.refInput = refInput;
+  void calibrate() {
+    this.refInput = input.get();
   }
 
-  public void update() {
+  void update() {
     output.set(graphFunc.yValueOf(input.get() - refInput));
   }
 

@@ -4,7 +4,7 @@
   public void run() {}
 }*/
 
-public enum NullCallback implements Callback {
+public enum NullCallback implements WaitCallback {
   obj;
 
   public void run() {}

@@ -20,36 +20,83 @@ class MoveCore {
   //motor buffers make it possible to superimpose two or more different motions together to achieve a sum of the motions
 
   //motor buffer class
-  public static class motorBufferClass {
-    public double leftFront = 0.0;
-    public double leftRear = 0.0;
-    public double rightFront = 0.0;
-    public double rightRear = 0.0;
+  public static class motorBufferClass implements InputSource, OutputSink {
+    motorBufferClass() {} //cannot be instantiated outside of package
 
+    double leftFront = 0.0;
+    double leftRear = 0.0;
+    double rightFront = 0.0;
+    double rightRear = 0.0;
+
+    //the speed factor variable is the raw speedfactor, (which means it is already multiplied by the ref speed factor)
     public double speedFactor = 1.0;
-    public double defaultSpeedFactor = 1.0;
-    public double acceleration = 0.0; //acceleration in percent of everything per second
-    public double threshold = 0.0; //acceleration stops when speedfactor passes threshold.
-    public boolean thresholdEnabled = false;
+    public double refSpeedFactor = 1.0;
+
     public void resetSpeedFactor() {
-      speedFactor = defaultSpeedFactor;
-      acceleration = 0.0;
-    }
-    public void setThreshold(double value) {
-      threshold = value;
-      thresholdEnabled = true;
+      speedFactor = refSpeedFactor;
     }
 
-    public double minFactor = -1.0;
-    public double maxFactor = 1.0;
-    //min and max factor are meant to be constants, unlike the variable threshold variable.
+    //now, the methods/classes which make this compatible with other parts of the library
+
+    //input source get method for SCS
+    @Override
+    public double get() {
+      return speedFactor/refSpeedFactor;
+    }
+    //output sink set method for SCS
+    @Override
+    public void set(double val) {
+      speedFactor = val * refSpeedFactor;
+    }
+
+    //wait class so that the motor buffer speed factor can be waited upon (wow, a THIRD ORDER class!!!!)
+    public class SFWait implements WaitCondition {
+
+      private double SF;
+      private boolean untilAbove;
+      
+      //if untilAbove is true, the object waits until the motor buffer speed factor is above the provided threshold. Otherwise, the object waits until it is below the threshold.
+      public SFWait(final double SF, final boolean untilAbove) {
+        this.SF = SF;
+        this.untilAbove = untilAbove;
+      }
+      
+      @Override
+      public boolean pollCondition() {
+        if (untilAbove) {
+          return SF > speedFactor;
+        }
+        else {
+          return SF < speedFactor;
+        }
+      }
+
+    }
+  }
+  public static class UserBuffer extends motorBufferClass {
+    UserBuffer() {} //cannot be instantiated outside of package
+
+    //order is left front, right front, left rear, and right rear.
+    //if a value is -0.0 (remember, floating point numbers have two values for 0, one positive and one negative), it signifies not to change the value.
+    public void setWheelValues(final double ...values) {
+      if (values.length != 4) return;
+      
+      if (values[0] != -0.0)
+        leftFront = values[0];
+      if (values[1] != -0.0)
+        rightFront = values[1];
+      if (values[2] != -0.0)
+        leftRear = values[2];
+      if (values[3] != -0.0)
+        rightRear = values[3];
+    }
   }
 
   //declaring all motor buffers
-  protected motorBufferClass rotateBuffer = new motorBufferClass();
-  protected motorBufferClass linTransBuffer = new linTransBufferClass();
+  public motorBufferClass rotateBuffer = new motorBufferClass();
+  public motorBufferClass linTransBuffer = new linTransBufferClass();
   //user controlled buffer
-  public motorBufferClass userBuffer = new motorBufferClass();
+  public UserBuffer userBuffer = new UserBuffer();
 
   //upload motor buffer function
   protected motorBufferClass universalBuffer = new motorBufferClass();
