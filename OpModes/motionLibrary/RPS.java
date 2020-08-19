@@ -7,6 +7,7 @@ public class RPS {
   /*
   1. When setting state, you need to explicitly call saveCurrentPosition, or have the second parameter of the first call to state setting function be true.
   2. When you are measuring multiple quantities, it is helpful to call coreDistFunc explicitly, so that it is only called once and extra computation time is not wasted.
+  3: All functions that deal with translative motion are measured in whatever unit that the distance per tick constant is defined in (cm probably). All functions that deal with rotative motion are measured in the units defined in the total angle measure constant (degrees for now)
   */
 
   //RESOURCE OBJECTS
@@ -62,8 +63,8 @@ public class RPS {
     return new double[]{dx, dy, dHyp, dAngle};
   }
 
-  //get the current angle orientation of the robot
-  //positive is clockwise, negative is counterclockwise
+  //get the current angle orientation of the robot relative to the origin angle
+  //positive is clockwise relative to angle, negative is counterclockwise
   public double getAngle(double[] varArray) {
     return syncAngle + varArray[3];
   }
@@ -99,7 +100,8 @@ public class RPS {
     }
   }
 
-  //these functions get the position of the robot relative to the reference point
+  //these functions get the position of the robot relative to the reference point/origin
+  //positive x and y quadrant is top right, like in normal graphs
   //return value array order is x, then y (in cm)
   private double angleSum = 0.0;
   private double[] tempDisplacement = new double[2];
@@ -109,7 +111,7 @@ public class RPS {
   public double[] getPosition() {
     return getPosition(coreDistFunc());
   }
-  //this function gets the robot's position relative to a certain point, which itself is relative to the reference point.
+  //this function gets the robot's position relative to a certain point, which itself is relative to the reference point/origin.
   //x and y signify a point, relative to current reference point
   public double[] getRelPosition(double x, double y) {
     double[] temp = getPosition();
@@ -139,6 +141,8 @@ public class RPS {
 
   //execute distance and displacement save function:
   //Run this function on every upload to motors command or at every number of ticks traveled.
+  //Also run whenever you are setting the position parameters
+  //This function establishes a vertex in the path traveled (the robot path is made of many lines joined together. A vertex forms when the robot's translation direction changes (logically). This function must be called every time that happens)
   public void saveCurrentPosition() {
     //add dx and dy to displacement and distance
     double[] tempArray = coreDistFunc();
@@ -152,4 +156,43 @@ public class RPS {
     lastWheelPos[2] = mhw.leftBack.getCurrentPosition();
     lastWheelPos[3] = mhw.rightBack.getCurrentPosition();
   }
+
+
+  //Now, for the classes and methods that make this compatible with other classes (mainly SCS)
+
+  public InputSource AngleInput = new InputSource() {
+
+    @Override
+    public double get() {
+      return getAngle();
+    }
+
+  };
+
+  public InputSource DistanceInput = new InputSource() {
+
+    @Override
+    public double get() {
+      return getDistanceTraveled()[0];
+    }
+
+  };
+
+  private class PositionInputClass implements InputSource {
+
+    private final int coordinateNum;
+    PositionInput(final int coordinateNum) {
+      this.coordinateNum = coordinateNum;
+    }
+    
+    @Override
+    public double get() {
+      return getPosition()[coordinateNum];
+    }
+
+  }
+
+  public InputSource PosInputX = new PositionInputClass(0);
+  public InputSource PosInputY = new PositionInputClass(1);
+
 }
