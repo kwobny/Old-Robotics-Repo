@@ -1,4 +1,8 @@
-import MathFunctions.*;
+package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
+
+import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.MathFunctions.*;
+
+//Each object of this class contains all the data necessary to represent one SCS operation.
 
 public class SCSOpUnit {
 

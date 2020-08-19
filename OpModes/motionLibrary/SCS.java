@@ -1,9 +1,17 @@
 //Speed (/speedfactor) Control System
 
-package new_code;
+package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 
-import MathFunctions.*;
+import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.MathFunctions.*;
 import java.util.ArrayList;
+
+//Every acceleration or automatic change in an output (motor buffer speedfactors mainly) is called an operation
+
+//Each SCS operation consists of four main things:
+//1: An input (usually time, distance, sensors, etc. but can be anything)
+//2: An output (usually motor buffers, but can also be anything)
+//3: A threshold which specifies when to stop running the operation
+//4: A graph function (provided by the MathFunctions sub library)
 
 public class SCS {
 

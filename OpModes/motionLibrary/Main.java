@@ -47,6 +47,7 @@ public class Main {
   public WaitCore wait = new WaitCore();
 
   public RPS rps = new RPS();
+  public SCS scs = new SCS();
 
   //CONSTRUCTOR
 

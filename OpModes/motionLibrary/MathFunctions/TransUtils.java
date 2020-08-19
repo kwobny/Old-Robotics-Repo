@@ -1,4 +1,4 @@
-package MathFunctions;
+package org.firstinspires.ftc.teamcode.OpModes.motionLibrary.MathFunctions;
 
 //defines utility functions for using transformations
 

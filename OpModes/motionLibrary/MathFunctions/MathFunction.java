@@ -1,4 +1,4 @@
-package MathFunctions;
+package org.firstinspires.ftc.teamcode.OpModes.motionLibrary.MathFunctions;
 
 //This abstract class is the one which represents a mathematical function (linear, quadratic, sine, etc.) that takes a numerical input and returns a numerical output
 

@@ -1,4 +1,4 @@
-package MathFunctions;
+package org.firstinspires.ftc.teamcode.OpModes.motionLibrary.MathFunctions;
 
 public class CommonFuncs {
 

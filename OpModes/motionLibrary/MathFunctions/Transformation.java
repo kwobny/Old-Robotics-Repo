@@ -1,4 +1,4 @@
-package MathFunctions;
+package org.firstinspires.ftc.teamcode.OpModes.motionLibrary.MathFunctions;
 
 public abstract class Transformation extends MathFunction {
 
