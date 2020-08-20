@@ -23,13 +23,13 @@ public class WaitCore {
   }
 
   //arrays of waits/conditions to loop through
-  private ArrayList<WaitCondition> polls = new ArrayList<>();
-  private ArrayList<WaitCallback> callbacks = new ArrayList<>();
+  private ArrayList<WaitTask> waits = new ArrayList<>();
 
   //the name of this method is self explanatory
-  public void addWait(WaitCondition pollToAdd, WaitCallback callbackToAdd) {
-    polls.add(pollToAdd);
-    callbacks.add(callbackToAdd);
+  public WaitTask addWait(WaitCondition pollToAdd, WaitCallback callbackToAdd) {
+    final WaitTask retWait = new WaitTask(pollToAdd, callbackToAdd);
+    waits.add(retWait);
+    return retWait;
   }
 
   //the name of this method is self explanatory
@@ -42,10 +42,10 @@ public class WaitCore {
       case AND:
         boolean[] conditionSatisfied = new boolean[polls.length];
         while (true) {
-          for (int i = 0; i < polls.size(); i++) {
+          for (WaitTask currentWait : waits) {
 
-            if (!conditionSatisfied[i] && polls.get(i).pollCondition()) {
-              callbacks.get(i).run(polls.get(i));
+            if (!conditionSatisfied[i] && currentWait.condition.pollCondition()) {
+              currentWait.callback.run(currentWait.condition);
               conditionSatisfied[i] = true;
             }
 
@@ -68,10 +68,10 @@ public class WaitCore {
       case OR:
         outer:
         while (true) {
-          for (int i = 0; i < polls.size(); i++) {
+          for (WaitTask currentWait : waits) {
 
-            if (polls.get(i).pollCondition()) {
-              callbacks.get(i).run();
+            if (currentWait.condition.pollCondition()) {
+              currentWait.callback.run(currentWait.condition);
               break outer;
             }
 
@@ -91,22 +91,21 @@ public class WaitCore {
   private ArrayList<Integer> indices = new ArrayList<Integer>();
 
   //allows things to execute once condition met, does not pause code execution
-  private ArrayList<WaitCondition> timeoutPolls = new ArrayList<WaitEnum>();
-  private ArrayList<WaitCallback> timeoutCallbacks = new ArrayList<Integer>();
+  private ArrayList<WaitTask> timeoutTasks = new ArrayList<>();
   
-  public void setTimeout(WaitCondition addCode, WaitCallback callback) {
-    timeoutPolls.add(addCode);
-    timeoutCallbacks.add(callback);
+  public void setTimeout(WaitCondition addCondition, WaitCallback callback) {
+    final WaitTask retTask = new WaitTask(addCondition, callback);
+    timeoutTasks.add(retTask);
+    return retTask;
   }
   void runTimeouts() {
-    for (int i = 0; i < timeoutPolls.size(); i++) {
-      if (timeoutPolls.get(i).pollCondition()) {
-        timeoutCallbacks.get(i).run(timeoutPolls.get(i));
+    for (WaitTask task : timeoutTasks) {
+      if (task.condition.pollCondition()) {
+        task.callback.run(task.condition);
         indices.add(i);
       }
     }
-    Constants.removeFromArray(timeoutPolls, indices);
-    Constants.removeFromArray(timeoutCallbacks, indices);
+    Constants.removeFromArray(timeoutTasks, indices);
     indices.clear();
   }
 
