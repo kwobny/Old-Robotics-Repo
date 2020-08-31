@@ -16,11 +16,12 @@ public abstract class CompoundWait implements WaitCondition {
         retVal = new OrPoll();
         break;
       default:
-        return null;
-        break;
+        throw new Exception("I don't know how the F#ck you did this, but you managed to provide a value from the Comparator enum that was not accounted for in the CompoundWait functionality.");
     }
 
     retVal.tasks = tasks;
+
+    return retVal;
   }
 
   private static class AndPoll extends CompoundWait {
@@ -31,10 +32,7 @@ public abstract class CompoundWait implements WaitCondition {
     public boolean pollCondition() {
       for (WaitTask currentWait : tasks) {
 
-        if (!conditionSatisfied[i] && currentWait.condition.pollCondition()) {
-          if (currentWait.callback != null) {
-            currentWait.callback.run(currentWait.condition);
-          }
+        if (!conditionSatisfied[i] && currentWait.run()) {
           conditionSatisfied[i] = true;
         }
 
@@ -56,10 +54,7 @@ public abstract class CompoundWait implements WaitCondition {
     public boolean pollCondition() {
       for (WaitTask currentWait : waits) {
 
-        if (currentWait.condition.pollCondition()) {
-          if (currentWait.callback != null) {
-            currentWait.callback.run(currentWait.condition);
-          }
+        if (currentWait.run()) {
           return true;
         }
 

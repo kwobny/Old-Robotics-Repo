@@ -21,6 +21,12 @@ public class WaitCore {
       main.loop();
     }
   }
+  public void simpleWait(WaitCondition condition, WaitCallback callback, WaitCallback runWhile) {
+    final WaitTask task = new WaitTask(condition, callback, runWhile);
+    while (!task.run()) {
+      main.loop();
+    }
+  }
 
   //timeout functionality
 
@@ -30,17 +36,18 @@ public class WaitCore {
   //allows things to execute once condition met, does not pause code execution
   private ArrayList<WaitTask> timeoutTasks = new ArrayList<>();
   
-  public WaitTask setTimeout(WaitCondition addCondition, WaitCallback callback) {
-    final WaitTask retTask = new WaitTask(addCondition, callback);
+  public WaitTask setTimeout(WaitCondition addCondition, WaitCallback callback, WaitCallback runWhile) {
+    final WaitTask retTask = new WaitTask(addCondition, callback, runWhile);
     timeoutTasks.add(retTask);
     return retTask;
   }
+  public WaitTask setTimeout(WaitCondition addCondition, WaitCallback callback) {
+    return setTimeout(addCondition, callback, null);
+  }
+
   void runTimeouts() {
     for (WaitTask task : timeoutTasks) {
-      if (task.condition.pollCondition()) {
-        if (task.callback != null) {
-          task.callback.run(task.condition);
-        }
+      if (task.run()) {
         indices.add(i);
       }
     }
