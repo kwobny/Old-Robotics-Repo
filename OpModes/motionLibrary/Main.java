@@ -72,6 +72,7 @@ public class Main {
 
   // loop for the motions
   public void loop() {
+    wait.runLoopCallbacks();
     wait.runTimeouts();
   }
 

@@ -77,4 +77,28 @@ public class WaitCore {
       }
     }
   }*/
+
+  //these callbacks are run on every loop, and can be added and removed.
+  private ArrayList<CancellableCallback> loopCallbacks = new ArrayList<>();
+
+  public CancellableCallback addLoopCallback(final CancellableCallback callback) {
+    loopCallbacks.add(callback);
+  }
+  public CancellableCallback removeLoopCallback(final CancellableCallback callback) {
+    callback.isActive = false;
+  }
+
+  void runLoopCallbacks() {
+    for (int i = 0; i < loopCallbacks.size(); i++) {
+      CancellableCallback callback = loopCallbacks.get(i);
+      if (callback.isActive) {
+        callback.run();
+      }
+      else {
+        indices.add(i);
+      }
+    }
+    Constants.removeFromArray(loopCallbacks, indices);
+    indices.clear();
+  }
 }
