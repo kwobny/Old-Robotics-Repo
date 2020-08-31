@@ -101,4 +101,20 @@ public class WaitCore {
     Constants.removeFromArray(loopCallbacks, indices);
     indices.clear();
   }
+
+  //This is just like the loop callbacks mechanism, except it runs from a static array of callbacks (unlike the CancellableCallback mechanism above).
+  //It is only used by the library itself, not by the user.
+  //This mechanism is the first thing run in the loop function, followed by the cancellable loop callback mechanism above, and then the wait timeouts.
+  private Callback[] staticLoopCallbacks;
+
+  void setStaticCallbacks(final Callback[] callbacks) {
+    staticLoopCallbacks = callbacks;
+  }
+
+  void runStaticCallbacks() {
+    for (Callback i : staticLoopCallbacks) {
+      i.run();
+    }
+  }
+
 }

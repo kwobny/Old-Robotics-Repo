@@ -14,12 +14,12 @@ public class WaitTask {
 
     if (condition.pollCondition()) {
       if (callback != null) {
-        callback.run(task.condition);
+        callback.run(condition);
       }
       return true;
     }
     if (runWhile != null) {
-      runWhile.run();
+      runWhile.run(condition);
     }
     return false;
 

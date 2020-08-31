@@ -1,9 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 
-public abstract class CancellableCallback {
-
+public abstract class CancellableCallback implements Callback {
+  
   boolean isActive = true;
-
-  public abstract void run();
 
 }
