@@ -7,7 +7,7 @@ public class WaitTask {
   public WaitCondition condition;
   public Callback callback;
 
-  WaitTask(final WaitCondition condition, final Callback callback) {
+  public WaitTask(final WaitCondition condition, final Callback callback) {
     this.condition = condition;
     this.callback = callback;
   }
