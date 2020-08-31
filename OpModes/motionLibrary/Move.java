@@ -39,16 +39,6 @@ public class Move extends MoveCore {
   public void initialize(MadHardware hmw, RPS rps) {
     mhw = hmw;
     rpss = rps;
-
-    //set up lin trans and rotate buffer speed factor settings
-    rotateBuffer.maxFactor = 0.1;
-    rotateBuffer.minFactor = -0.1;
-
-    linTransBuffer.maxFactor = 2.0;
-    linTransBuffer.minFactor = -2.0;
-
-    universalBuffer.speedFactor = 0.1;
-    universalBuffer.defaultSpeedFactor = 0.1;
   }
 
   //START MOVE COMMANDS
@@ -71,7 +61,6 @@ public class Move extends MoveCore {
 
   //linear translate
   public void moveLinTrans(double rx, double ry, boolean boostOverride) {
-    linTransBuffer.speedFactor = boostOverride ? 2.0 : 1.0;
 
     //using encoder to find magnitude of joystick x and y
     /*if (gamepadControl) {
@@ -82,6 +71,11 @@ public class Move extends MoveCore {
     //calculating motor powers
     double a = rx + ry;
     double b = ry - rx;
+
+    if (boostOverride) {
+      a *= 2.0;
+      b *= 2.0;
+    }
 
     //sets powers according to compensation
     linTransBuffer.leftFront = a;

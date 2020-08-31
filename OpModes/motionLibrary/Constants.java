@@ -14,6 +14,7 @@ public class Constants {
   public static final double distancePerTick = (Math.PI*wheelDiameter)/ticksPerRevolution; //how many centimeters wheel runs per wheel tick
   public static final double totalAngleMeasure = 360; //the number of angle units in a full circle
   public static final double defaultSectorSize = 90; //The default size of the sector for wait for displacement.
+  public static final double motor_down_scale = 0.2; //specifies the universal buffer reference speed factor
 
   static void removeFromArray(ArrayList<?> primaryArray, ArrayList<Integer> indexArray) {
     //the index array is expected to be sorted from least to greatest

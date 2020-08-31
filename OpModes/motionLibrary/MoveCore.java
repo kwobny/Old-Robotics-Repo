@@ -21,7 +21,12 @@ class MoveCore {
 
   //motor buffer class
   public static class motorBufferClass implements InputSource, OutputSink {
-    motorBufferClass() {} //cannot be instantiated outside of package
+    motorBufferClass(final double refFactor) { //cannot be instantiated outside of package
+      refSpeedFactor = refFactor;
+    }
+    motorBufferClass() {
+      this(1.0);
+    }
 
     double leftFront = 0.0;
     double leftRear = 0.0;
@@ -29,8 +34,8 @@ class MoveCore {
     double rightRear = 0.0;
 
     //the speed factor variable is the raw speedfactor, (which means it is already multiplied by the ref speed factor)
-    public double speedFactor = 1.0;
-    public double refSpeedFactor = 1.0;
+    public final double refSpeedFactor;
+    public double speedFactor = refSpeedFactor;
 
     public void resetSpeedFactor() {
       speedFactor = refSpeedFactor;
@@ -74,7 +79,10 @@ class MoveCore {
     }
   }
   public static class UserBuffer extends motorBufferClass {
-    UserBuffer() {} //cannot be instantiated outside of package
+    UserBuffer(final double refFactor) { //cannot be instantiated outside of package
+      super(refFactor);
+    }
+    UserBuffer() {}
 
     //order is left front, right front, left rear, and right rear.
     //if a value is -0.0 (remember, floating point numbers have two values for 0, one positive and one negative), it signifies not to change the value.
@@ -99,7 +107,7 @@ class MoveCore {
   public UserBuffer userBuffer = new UserBuffer();
 
   //upload motor buffer function
-  protected motorBufferClass universalBuffer = new motorBufferClass();
+  protected motorBufferClass universalBuffer = new motorBufferClass(Constants.motor_down_scale);
   private motorBufferClass[] bufferArray = new motorBufferClass[]{universalBuffer, rotateBuffer, linTransBuffer, userBuffer};
 
   public void syncMotors() {
