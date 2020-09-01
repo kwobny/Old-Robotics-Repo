@@ -38,14 +38,17 @@ public class SCS {
     Constants.removeFromArray(operations, indices);
   }
 
-  public SCSOpUnit addOperation(SCSOpUnit op) {
+  public SCSOpUnit addOperation(SCSOpUnit op) throws Exception {
+    if (op.isRunning) throw new Exception("The SCS operation you are trying to run is already running");
+
     op.calibrate();
     op.isRunning = true;
     operations.add(op);
     return op;
   }
 
-  public void removeOperation(SCSOpUnit op) {
+  public void removeOperation(SCSOpUnit op) throws Exception {
+    if (!op.isRunning) throw new Exception("Cannot remove an SCS operation that has not been added in the first place");
     op.running = false;
   }
 

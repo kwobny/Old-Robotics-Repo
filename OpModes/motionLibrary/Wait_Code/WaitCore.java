@@ -81,10 +81,13 @@ public class WaitCore {
   //these callbacks are run on every loop, and can be added and removed.
   private ArrayList<CancellableCallback> loopCallbacks = new ArrayList<>();
 
-  public CancellableCallback addLoopCallback(final CancellableCallback callback) {
+  public CancellableCallback addLoopCallback(final CancellableCallback callback) throws Exception {
+    if (callback.isActive) throw new Exception("Cannot add a loop callback that is already added");
+    callback.isActive = true;
     loopCallbacks.add(callback);
   }
-  public CancellableCallback removeLoopCallback(final CancellableCallback callback) {
+  public CancellableCallback removeLoopCallback(final CancellableCallback callback) throws Exception {
+    if (!callback.isActive) throw new Exception("Cannot remove a loop callback that has not been added in the first place");
     callback.isActive = false;
   }
 
@@ -115,6 +118,53 @@ public class WaitCore {
     for (Callback i : staticLoopCallbacks) {
       i.run();
     }
+  }
+
+
+
+  //Interval code
+  private ArrayList<WaitInterval> intervals = new ArrayList<>();
+
+  public WaitInterval setInterval(final WaitInterval interv) throws Exception {
+    if (interv.isActive) throw new Exception("Cannot add an interval that has already been added");
+    interv.isActive = true;
+    intervals.add(interv);
+
+    return interv;
+  }
+  public void removeInterval(final WaitInterval interv) {
+    if (!interv.isActive) throw new Exception("Cannot remove an interval which was not added in the first place");
+    interv.isActive = false;
+  }
+
+  private WaitInterval[] staticIntervals = null;
+
+  void setStaticIntervals(final WaitInterval ...intervs) {
+    staticIntervals = intervs;
+  }
+
+  void runIntervals() {
+    //run the static intervals first because they are the system intervals
+    if (staticIntervals != null) {
+      for (WaitInterval i : staticIntervals) {
+        i.run();
+      }
+    }
+
+    //then run the normal intervals
+    for (int i = 0; i < intervals.size(); i++) {
+      WaitInterval interval = intervals.get(i);
+
+      if (interval.isActive) {
+        interval.run();
+      }
+      else {
+        indices.add(i);
+      }
+
+    }
+    Constants.removeFromArray(intervals, indices);
+    indices.clear();
   }
 
 }

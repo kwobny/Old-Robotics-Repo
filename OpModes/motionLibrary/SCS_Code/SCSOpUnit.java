@@ -13,7 +13,7 @@ public class SCSOpUnit {
 
   public double refInput; //reference input
 
-  boolean isRunning;
+  boolean isRunning = false;
 
   public SCSOpUnit(final InputSource input, final OutputSink output, final MathFunction graphFunc) {
     this.input = input;
