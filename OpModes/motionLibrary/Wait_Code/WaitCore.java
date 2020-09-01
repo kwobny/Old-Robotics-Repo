@@ -55,29 +55,6 @@ public class WaitCore {
     indices.clear();
   }
 
-  //interval functionality
-  //allows things to execute every so often
-  //currently turned off
-
-  /*private ArrayList<WaitEnum> intervalPolls = new ArrayList<WaitEnum>();
-  private ArrayList<Object[]> intervalData = new ArrayList<Object[]>();
-  private ArrayList<Object[]> intervalArgs = new ArrayList<Object[]>();
-  private ArrayList<Integer> intervalCallbacks = new ArrayList<Integer>();
-
-  public void addInterval(WaitCondition poll, WaitCallback intervalCallback) {
-    intervalPolls.add(poll);
-    intervalCallbacks.add(intervalCallback);
-  }
-  void executeIntervals() {
-    for (int i = 0; i < intervalPolls.size(); i++) {
-      if (waiters.pollCondition(intervalPolls.get(i), intervalData.get(i))) {
-        systemCallback(intervalCallbacks.get(i));
-
-        intervalData.set(i, waiters.generateData(intervalPolls.get(i), intervalArgs.get(i)));
-      }
-    }
-  }*/
-
   //these callbacks are run on every loop, and can be added and removed.
   private ArrayList<CancellableCallback> loopCallbacks = new ArrayList<>();
 
