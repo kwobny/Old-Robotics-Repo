@@ -124,7 +124,7 @@ public class WaitCore {
   //Interval code
   private ArrayList<WaitInterval> intervals = new ArrayList<>();
 
-  public WaitInterval setInterval(final WaitInterval interv) throws Exception {
+  public WaitInterval addInterval(final WaitInterval interv) throws Exception {
     if (interv.isActive) throw new Exception("Cannot add an interval that has already been added");
     interv.isActive = true;
     intervals.add(interv);
