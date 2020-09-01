@@ -72,8 +72,8 @@ public class Main {
 
   // loop for the motions
   public void loop() {
-    wait.runStaticCallbacks();
     wait.runLoopCallbacks();
+    wait.runIntervals();
     wait.runTimeouts();
   }
 
