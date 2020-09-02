@@ -40,14 +40,14 @@ public class Main {
     Time.Interval lowMaint = time.getInterval(lowFreqMaintInterval, new Callback() {
       @Override
       public void run() {
-        runLowInterval(cond.changeInTime);
+        runLowInterval();
       }
     });
 
     Time.Interval highMaint = time.getInterval(highFreqMaintInterval, new Callback() {
       @Override
       public void run() {
-        runHighInterval(cond.changeInTime);
+        runHighInterval();
       }
     });
 
@@ -67,11 +67,11 @@ public class Main {
     wait.runTimeouts();
   }
 
-  void runLowInterval(final double change_in_time) {
+  void runLowInterval() {
     move.motorCali();
   }
-  void runHighInterval(final double change_in_time) {
-    move.runCommonAccelerationSystem(change_in_time);
+  void runHighInterval() {
+    scs.runSCS();
   }
 
   // function that you call at the end of autonomous sequence to wait for program

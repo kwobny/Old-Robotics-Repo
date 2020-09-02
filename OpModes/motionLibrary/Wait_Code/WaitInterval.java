@@ -20,4 +20,8 @@ public abstract class WaitInterval {
     }
   }
 
+  public WaitCondition getCond() {
+    return cond;
+  }
+
 }

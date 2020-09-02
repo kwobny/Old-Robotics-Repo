@@ -24,6 +24,7 @@ public class SCS {
     //
   }
 
+  //this is the function that should be called in the high frequency interval method
   void runSCS() {
     for (int i = 0; i < operations.size(); i++) {
       SCSOpUnit j = operations.get(i);
@@ -52,7 +53,7 @@ public class SCS {
     op.running = false;
   }
 
-  public class AddOpCallback implements WaitCallback {
+  public class AddOpCallback implements Callback {
     private SCSOpUnit operation;
 
     public AddOpCallback(SCSOpUnit operation) {
@@ -60,12 +61,12 @@ public class SCS {
     }
 
     @Override
-    public void run(WaitCondition cond) {
+    public void run() {
       addOperation(operation);
     }
   }
 
-  public class RemoveOpCallback implements WaitCallback {
+  public class RemoveOpCallback implements Callback {
     private SCSOpUnit operation;
 
     public RemoveOpCallback(SCSOpUnit operation) {
@@ -73,7 +74,7 @@ public class SCS {
     }
 
     @Override
-    public void run(WaitCondition cond) {
+    public void run() {
       removeOperation(operation);
     }
   }
