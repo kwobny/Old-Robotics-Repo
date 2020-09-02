@@ -13,22 +13,21 @@ public class Main {
   //mad hardware
   public MadHardware mhw;
 
-  //this next grouping of stuff is a group of three parts, which are all triangularly dependent on each other, and madhardware.
+  //sub systems
   public Time time;
 
   public Move move = new Move();
-  public WaitCore wait = new WaitCore();
+  public WaitCore wait = new WaitCore(this);
 
   public RPS rps = new RPS();
   public SCS scs = new SCS();
 
   //CONSTRUCTOR
 
-  public Main(MadHardware hmw) {
+  public Main(MadHardware mhw) {
     //SUB OBJECT INITIALIZATION
-    mhw = hmw;
+    this.mhw = mhw;
 
-    wait.initialize(this);
     move.initialize(mhw, rps);
 
     rps.initialize(mhw, move);

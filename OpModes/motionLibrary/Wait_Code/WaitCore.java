@@ -9,10 +9,8 @@ public class WaitCore {
   //RESOURCE OBJECTS
   public Main main;
 
-  Waitcore() {} //cannot be instantiated outside of package
-
-  public void initialize(Main c) {
-    main = c;
+  Waitcore(Main main) { //cannot be instantiated outside of package
+    this.main = main;
   }
 
   //simple wait functionality
