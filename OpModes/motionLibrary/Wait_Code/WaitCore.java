@@ -16,16 +16,20 @@ public class WaitCore {
   }
 
   //simple wait functionality
+  //important thing to note here: the loops used are do while loops. As a result, the code that resumes the driver coroutine runs in the same block of time as the rest of the coroutine scanning. This also means that the driver resume code also runs after the loop callbacks, which include setting the various values for that loop.
+
   public void simpleWait(WaitCondition waitCondition) {
-    while (!waitCondition.pollCondition()) {
+    do {
       main.loop();
     }
+    while (!waitCondition.pollCondition());
   }
   public void simpleWait(WaitCondition condition, WaitCallback callback, WaitCallback runWhile) {
     final WaitTask task = new WaitTask(condition, callback, runWhile);
-    while (!task.run()) {
+    do {
       main.loop();
     }
+    while (!task.run());
   }
 
   //timeout functionality
