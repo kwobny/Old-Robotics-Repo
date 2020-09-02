@@ -74,9 +74,14 @@ public class RPS {
 
   //sets the robot angle at the current heading.
   //for everytime state variables are changed, save current position has to be called once and once only. the second parameter is a safeguard to make sure that happens.
-  public void setAngle(double angle, boolean saveState) {
+  public void setAngle(final double angle, final boolean saveState) {
     if (saveState) saveCurrentPosition();
     syncAngle = angle % Constants.totalAngleMeasure;
+  }
+  //this sets the current angle to its lowest equivalent. Should be called every so often to avoid angle overflow.
+  public void setAToLE(final boolean saveState) {
+    if (saveState) saveCurrentPosition();
+    syncAngle = syncAngle % Constants.totalAngleMeasure;
   }
 
   //this function returns an array with the total distance (not displacement) traveled by the robot. index 0 is total distance, 1 is x distance, 2 is y distance
@@ -121,10 +126,18 @@ public class RPS {
   }
 
   //This function sets the robot's current position.
-  public void setPosition(double x, double y, boolean saveState) {
+  public void setPosition(final double x, final double y, final boolean saveState) {
     if (saveState) saveCurrentPosition();
     syncDisplacement[0] = x;
     syncDisplacement[1] = y;
+  }
+  public void setXPos(final double x, final boolean saveState) {
+    if (saveState) saveCurrentPosition();
+    syncDisplacement[0] = x;
+  }
+  public void setYPos(final double y, final boolean saveState) {
+    if (saveState) saveCurrentPosition();
+    syncDisplacement[0] = y;
   }
 
   //This function shifts the position/changes it
