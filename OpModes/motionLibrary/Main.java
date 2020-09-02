@@ -14,7 +14,6 @@ public class Main {
   public MadHardware mhw;
 
   //this next grouping of stuff is a group of three parts, which are all triangularly dependent on each other, and madhardware.
-  public CommonWaits common_waits = new CommonWaits(this);
   public Time time;
 
   public Move move = new Move();

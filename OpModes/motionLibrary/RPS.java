@@ -208,4 +208,75 @@ public class RPS {
   public InputSource PosInputX = new PositionInputClass(0);
   public InputSource PosInputY = new PositionInputClass(1);
 
+
+  public class DistanceWait implements WaitCondition {
+
+    private double target_distance;
+
+    //parameter list:
+    //1. distance in cm (double).
+    //2. flag if measuring change in distance (true) or just plain distance (false)
+    public DistanceWait(final double distance, final boolean measure_mode) {
+      if (measure_mode) {
+        target_distance = distance + getDistanceTraveled()[0];
+      }
+      else {
+        target_distance = distance;
+      }
+    }
+    //in this version, the measure mode is true, which means that it measures change in distance
+    public DistanceWait(final double distance) {
+      this(distance, true);
+    }
+
+    @override
+    public boolean pollCondition() {
+      return getDistanceTraveled()[0] > target_distance;
+    }
+  }
+
+  //measuring change in distance
+  public DistanceWait getDistWait(final double distance) {
+    return new DistanceWait(distance);
+  }
+
 }
+
+/*
+//WAIT FOR DISPLACEMENT/UNTIL AT POSITION
+//parameter list:
+//1. x-position/displacement (in cm, double)
+//2. y-position/displacement (in cm, double)
+//3. flag if waiting until at position (false) or waiting until displacement traveled (true)
+//4 & 5. Optional parameters. Are angle measures which indicate what sector surrounding the target position/displacement the robot has to be in for the condition to be satisfied. The sector starts at the first parameter and ends at the second parameter. Default is a sector with its bisector being parallel to the line connecting the robot position to target, its size being predefined in the constants.
+
+//Three things needed to be done:
+//1. work out the total angle unit situation (if you are using boolean to represent if using radians or some other unit, maybe have a unit to radians conversion factor constant)
+//2. work out how displacement is going to work
+//3. work out how wait for angle is going to work.
+private Object[] generateDisplacementData(Object[] args) {
+  Object quadrantX, quadrantY;
+  double[] pos = main.rps.getPosition();
+  if (args[2]) {
+    if (args.length == 3) {
+      quadrantX = (Double) args[0] > 0.0;
+      quadrantY = (Double) args[1] > 0.0;
+    }
+    else {
+      quadrantX = args[3];
+      quardantY = args[4];
+    }
+    return new Object[]{(Double) args[0] + pos[0], (Double) args[1] + pos[1], quadrantX, quadrantY};
+  }
+  else {
+    if (args.length == 3) {
+      quadrantX = (Double) args[0] > pos[0];
+      quadrantY = (Double) args[1] > pos[1];
+    }
+    else {
+      quadrantX = args[3];
+      quardantY = args[4];
+    }
+  }
+}
+*/
