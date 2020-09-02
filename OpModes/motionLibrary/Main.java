@@ -29,10 +29,7 @@ public class Main {
     //SUB OBJECT INITIALIZATION
     mhw = hmw;
 
-    //order of initialization is the wait conditions and callbacks, then wait core, then move core.
-    waitConditions.initialize(mhw, this);
-
-    wait.initialize(this, waitConditions, waitCallbacks);
+    wait.initialize(this);
     move.initialize(mhw, rps);
 
     rps.initialize(mhw, move);
@@ -55,6 +52,10 @@ public class Main {
     });
 
     wait.setStaticIntervals(lowMaint, highMaint);
+
+    //Setup the loop callbacks for the (new) loop notifiers
+    if (Constants.turnOnOPLP)
+      wait.setStaticCallbacks(time.loop_notifer);
   }
 
   //OTHER FUNCTIONS AND STUFF

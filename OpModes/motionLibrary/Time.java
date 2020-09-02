@@ -6,14 +6,30 @@ import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
 
 public class Time implements InputSource {
 
-  MadHardware mhw;
+  private MadHardware mhw;
+  LoopNotifer loop_notifier;
 
   Time(MadHardware mhw) {
     this.mhw = mhw;
+    if (Constants.turnOnOPLP)
+      loop_notifier = new LoopNotifer();
   }
 
-  public double getTime() {
+  public double getRawTime() {
     return mhw.runtime.time();
+  }
+
+  private double saved_time = 0.0;
+
+  public double getTime() {
+    if (Constants.turnOnOPLP) {
+      return getRawTime();
+    }
+    if (!loop_notifier.hasRunYet()) {
+      saved_time = getRawTime();
+      loop_notifier.setHasRun();
+    }
+    return saved_time;
   }
 
   public class Wait implements WaitCondition {
