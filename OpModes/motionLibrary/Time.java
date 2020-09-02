@@ -52,7 +52,7 @@ public class Time implements InputSource {
   public class Interval extends WaitInterval {
     public double time_interval;
 
-    public Interval(final double time_interval, final WaitCallback callback) {
+    public Interval(final double time_interval, final Callback callback) {
       this.time_interval = time_interval;
       this.callback = callback;
     }
@@ -75,7 +75,7 @@ public class Time implements InputSource {
     return new Wait(delay);
   }
 
-  public Interval getInterval(final double time_interval, final WaitCallback callback) {
+  public Interval getInterval(final double time_interval, final Callback callback) {
     return new Interval(time_interval, callback);
   }
 

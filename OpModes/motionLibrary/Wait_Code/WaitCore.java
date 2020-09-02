@@ -24,7 +24,7 @@ public class WaitCore {
     }
     while (!waitCondition.pollCondition());
   }
-  public void simpleWait(WaitCondition condition, WaitCallback callback, WaitCallback runWhile) {
+  public void simpleWait(WaitCondition condition, Callback callback, Callback runWhile) {
     final WaitTask task = new WaitTask(condition, callback, runWhile);
     do {
       main.loop();
@@ -40,12 +40,12 @@ public class WaitCore {
   //allows things to execute once condition met, does not pause code execution
   private ArrayList<WaitTask> timeoutTasks = new ArrayList<>();
   
-  public WaitTask setTimeout(WaitCondition addCondition, WaitCallback callback, WaitCallback runWhile) {
+  public WaitTask setTimeout(WaitCondition addCondition, Callback callback, Callback runWhile) {
     final WaitTask retTask = new WaitTask(addCondition, callback, runWhile);
     timeoutTasks.add(retTask);
     return retTask;
   }
-  public WaitTask setTimeout(WaitCondition addCondition, WaitCallback callback) {
+  public WaitTask setTimeout(WaitCondition addCondition, Callback callback) {
     return setTimeout(addCondition, callback, null);
   }
 

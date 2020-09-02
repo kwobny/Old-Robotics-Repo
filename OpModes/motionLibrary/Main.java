@@ -25,7 +25,7 @@ public class Main {
 
   //CONSTRUCTOR
 
-  public Main(MadHardware hmw, WaitCallbackClass waitCallbacks) {
+  public Main(MadHardware hmw) {
     //SUB OBJECT INITIALIZATION
     mhw = hmw;
 
@@ -37,16 +37,16 @@ public class Main {
     time = new Time(mhw);
 
     //Setup system intervals
-    Time.Interval lowMaint = time.getInterval(lowFreqMaintInterval, new WaitCallback() {
+    Time.Interval lowMaint = time.getInterval(lowFreqMaintInterval, new Callback() {
       @Override
-      public void run(WaitCondition cond) {
+      public void run() {
         runLowInterval(cond.changeInTime);
       }
     });
 
-    Time.Interval highMaint = time.getInterval(highFreqMaintInterval, new WaitCallback() {
+    Time.Interval highMaint = time.getInterval(highFreqMaintInterval, new Callback() {
       @Override
-      public void run(WaitCondition cond) {
+      public void run() {
         runHighInterval(cond.changeInTime);
       }
     });
