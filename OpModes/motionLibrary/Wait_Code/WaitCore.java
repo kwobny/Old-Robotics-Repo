@@ -24,6 +24,9 @@ public class WaitCore {
   }
   public void simpleWait(WaitCondition condition, Callback callback, Callback runWhile) {
     final WaitTask task = new WaitTask(condition, callback, runWhile);
+    simpleWait(task);
+  }
+  public void simpleWait(WaitTask task) {
     do {
       main.loop();
     }
@@ -45,6 +48,10 @@ public class WaitCore {
   }
   public WaitTask setTimeout(WaitCondition addCondition, Callback callback) {
     return setTimeout(addCondition, callback, null);
+  }
+  public WaitTask setTimeout(WaitTask task) {
+    timeoutTasks.add(task);
+    return task;
   }
 
   void runTimeouts() {
