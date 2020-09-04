@@ -237,7 +237,7 @@ class MoveCore {
   }
 
   //START BASIC SYSTEM FUNCTIONS
-
+  /*
   void runCommonAccelerationSystem(double changeInTime) {
     //This function is run in the high interval
     byte accel = 0;
@@ -280,6 +280,7 @@ class MoveCore {
       syncMotors();
     }
   }
+  */
 
   //END BASIC SYSTEM FUNCTIONS
 }
