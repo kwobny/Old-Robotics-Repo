@@ -145,6 +145,9 @@ class MoveCore {
   //universal motor calibration system
   private double[] globalPos = new double[4];
   private double[] caliPowerFactor = new double[4];
+  for (int i = 0; i < caliPowerFactor.length; i++) {
+    caliPowerFactor[i] = 1.0;
+  }
 
   void motorCali() {
     /* CALCULATE DISTANCES TRAVELLED */
