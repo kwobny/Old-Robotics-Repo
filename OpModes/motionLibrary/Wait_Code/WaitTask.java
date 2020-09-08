@@ -5,7 +5,7 @@ package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 
 public class WaitTask {
   public WaitCondition condition;
-  public Callback[] callbacks;
+  public Callback callback;
   public Callback runWhile; //this is basically an optional callback that continuously runs in the main loop while the wait is ongoing.
   //It is run after the wait condition is tested, so if the wait is determined to be over, then this does not run.
 
@@ -16,11 +16,8 @@ public class WaitTask {
   boolean run() {
 
     if (condition.pollCondition()) {
-      if (callbacks != null) {
-        for (Callback i : callbacks) {
-          if (i != null)
-            i.run();
-        }
+      if (callback != null) {
+        callback.run();
       }
       if (endWait)
         return true;
@@ -32,9 +29,9 @@ public class WaitTask {
 
   }
 
-  public void setTask(final WaitCondition cond, final Callback ...callbacks) {
+  public void setTask(final WaitCondition cond, final Callback callback) {
     setWait(cond);
-    setCallback(callbacks);
+    setCallback(callback);
   }
   public void setWait(final WaitCondition cond) throws Exception {
     if (cond == null) {
@@ -42,20 +39,17 @@ public class WaitTask {
     }
     condition = cond;
   }
-  public void setCallback(final Callback ...callbacks) {
-    this.callbacks = callbacks;
+  public void setCallback(final Callback callback) {
+    this.callback = callback;
   }
 
-  public WaitTask(final WaitCondition condition, final Callback runWhile, final Callback[] callbacks) throws Exception {
+  public WaitTask(final WaitCondition condition, final Callback callback, final Callback runWhile) throws Exception {
     if (condition == null) {
       throw new Exception("There is no WaitCondition provided");
     }
     this.condition = condition;
-    this.callbacks = callbacks;
+    this.callback = callback;
     this.runWhile = runWhile;
-  }
-  public WaitTask(final WaitCondition condition, final Callback callback, final Callback runWhile) {
-    this(condition, runWhile, new Callback[]{callback});
   }
   public WaitTask() {
     //
