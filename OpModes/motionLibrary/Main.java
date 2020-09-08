@@ -17,7 +17,7 @@ public class Main {
   public Time time;
 
   public Move move = new Move();
-  public WaitCore wait = new WaitCore(this);
+  public WaitCore wait = new WaitCore();
 
   public RPS rps = new RPS();
   public SCS scs = new SCS();
@@ -62,15 +62,13 @@ public class Main {
   // this function is called at the end of the program.
   public void end() {
     while (true) {
-      loop();
+      wait.loop();
     }
   }
 
   // loop for the motions
   public void loop() {
-    wait.runLoopCallbacks();
-    wait.runIntervals();
-    wait.runTimeouts();
+    wait.loop();
   }
 
   void runLowInterval() {

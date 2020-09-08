@@ -7,10 +7,22 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class WaitCore {
 
   //RESOURCE OBJECTS
-  public Main main;
 
-  Waitcore(Main main) { //cannot be instantiated outside of package
-    this.main = main;
+  Waitcore() { //cannot be instantiated outside of package
+    //
+  }
+
+  public void start() {
+    //
+  }
+  public void end() {
+    //
+  }
+
+  public void loop() {
+    runLoopCallbacks();
+    runIntervals();
+    runTimeouts();
   }
 
   //simple wait functionality
@@ -18,7 +30,7 @@ public class WaitCore {
 
   public void simpleWait(WaitCondition waitCondition) {
     do {
-      main.loop();
+      loop();
     }
     while (!waitCondition.pollCondition());
   }
@@ -28,7 +40,7 @@ public class WaitCore {
   }
   public void simpleWait(WaitTask task) {
     do {
-      main.loop();
+      loop();
     }
     while (!task.run());
   }
