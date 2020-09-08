@@ -33,7 +33,10 @@ public class Main {
     rps.initialize(mhw, move);
 
     time = new Time(mhw);
+  }
 
+  //this function is called to start the whole system
+  public void start() {
     //Setup system intervals
     Time.Interval lowMaint = time.getInterval(lowFreqMaintInterval, new Callback() {
       @Override
@@ -56,7 +59,12 @@ public class Main {
       wait.setStaticCallbacks(time.loop_notifer);
   }
 
-  //OTHER FUNCTIONS AND STUFF
+  // this function is called at the end of the program.
+  public void end() {
+    while (true) {
+      loop();
+    }
+  }
 
   // loop for the motions
   public void loop() {
@@ -70,13 +78,5 @@ public class Main {
   }
   void runHighInterval() {
     scs.runSCS();
-  }
-
-  // function that you call at the end of autonomous sequence to wait for program
-  // to end. This should be the absolute last function executed in program.
-  public void endProgram() {
-    while (true) {
-      loop();
-    }
   }
 }
