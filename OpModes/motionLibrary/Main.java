@@ -68,6 +68,7 @@ public class Main {
   }
 
   // loop for the motions
+  //In teleop, it is best to run this method at the beginning of each loop
   public void loop() {
     wait.loop();
   }

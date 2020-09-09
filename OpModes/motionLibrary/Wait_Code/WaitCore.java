@@ -12,6 +12,7 @@ public class WaitCore {
     //
   }
 
+  //In teleop, it is best to run this method at the beginning of each loop, because then the thread sleep will be at the end of every driver thread run (end of function call)
   public void loop() {
     runLoopCallbacks();
     runIntervals();
@@ -21,7 +22,17 @@ public class WaitCore {
   //1: loop callbacks
   //2: loop intervals
   //3: normal timeouts
-  //4: driver thread (can include thread sleep)
+  //4: driver thread
+  //5: Any thread sleep for other things to run (optional, is considered part of the driver thread for now.)
+
+  //experimental order:
+  //1: loop callbacks
+  //2: loop intervals
+  //3: driver thread
+  //4: normal timeouts
+  //5: Any thread sleep (optional)
+  
+  //the problem with this is that the driver thread can include a thread sleep in its code, which means that the loop is split at a point where it is not supposed to.
 
   //simple wait functionality
   //important thing to note here: the loops used are do while loops. As a result, the code that resumes the driver coroutine runs in the same block of time as the rest of the coroutine scanning. This also means that the driver resume code also runs after the loop callbacks, which include setting the various values for that loop.
