@@ -12,24 +12,23 @@ public class WaitCore {
     //
   }
 
-  public void start() {
-    //
-  }
-  public void end() {
-    //
-  }
-
   public void loop() {
     runLoopCallbacks();
     runIntervals();
     runTimeouts();
   }
+  //the order of the event loop is:
+  //1: loop callbacks
+  //2: loop intervals
+  //3: normal timeouts
+  //4: driver thread (can include thread sleep)
 
   //simple wait functionality
   //important thing to note here: the loops used are do while loops. As a result, the code that resumes the driver coroutine runs in the same block of time as the rest of the coroutine scanning. This also means that the driver resume code also runs after the loop callbacks, which include setting the various values for that loop.
 
   public void simpleWait(WaitCondition waitCondition) {
     do {
+      //if you wanted to implement a thread.sleep or something for an autonomous program, you would put it right here. Make sure to mirror this in the end program while loop.
       loop();
     }
     while (!waitCondition.pollCondition());

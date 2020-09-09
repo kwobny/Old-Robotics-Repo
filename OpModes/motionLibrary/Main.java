@@ -60,6 +60,7 @@ public class Main {
   }
 
   // this function is called at the end of the program.
+  // ONLY USED FOR AUTONOMOUS
   public void end() {
     while (true) {
       wait.loop();
