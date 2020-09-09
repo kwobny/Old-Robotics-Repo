@@ -77,8 +77,8 @@ public class WaitCore {
   }
 
   void runTimeouts() {
-    for (WaitTask task : timeoutTasks) {
-      if (task.run()) {
+    for (int i = 0; i < timeoutTasks.size(); i++) {
+      if (timeoutTasks.get(i).run()) {
         indices.add(i);
       }
     }
