@@ -39,6 +39,7 @@ public class SCS {
     Constants.removeFromArray(operations, indices);
   }
 
+  //adds, calibrates, and starts a new operation.
   public SCSOpUnit addOperation(SCSOpUnit op) throws Exception {
     if (op.isRunning) throw new Exception("The SCS operation you are trying to run is already running");
 

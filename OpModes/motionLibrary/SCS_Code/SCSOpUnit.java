@@ -24,7 +24,7 @@ public class SCSOpUnit implements WaitCondition {
     this.graphFunc = graphFunc;
   }
 
-  void calibrate() {
+  public void calibrate() {
     this.refInput = input.get();
   }
 
