@@ -127,7 +127,9 @@ class MoveCore {
     }
 
     uploadToMotors();
-
+    
+    //save the distance only if at least one of the changes is above tick threshold.
+    rpss.saveCurrentPosition();
   }
   //clear motor buffers function
   public void clearMotors() {
@@ -234,9 +236,6 @@ class MoveCore {
     mhw.rightFront.setPower(powers[1]);
     mhw.rightRear.setPower(powers[2]);
     mhw.leftRear.setPower(powers[3]);
-
-    //save the distance only if at least one of the changes is above tick threshold.
-    rpss.saveCurrentPosition();
   }
 
   //START BASIC SYSTEM FUNCTIONS
