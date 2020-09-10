@@ -4,7 +4,7 @@ import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.MathFunctions.*;
 
 //Each object of this class contains all the data necessary to represent one SCS operation.
 
-public class SCSOpUnit implements WaitCondition {
+public class SCSOpUnit {
 
   //data members
   public InputSource input;
@@ -12,6 +12,8 @@ public class SCSOpUnit implements WaitCondition {
   public MathFunction graphFunc;
 
   public double refInput; //reference input
+  public WaitTask waitTask;
+  private double latestOutput;
 
   boolean isRunning = false;
 
@@ -31,35 +33,30 @@ public class SCSOpUnit implements WaitCondition {
   void update() {
     latestOutput = graphFunc.yValueOf(input.get() - refInput);
     output.set(latestOutput);
-    if (usingAsWait && thresholdCallback != null && pollCondition())
-      thresholdCallback.run();
+    if (waitTask != null)
+      waitTask.run();
   }
 
-  private Callback thresholdCallback = null;
-  private double latestOutput;
-  private double threshold;
-  private boolean isAbove;
-  private boolean usingAsWait = false;
+  public class OutputCond implements WaitCondition {
 
-  //the is above flag signifies whether or not the output value needs to be above the threshold for the wait to be over.
-  public void setOutputThreshold(final double threshold, final boolean isAbove) {
-    this.threshold = threshold;
-    this.isAbove = isAbove;
-    usingAsWait = true;
-  }
-  public void removeThreshold() {
-    usingAsWait = false;
-  }
+    public double threshold;
+    public boolean isAbove;
 
-  public void setThresholdCallback(final Callback callback) {
-    thresholdCallback = callback;
+    //the is above flag signifies whether or not the output value needs to be above the threshold for the wait to be over.
+    public OutputCond(final double threshold, final boolean isAbove) {
+      this.threshold = threshold;
+      this.isAbove = isAbove;
+    }
+    
+    @Override
+    public boolean pollCondition() throws Exception {
+      return (isAbove && latestOutput > threshold) || (!isAbove && latestOutput < threshold);
+    }
+
   }
 
-  @Override
-  public boolean pollCondition() throws Exception {
-    if (!usingAsWait)
-      throw new Exception("There is no output threshold set currently");
-    return (isAbove && latestOutput > threshold) || (!isAbove && latestOutput < threshold);
+  public OutputCond getOutputCond(final double threshold, final boolean isAbove) {
+    return new OutputCond(threshold, isAbove);
   }
 
 }
