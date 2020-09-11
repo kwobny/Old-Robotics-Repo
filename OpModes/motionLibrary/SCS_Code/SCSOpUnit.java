@@ -75,4 +75,8 @@ public class SCSOpUnit {
   }
   */
 
+  public static SCSOpUnit getOpUnit(final InputSource input, final OutputSink output, final MathFunction graphFunc) {
+    return new SCSOpUnit(input, output, graphFunc);
+  }
+
 }
