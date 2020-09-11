@@ -21,10 +21,10 @@ public class MotionProfiles {
   //this is the curve which is used to build the full S curve profile.
   public class SubSCurve {
     
-    public double changeInVelocity;
-    public double changeInTime;
-    public double jerk;
-    public double maxAccel;
+    //public double changeInVelocity;
+    //public double changeInTime;
+    private double jerk;
+    private double maxAccel;
 
     private double initialVelocity;
     private double jerkTime; //the time spent on constant jerk mode
@@ -34,12 +34,32 @@ public class MotionProfiles {
 
     private SCSOpUnit operation;
     private WaitTask waitTask = new WaitTask();
+
+    //These are the properties for detection of when the wait is done.
+    private boolean isDone = false;
+    public Callback opCallback;
+    private WaitCondition opCondition = new WaitCondition() {
+      @Override
+      public boolean pollCondition() {
+        return isDone;
+      }
+    };
+
+    public WaitCondition getOpCondition() {
+      return opCondition;
+    }
     
 
-    public SubSCurve(final OutputSink output) {
+    public SubSCurve(final Double changeInTime, final Double changeInOutput, final Double jerk, final Double maxAcceleration, final OutputSink output, final Callback opCallback) {
+
+      //finding the required constants
+      //
+
+      //setting up the actual operation
       operation = new SCSOpUnit(main.time, output, null);
       operation.graphFunc = new CommonOps.ConstJerk(jerk, 0, initialVelocity);
       waitTask.endTaskAfter = false;
+      this.opCallback = opCallback;
     }
 
     public void start() {
@@ -60,7 +80,7 @@ public class MotionProfiles {
           MathFunction constAccel = new CommonOps.ConstAccel(maxAccel, accelStartVelocity);
           constAccel = TransUtils.applyTrans(constAccel, new CommonTrans.Translate(jerkTime, 0.0));
 
-          waitTask.condition.threshold = jerkTime + accelTime;
+          ((SCSOpUnit.InputCond) waitTask.condition).threshold = jerkTime + accelTime;
           waitTask.callback = callback2;
 
           operation.graphFunc = constAccel;
@@ -78,9 +98,18 @@ public class MotionProfiles {
         MathFunction constJerk = new CommonOps.ConstJerk(-jerk, maxAccel, lastStartVelocity);
         constJerk = TransUtils.applyTrans(constJerk, new CommonTrans.Translate(jerkTime + accelTime, 0.0));
 
-        waitTask.condition.threshold = 2 * jerkTime + accelTime;
+        ((SCSOpUnit.InputCond) waitTask.condition).threshold = 2 * jerkTime + accelTime;
+        waitTask.callback = opCallback;
 
-        oper
+        operation.graphFunc = constJerk;
+      }
+    };
+
+    private Callback endCallback = new Callback() {
+      @Override
+      public void run() {
+        isDone = true;
+        opCallback.run();
       }
     };
 
