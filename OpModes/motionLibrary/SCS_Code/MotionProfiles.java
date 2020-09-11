@@ -30,6 +30,7 @@ public class MotionProfiles {
     private double jerkTime; //the time spent on constant jerk mode
     private double accelTime; //the time spent on the constant acceleration part
     private double accelStartVelocity;
+    private double lastStartVelocity;
 
     private SCSOpUnit operation;
     private WaitTask waitTask = new WaitTask();
@@ -54,14 +55,32 @@ public class MotionProfiles {
       @Override
       public void run() {
         //second part of operation (constant acceleration)
+        //if the time spent on acceleration is 0, then run alternative code
         if (accelTime != 0.0) {
           MathFunction constAccel = new CommonOps.ConstAccel(maxAccel, accelStartVelocity);
           constAccel = TransUtils.applyTrans(constAccel, new CommonTrans.Translate(jerkTime, 0.0));
 
           waitTask.condition.threshold = jerkTime + accelTime;
+          waitTask.callback = callback2;
 
           operation.graphFunc = constAccel;
         }
+        else {
+          callback2.run();
+        }
+      }
+    };
+
+    private Callback callback2 = new Callback() {
+      @Override
+      public void run() {
+        //last part of operation, constant jerk
+        MathFunction constJerk = new CommonOps.ConstJerk(-jerk, maxAccel, lastStartVelocity);
+        constJerk = TransUtils.applyTrans(constJerk, new CommonTrans.Translate(jerkTime + accelTime, 0.0));
+
+        waitTask.condition.threshold = 2 * jerkTime + accelTime;
+
+        oper
       }
     };
 
