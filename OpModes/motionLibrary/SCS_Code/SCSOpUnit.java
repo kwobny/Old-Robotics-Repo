@@ -14,6 +14,7 @@ public class SCSOpUnit {
   public double refInput; //reference input
   public WaitTask waitTask;
   private double latestOutput;
+  private double latestInput;
 
   boolean isRunning = false;
 
@@ -31,7 +32,8 @@ public class SCSOpUnit {
   }
 
   void update() {
-    latestOutput = graphFunc.yValueOf(input.get() - refInput);
+    latestInput = input.get() - refInput;
+    latestOutput = graphFunc.yValueOf(latestInput);
     output.set(latestOutput);
     if (waitTask != null)
       waitTask.run();
@@ -50,8 +52,25 @@ public class SCSOpUnit {
 
   }
 
+  public class LastInputCond extends ThresholdWait {
+
+    public LastInputCond(final double threshold, final boolean isAbove) {
+      super(threshold, isAbove);
+    }
+
+    @Override
+    protected double getCompVal() {
+      return latestInput;
+    }
+
+  }
+
   public OutputCond getOutputCond(final double threshold, final boolean isAbove) {
     return new OutputCond(threshold, isAbove);
+  }
+
+  public LastInputCond getInputCond(final double threshold, final boolean isAbove) {
+    return new LastInputCond(threshold, isAbove);
   }
 
   //alternative output cond wait
