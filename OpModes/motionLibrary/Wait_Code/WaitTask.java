@@ -19,7 +19,7 @@ public class WaitTask {
       if (callback != null) {
         callback.run();
       }
-      if (endWait)
+      if (endTaskAfter)
         return true;
     }
     if (runWhile != null) {

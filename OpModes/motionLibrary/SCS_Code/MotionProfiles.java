@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 
+import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.MathFunctions.*;
+
 public class MotionProfiles {
 
   public Main main;
@@ -25,21 +27,43 @@ public class MotionProfiles {
     public double maxAccel;
 
     private double initialVelocity;
-    private double jerkTime;
+    private double jerkTime; //the time spent on constant jerk mode
+    private double accelTime; //the time spent on the constant acceleration part
+    private double accelStartVelocity;
 
     private SCSOpUnit operation;
+    private WaitTask waitTask = new WaitTask();
     
 
     public SubSCurve(final OutputSink output) {
       operation = new SCSOpUnit(main.time, output, null);
+      operation.graphFunc = new CommonOps.ConstJerk(jerk, 0, initialVelocity);
+      waitTask.endTaskAfter = false;
     }
 
     public void start() {
-      operation.graphFunc = new CommonOps.ConstJerk(jerk, 0, initialVelocity);
+      //starts the first part of the operation (positive jerk)
       scs.addOperation(operation);
-      main.wait.setTimeout(new operation.InputCond(jerkTime, true), callback);
+      waitTask.condition = new operation.InputCond(jerkTime, true);
+      waitTask.callback = callback1;
+      main.wait.setTimeout(waitTask);
       
     }
+
+    private Callback callback1 = new Callback() {
+      @Override
+      public void run() {
+        //second part of operation (constant acceleration)
+        if (accelTime != 0.0) {
+          MathFunction constAccel = new CommonOps.ConstAccel(maxAccel, accelStartVelocity);
+          constAccel = TransUtils.applyTrans(constAccel, new CommonTrans.Translate(jerkTime, 0.0));
+
+          waitTask.condition.threshold = jerkTime + accelTime;
+
+          operation.graphFunc = constAccel;
+        }
+      }
+    };
 
   }
 
