@@ -74,6 +74,8 @@ public class SCSOpUnit {
   }
 
   //the difference between this and the last input condition is that the last input condition tests using the input when the operation was last run. This condition uses the real time input.
+  //WARNING:
+  //You cannot use this wait until after the operation is started!!!
   public class InputCond extends ThresholdWait {
 
     public InputCond(final double threshold, final boolean isAbove) {

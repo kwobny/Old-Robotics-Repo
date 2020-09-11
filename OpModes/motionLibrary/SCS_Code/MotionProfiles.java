@@ -25,6 +25,7 @@ public class MotionProfiles {
     public double maxAccel;
 
     private double initialVelocity;
+    private double jerkTime;
 
     private SCSOpUnit operation;
     
@@ -35,8 +36,8 @@ public class MotionProfiles {
 
     public void start() {
       operation.graphFunc = new CommonOps.ConstJerk(jerk, 0, initialVelocity);
-      operation.waitTask = new WaitTask(cond, callback, null);
       scs.addOperation(operation);
+      main.wait.setTimeout(new operation.InputCond(jerkTime, true), callback);
       
     }
 
