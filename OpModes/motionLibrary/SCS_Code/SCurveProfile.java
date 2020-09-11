@@ -14,4 +14,8 @@ class SubSCurve {
   public double jerk;
   public double maxAccel;
 
+  public void start() {
+    //
+  }
+
 }

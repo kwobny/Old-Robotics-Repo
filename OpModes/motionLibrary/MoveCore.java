@@ -23,6 +23,7 @@ class MoveCore {
   public static class motorBufferClass implements InputSource, OutputSink {
     motorBufferClass(final double refFactor) { //cannot be instantiated outside of package
       refSpeedFactor = refFactor;
+      speedFactor = refFactor;
     }
     motorBufferClass() {
       this(1.0);
@@ -35,7 +36,7 @@ class MoveCore {
 
     //the speed factor variable is the raw speedfactor, (which means it is already multiplied by the ref speed factor)
     public final double refSpeedFactor;
-    public double speedFactor = refSpeedFactor;
+    public double speedFactor;
 
     public void resetSpeedFactor() {
       speedFactor = refSpeedFactor;
@@ -55,28 +56,20 @@ class MoveCore {
     }
 
     //wait class so that the motor buffer speed factor can be waited upon (wow, a THIRD ORDER class!!!!)
-    public class SFWait implements WaitCondition {
+    public class SFWait extends ThresholdWait {
 
-      private double SF;
-      private boolean untilAbove;
-      
       //if untilAbove is true, the object waits until the motor buffer speed factor is above the provided threshold. Otherwise, the object waits until it is below the threshold.
-      public SFWait(final double SF, final boolean untilAbove) {
-        this.SF = SF;
-        this.untilAbove = untilAbove;
+      public SFWait(final double threshold, final boolean untilAbove) {
+        super(threshold, untilAbove);
       }
-      
+
       @Override
-      public boolean pollCondition() {
-        if (untilAbove) {
-          return SF > speedFactor;
-        }
-        else {
-          return SF < speedFactor;
-        }
+      protected double getCompVal() {
+        return get();
       }
 
     }
+    
   }
   public static class UserBuffer extends motorBufferClass {
     UserBuffer(final double refFactor) { //cannot be instantiated outside of package

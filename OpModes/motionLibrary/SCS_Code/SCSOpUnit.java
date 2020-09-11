@@ -37,6 +37,25 @@ public class SCSOpUnit {
       waitTask.run();
   }
 
+  public class OutputCond extends ThresholdWait {
+
+    public OutputCond(final double threshold, final boolean isAbove) {
+      super(threshold, isAbove);
+    }
+
+    @Override
+    protected double getCompVal() {
+      return latestOutput;
+    }
+
+  }
+
+  public OutputCond getOutputCond(final double threshold, final boolean isAbove) {
+    return new OutputCond(threshold, isAbove);
+  }
+
+  //alternative output cond wait
+  /*
   public class OutputCond implements WaitCondition {
 
     public double threshold;
@@ -54,9 +73,6 @@ public class SCSOpUnit {
     }
 
   }
-
-  public OutputCond getOutputCond(final double threshold, final boolean isAbove) {
-    return new OutputCond(threshold, isAbove);
-  }
+  */
 
 }
