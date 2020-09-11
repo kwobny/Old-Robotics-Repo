@@ -50,10 +50,13 @@ public class MotionProfiles {
     }
     
 
-    public SubSCurve(final Double changeInTime, final Double changeInOutput, final Double jerk, final Double maxAcceleration, final OutputSink output, final Callback opCallback) {
+    public SubSCurve(final Double changeInTime, final Double initialOutput, final Double finalOutput, final Double jerk, final Double maxAcceleration, final OutputSink output, final Callback opCallback) {
 
       //finding the required constants
-      //
+      this.jerk = jerk;
+      this.maxAccel = maxAcceleration;
+      this.initialVelocity = initialOutput;
+      this.
 
       //setting up the actual operation
       operation = new SCSOpUnit(main.time, output, null);
