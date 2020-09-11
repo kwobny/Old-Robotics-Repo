@@ -24,16 +24,20 @@ public class MotionProfiles {
     public double jerk;
     public double maxAccel;
 
-    private SCSOpUnit operation = new SCSOpUnit();
+    private double initialVelocity;
+
+    private SCSOpUnit operation;
     
 
     public SubSCurve(final OutputSink output) {
-      operation.input = main.time;
-      operation.output = output;
+      operation = new SCSOpUnit(main.time, output, null);
     }
 
     public void start() {
-      //
+      operation.graphFunc = new CommonOps.ConstJerk(jerk, 0, initialVelocity);
+      operation.waitTask = new WaitTask(cond, callback, null);
+      scs.addOperation(operation);
+      
     }
 
   }
