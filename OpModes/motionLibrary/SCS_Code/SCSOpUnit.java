@@ -7,12 +7,15 @@ import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.MathFunctions.*;
 public class SCSOpUnit {
 
   //data members
+
+  //these three things always need to be defined.
   public InputSource input;
   public OutputSink output;
   public MathFunction graphFunc;
 
-  public double refInput; //reference input
   public WaitTask waitTask;
+
+  double refInput; //reference input
   private double latestOutput;
   private double latestInput;
 
@@ -25,6 +28,10 @@ public class SCSOpUnit {
     this.input = input;
     this.output = output;
     this.graphFunc = graphFunc;
+  }
+
+  public SCSOpUnit() {
+    //
   }
 
   public void calibrate() {

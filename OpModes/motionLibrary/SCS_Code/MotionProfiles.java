@@ -22,6 +22,12 @@ public class MotionProfiles {
     public double jerk;
     public double maxAccel;
 
+    private SCSOpUnit op_unit;
+
+    public SubSCurve() {
+      //
+    }
+
     public void start() {
       //
     }
