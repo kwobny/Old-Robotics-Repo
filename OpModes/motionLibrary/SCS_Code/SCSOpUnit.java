@@ -73,6 +73,20 @@ public class SCSOpUnit {
 
   }
 
+  //the difference between this and the last input condition is that the last input condition tests using the input when the operation was last run. This condition uses the real time input.
+  public class InputCond extends ThresholdWait {
+
+    public InputCond(final double threshold, final boolean isAbove) {
+      super(threshold, isAbove);
+    }
+
+    @Override
+    protected double getCompVal() {
+      return input.get() - refInput;
+    }
+
+  }
+
   public OutputCond getOutputCond(final double threshold, final boolean isAbove) {
     return new OutputCond(threshold, isAbove);
   }
