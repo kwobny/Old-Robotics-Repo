@@ -16,6 +16,7 @@ public abstract class ThresholdWait implements WaitCondition {
     return (isAbove && getCompVal() > threshold) || (!isAbove && getCompVal() < threshold);
   }
 
+  //get value to compare function
   protected abstract double getCompVal();
 
 }
