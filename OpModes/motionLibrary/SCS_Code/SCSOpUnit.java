@@ -22,8 +22,9 @@ public class SCSOpUnit {
   boolean isRunning = false;
 
   public SCSOpUnit(final InputSource input, final OutputSink output, final MathFunction graphFunc) {
-    if (input == null || output == null || graphFunc == null)
-      throw new Exception("One or more of the arguments provided to the SCS Op Unit constructor was null");
+    /*if (input == null || output == null || graphFunc == null)
+      throw new Exception("One or more of the arguments provided to the SCS Op Unit constructor was null")
+    */
 
     this.input = input;
     this.output = output;

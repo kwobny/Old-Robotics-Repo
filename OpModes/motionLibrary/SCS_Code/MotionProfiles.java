@@ -2,10 +2,12 @@ package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 
 public class MotionProfiles {
 
+  public Main main;
   public SCS scs;
 
-  public MotionProfiles(final SCS scs) {
-    this.scs = scs;
+  public MotionProfiles(final Main main) {
+    this.main = main;
+    this.scs = main.scs;
   }
 
   public class SCurveProfile {
@@ -22,10 +24,12 @@ public class MotionProfiles {
     public double jerk;
     public double maxAccel;
 
-    private SCSOpUnit op_unit;
+    private SCSOpUnit operation = new SCSOpUnit();
+    
 
-    public SubSCurve() {
-      //
+    public SubSCurve(final OutputSink output) {
+      operation.input = main.time;
+      operation.output = output;
     }
 
     public void start() {
