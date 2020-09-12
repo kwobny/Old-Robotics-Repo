@@ -101,6 +101,22 @@ public class MotionProfiles {
         }
         else if (changeInTime == null) {
           //change in time
+
+          //for scenario 1
+          //v = (dt/2)^2 * j
+          //2 * sqrt(v/j) = dt
+
+          //for scenario 2
+          //v = amax * (dt - amax/j)
+          //
+
+          double dtDiv2 = Math.sqrt((finalOutput - initialOutput)/jerk);
+          if (dtDiv2 * jerk < maxAcceleration) {
+            changeInTime = dtDiv2 * 2;
+          }
+          else {
+            if 
+          }
         }
         else if (initialOutput == null || finalOutput == null) {
           //change in velocity
@@ -111,10 +127,21 @@ public class MotionProfiles {
       }
       else {
         //nothing is missing, check to see that everything is valid and checks out
+        /*
         ((1/2 * dt)^2 * j == dv)
 
         (amax/j) = tjerk
         (amax * (dt - amax/j) == dv)
+        */
+
+        if (changeInTime/2 * jerk < maxAcceleration) {
+          if (!Constants.isEqual(changeInTime * changeInTime/4 * jerk, finalOutput - initialOutput)) {
+            throw new Exception("the 4 arguments given were not valid with each other.");
+          }
+        }
+        else if (!Constants.isEqual(maxAcceleration * (changeInTime - maxAcceleration/jerk), finalOutput - initialOutput)) {
+          throw new Exception("the 4 arguments given were not valid with each other.");
+        }
       }
 
       //finding the required constants
