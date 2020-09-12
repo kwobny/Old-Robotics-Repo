@@ -71,10 +71,10 @@ public class WaitCore {
     return setTimeout(addCondition, callback, null);
   }
   public WaitTask setTimeout(WaitTask task) throws Exception {
-    if (task.isActive)
+    if (task._isActive)
       throw new Exception("You cannot add a wait timeout/task which is already running");
     
-    task.isActive = true;
+    task._isActive = true;
     timeoutTasks.add(task);
     return task;
   }
@@ -82,7 +82,7 @@ public class WaitCore {
   void runTimeouts() {
     for (int i = 0; i < timeoutTasks.size(); i++) {
       final WaitTask task = timeoutTasks.get(i);
-      if (task.isActive) {
+      if (task._isActive) {
         task.run();
       }
       else {

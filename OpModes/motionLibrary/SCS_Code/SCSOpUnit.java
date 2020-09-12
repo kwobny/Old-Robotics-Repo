@@ -13,7 +13,7 @@ public class SCSOpUnit {
   public OutputSink output;
   public MathFunction graphFunc;
 
-  public WaitTask waitTask;
+  private WaitTask waitTask;
 
   double refInput; //reference input
   private double latestOutput;
@@ -35,6 +35,11 @@ public class SCSOpUnit {
     //
   }
 
+  public void setWaitTask(final WaitTask waitTask) {
+    this.waitTask = waitTask;
+    waitTask._isActive = true;
+  }
+
   public void calibrate() {
     this.refInput = input.get();
   }
@@ -44,7 +49,7 @@ public class SCSOpUnit {
     latestOutput = graphFunc.yValueOf(latestInput);
     output.set(latestOutput);
     if (waitTask != null) {
-      if (waitTask.isActive)
+      if (waitTask._isActive)
         waitTask.run();
       else
         waitTask = null;

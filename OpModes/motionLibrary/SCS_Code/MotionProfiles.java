@@ -159,6 +159,7 @@ public class MotionProfiles {
       //setting up the actual operation
       operation = new SCSOpUnit(main.time, output, null);
       operation.graphFunc = new CommonOps.ConstJerk(jerk, 0, initialVelocity);
+      operation.
       waitTask.endTaskAfter = false;
       this.opCallback = opCallback;
     }
