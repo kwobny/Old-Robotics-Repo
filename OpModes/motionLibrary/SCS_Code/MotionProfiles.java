@@ -210,6 +210,9 @@ public class MotionProfiles {
       @Override
       public void run() {
         isDone = true;
+        scs.removeOperation(operation);
+        waitTask.
+
         opCallback.run();
       }
     };

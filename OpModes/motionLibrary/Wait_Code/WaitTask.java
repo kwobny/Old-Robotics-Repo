@@ -12,20 +12,23 @@ public class WaitTask {
   public boolean endTaskAfter = true;
   //is a property that specifies whether or not to end the wait after the condition has been met.
 
+  boolean isActive = false;
+
   //A return value of true means that the wait condition has been satisfied and the wait is over. A return value of false means that the wait is still ongoing.
-  boolean run() {
+  void run() {
 
     if (condition.pollCondition()) {
       if (callback != null) {
         callback.run();
       }
-      if (endTaskAfter)
-        return true;
+      if (endTaskAfter) {
+        isActive = false;
+        return;
+      }
     }
     if (runWhile != null) {
       runWhile.run();
     }
-    return false;
 
   }
 

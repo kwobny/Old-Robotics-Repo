@@ -65,20 +65,24 @@ public class WaitCore {
   
   public WaitTask setTimeout(WaitCondition addCondition, Callback callback, Callback runWhile) {
     final WaitTask retTask = new WaitTask(addCondition, callback, runWhile);
-    timeoutTasks.add(retTask);
-    return retTask;
+    return setTimeout(retTask);
   }
   public WaitTask setTimeout(WaitCondition addCondition, Callback callback) {
     return setTimeout(addCondition, callback, null);
   }
   public WaitTask setTimeout(WaitTask task) {
+    task.isActive = true;
     timeoutTasks.add(task);
     return task;
   }
 
   void runTimeouts() {
     for (int i = 0; i < timeoutTasks.size(); i++) {
-      if (timeoutTasks.get(i).run()) {
+      final WaitTask task = timeoutTasks.get(i);
+      if (task.isActive) {
+        task.run();
+      }
+      else {
         indices.add(i);
       }
     }
