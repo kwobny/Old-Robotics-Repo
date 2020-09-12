@@ -16,8 +16,11 @@ public class WaitTask {
   public boolean _isActive = false;
 
   //A return value of true means that the wait condition has been satisfied and the wait is over. A return value of false means that the wait is still ongoing.
-  void run() {
-
+  void run() throws Exception {
+    
+    if (!_isActive)
+      throw new Exception("You cannot run a wait that is not active");
+    
     if (condition.pollCondition()) {
       if (callback != null) {
         callback.run();
