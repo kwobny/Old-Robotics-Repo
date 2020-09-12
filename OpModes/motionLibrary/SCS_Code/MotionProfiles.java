@@ -28,7 +28,7 @@ public class MotionProfiles {
 
     private double initialVelocity;
     private double jerkTime; //the time spent on constant jerk mode
-    private double accelTime; //the time spent on the constant acceleration part
+    private double accelTime = 0.0; //the time spent on the constant acceleration part
     private double accelStartVelocity;
     private double lastStartVelocity;
 
@@ -50,13 +50,84 @@ public class MotionProfiles {
     }
     
 
-    public SubSCurve(final Double changeInTime, final Double initialOutput, final Double finalOutput, final Double jerk, final Double maxAcceleration, final OutputSink output, final Callback opCallback) {
+    public SubSCurve(final Double changeInTime, final Double initialOutput, final Double finalOutput, final Double jerk, final Double maxAcceleration, final OutputSink output, final Callback opCallback) throws Exception {
+      //finding input numbers if some parameters are missing
+
+      //check to see if initial and final output are both missing.
+      if (initialOutput == null && finalOutput == null) {
+        throw new Exception("both the initial and final outputs are null. The function does not know where to place the graph. At least provide something like 0.0 for the initial output.");
+      }
+
+      //find how many inputs are missing
+      int missing = 0;
+      if (changeInTime == null)
+        i++;
+      if (initialOutput == null || finalOutput == null)
+        i++;
+      if (jerk == null)
+        i++;
+      if (maxAcceleration == null)
+        i++;
+      
+      if (missing > 2)
+        throw new Exception("There were more than 2 missing arguments out of 4.");
+      
+      else if (missing == 2) {
+
+        if (maxAcceleration == null) {
+          if (jerk == null) {
+            //jerk
+          }
+          else if (changeInTime == null) {
+            //change in time
+          }
+          else {
+            //change in velocity
+          }
+        }
+        else if (jerk == null) {
+          //jerk and either time or velocity is missing
+          throw new Exception("Change in time or change in velocity cannot be null if jerk is also null. Look at scs notes for explanation as to why.");
+        }
+        else {
+          //time and velocity is missing, which is impossible
+          throw new Exception("Change in time and change in velocity cannot be null together.");
+        }
+
+      }
+      else if (missing == 1) {
+        if (jerk == null) {
+          //jerk
+        }
+        else if (changeInTime == null) {
+          //change in time
+        }
+        else if (initialOutput == null || finalOutput == null) {
+          //change in velocity
+        }
+        else {
+          //max acceleration
+        }
+      }
+      else {
+        //nothing is missing, check to see that everything is valid and checks out
+        ((1/2 * dt)^2 * j == dv)
+
+        (amax/j) = tjerk
+        (amax * (dt - amax/j) == dv)
+      }
 
       //finding the required constants
       this.jerk = jerk;
       this.maxAccel = maxAcceleration;
       this.initialVelocity = initialOutput;
-      this.
+      this.jerkTime = this.maxAccel/this.jerk;
+
+      //edit this a little. Works for everything
+      this.accelTime = (finalOutput - this.initialVelocity) - (1/this.jerk);
+
+      this.accelStartVelocity = 1/2 * this.jerkTime * this.maxAccel;
+      this.lastStartVelocity = this.accelStartVelocity + this.accelTime * this.maxAccel;
 
       //setting up the actual operation
       operation = new SCSOpUnit(main.time, output, null);
