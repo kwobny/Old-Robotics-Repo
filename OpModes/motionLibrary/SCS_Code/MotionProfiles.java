@@ -211,7 +211,7 @@ public class MotionProfiles {
       public void run() {
         isDone = true;
         scs.removeOperation(operation);
-        waitTask.
+        waitTask.endTaskAfter = true;
 
         opCallback.run();
       }

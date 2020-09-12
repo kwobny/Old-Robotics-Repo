@@ -70,7 +70,10 @@ public class WaitCore {
   public WaitTask setTimeout(WaitCondition addCondition, Callback callback) {
     return setTimeout(addCondition, callback, null);
   }
-  public WaitTask setTimeout(WaitTask task) {
+  public WaitTask setTimeout(WaitTask task) throws Exception {
+    if (task.isActive)
+      throw new Exception("You cannot add a wait timeout/task which is already running");
+    
     task.isActive = true;
     timeoutTasks.add(task);
     return task;

@@ -43,8 +43,12 @@ public class SCSOpUnit {
     latestInput = input.get() - refInput;
     latestOutput = graphFunc.yValueOf(latestInput);
     output.set(latestOutput);
-    if (waitTask != null)
-      waitTask.run();
+    if (waitTask != null) {
+      if (waitTask.isActive)
+        waitTask.run();
+      else
+        waitTask = null;
+    }
   }
 
   public class OutputCond extends ThresholdWait {
