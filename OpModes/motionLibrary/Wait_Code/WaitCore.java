@@ -49,10 +49,12 @@ public class WaitCore {
     simpleWait(task);
   }
   public void simpleWait(WaitTask task) {
+    task._isActive = true;
     do {
       loop();
+      task.run();
     }
-    while (!task.run());
+    while (task._isActive);
   }
 
   //timeout functionality
