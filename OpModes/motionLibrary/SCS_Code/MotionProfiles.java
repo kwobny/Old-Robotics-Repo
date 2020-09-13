@@ -23,16 +23,16 @@ public class MotionProfiles {
     
     //public double changeInVelocity;
     //public double changeInTime;
-    private double jerk;
-    private double maxAccel;
+    private final double jerk;
+    private final double maxAccel;
 
-    private double initialVelocity;
-    private double jerkTime; //the time spent on constant jerk mode
-    private double accelTime = 0.0; //the time spent on the constant acceleration part
-    private double accelStartVelocity;
-    private double lastStartVelocity;
+    private final double initialVelocity;
+    private final double jerkTime; //the time spent on constant jerk mode
+    private final double accelTime; //the time spent on the constant acceleration part
+    private final double accelStartVelocity;
+    private final double lastStartVelocity;
 
-    private SCSOpUnit operation;
+    private final SCSOpUnit operation;
     private WaitTask waitTask = new WaitTask();
 
     //These are the properties for detection of when the wait is done.
@@ -50,99 +50,7 @@ public class MotionProfiles {
     }
     
 
-    public SubSCurve(final Double changeInTime, final Double initialOutput, final Double finalOutput, final Double jerk, final Double maxAcceleration, final OutputSink output, final Callback opCallback) throws Exception {
-      //finding input numbers if some parameters are missing
-
-      //check to see if initial and final output are both missing.
-      if (initialOutput == null && finalOutput == null) {
-        throw new Exception("both the initial and final outputs are null. The function does not know where to place the graph. At least provide something like 0.0 for the initial output.");
-      }
-
-      //find how many inputs are missing
-      int missing = 0;
-      if (changeInTime == null)
-        i++;
-      if (initialOutput == null || finalOutput == null)
-        i++;
-      if (jerk == null)
-        i++;
-      if (maxAcceleration == null)
-        i++;
-      
-      if (missing > 2)
-        throw new Exception("There were more than 2 missing arguments out of 4.");
-      
-      else if (missing == 2) {
-
-        if (maxAcceleration == null) {
-          if (jerk == null) {
-            //jerk
-          }
-          else if (changeInTime == null) {
-            //change in time
-          }
-          else {
-            //change in velocity
-          }
-        }
-        else if (jerk == null) {
-          //jerk and either time or velocity is missing
-          throw new Exception("Change in time or change in velocity cannot be null if jerk is also null. Look at scs notes for explanation as to why.");
-        }
-        else {
-          //time and velocity is missing, which is impossible
-          throw new Exception("Change in time and change in velocity cannot be null together.");
-        }
-
-      }
-      else if (missing == 1) {
-        if (jerk == null) {
-          //jerk
-        }
-        else if (changeInTime == null) {
-          //change in time
-
-          //for scenario 1
-          //v = (dt/2)^2 * j
-          //2 * sqrt(v/j) = dt
-
-          //for scenario 2
-          //v = amax * (dt - amax/j)
-          //
-
-          double dtDiv2 = Math.sqrt((finalOutput - initialOutput)/jerk);
-          if (dtDiv2 * jerk < maxAcceleration) {
-            changeInTime = dtDiv2 * 2;
-          }
-          else {
-            if 
-          }
-        }
-        else if (initialOutput == null || finalOutput == null) {
-          //change in velocity
-        }
-        else {
-          //max acceleration
-        }
-      }
-      else {
-        //nothing is missing, check to see that everything is valid and checks out
-        /*
-        ((1/2 * dt)^2 * j == dv)
-
-        (amax/j) = tjerk
-        (amax * (dt - amax/j) == dv)
-        */
-
-        if (changeInTime/2 * jerk < maxAcceleration) {
-          if (!Constants.isEqual(changeInTime * changeInTime/4 * jerk, finalOutput - initialOutput)) {
-            throw new Exception("the 4 arguments given were not valid with each other.");
-          }
-        }
-        else if (!Constants.isEqual(maxAcceleration * (changeInTime - maxAcceleration/jerk), finalOutput - initialOutput)) {
-          throw new Exception("the 4 arguments given were not valid with each other.");
-        }
-      }
+    public SubSCurve(final OutputSink output, final Callback opCallback, final ) throws Exception {
 
       //finding the required constants
       this.jerk = jerk;
@@ -159,7 +67,6 @@ public class MotionProfiles {
       //setting up the actual operation
       operation = new SCSOpUnit(main.time, output, null);
       operation.graphFunc = new CommonOps.ConstJerk(jerk, 0, initialVelocity);
-      operation.
       waitTask.endTaskAfter = false;
       this.opCallback = opCallback;
     }
@@ -218,6 +125,103 @@ public class MotionProfiles {
       }
     };
 
+  }
+
+  //this function returns a set of complete arguments for the sub scs curve when given a partial set of arguments.
+  //arguments that are missing/not given are denoted with null.
+  public static void getSubSCurveArgs(final Double changeInTime, final Double initialOutput, final Double finalOutput, final Double jerk, final Double maxAcceleration) {
+    //finding input numbers if some parameters are missing
+
+    //check to see if initial and final output are both missing.
+    if (initialOutput == null && finalOutput == null) {
+      throw new Exception("both the initial and final outputs are null. The function does not know where to place the graph. At least provide something like 0.0 for the initial output.");
+    }
+
+    //find how many inputs are missing
+    int missing = 0;
+    if (changeInTime == null)
+      i++;
+    if (initialOutput == null || finalOutput == null)
+      i++;
+    if (jerk == null)
+      i++;
+    if (maxAcceleration == null)
+      i++;
+    
+    if (missing > 2)
+      throw new Exception("There were more than 2 missing arguments out of 4.");
+    
+    else if (missing == 2) {
+
+      if (maxAcceleration == null) {
+        if (jerk == null) {
+          //jerk
+        }
+        else if (changeInTime == null) {
+          //change in time
+        }
+        else {
+          //change in velocity
+        }
+      }
+      else if (jerk == null) {
+        //jerk and either time or velocity is missing
+        throw new Exception("Change in time or change in velocity cannot be null if jerk is also null. Look at scs notes for explanation as to why.");
+      }
+      else {
+        //time and velocity is missing, which is impossible
+        throw new Exception("Change in time and change in velocity cannot be null together.");
+      }
+
+    }
+    else if (missing == 1) {
+      if (jerk == null) {
+        //jerk
+      }
+      else if (changeInTime == null) {
+        //change in time
+
+        //for scenario 1
+        //v = (dt/2)^2 * j
+        //2 * sqrt(v/j) = dt
+
+        //for scenario 2
+        //v = amax * (dt - amax/j)
+        //
+
+        double dtDiv2 = Math.sqrt((finalOutput - initialOutput)/jerk);
+        if (dtDiv2 * jerk < maxAcceleration) {
+          changeInTime = dtDiv2 * 2;
+        }
+        else {
+          if 
+        }
+      }
+      else if (initialOutput == null || finalOutput == null) {
+        //change in velocity
+      }
+      else {
+        //max acceleration
+      }
+    }
+    else {
+      //nothing is missing, check to see that everything is valid and checks out
+      /*
+      ((1/2 * dt)^2 * j == dv)
+
+      (amax/j) = tjerk
+      (amax * (dt - amax/j) == dv)
+      */
+
+      if (changeInTime/2 * jerk < maxAcceleration) {
+        if (!Constants.isEqual(changeInTime * changeInTime/4 * jerk, finalOutput - initialOutput)) {
+          throw new Exception("the 4 arguments given were not valid with each other.");
+        }
+      }
+      else if (!Constants.isEqual(maxAcceleration * (changeInTime - maxAcceleration/jerk), finalOutput - initialOutput)) {
+        throw new Exception("the 4 arguments given were not valid with each other.");
+      }
+    }
   }
 
 }
