@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 
 import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.MathFunctions.*;
+import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.CancelCallback.*;
 
 //Each object of this class contains all the data necessary to represent one SCS operation.
 
-public class SCSOpUnit {
+public class SCSOpUnit extends CancellableCallback {
 
   //data members
 
@@ -19,7 +20,7 @@ public class SCSOpUnit {
   private double latestOutput;
   private double latestInput;
 
-  boolean isRunning = false;
+  //boolean isRunning = false;
 
   public SCSOpUnit(final InputSource input, final OutputSink output, final MathFunction graphFunc) {
     /*if (input == null || output == null || graphFunc == null)

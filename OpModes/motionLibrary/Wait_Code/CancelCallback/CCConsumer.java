@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary.CancelCallback;
 
+//There are 6 methods total. 3 need to be overridden, and 3 are the ones that are to be used.
+
 public abstract class CCConsumer<T extends CancellableCallback> {
   
   //these methods should be PRIVATE, but are protected because they need to be accessible and overridable from any subclass

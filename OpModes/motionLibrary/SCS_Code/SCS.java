@@ -3,6 +3,7 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 
 import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.MathFunctions.*;
+import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.CancelCallback.*;
 import java.util.ArrayList;
 
 //Every acceleration or automatic change in an output (motor buffer speedfactors mainly) is called an operation
@@ -24,6 +25,26 @@ public class SCS {
     //
   }
 
+  private CCConsumer<SCSOpUnit> consumer = new CCConsumer<>() {
+  
+    @Override
+    protected void _actualRun(SCSOpUnit op) {
+      op.update();
+    }
+
+    @Override
+    protected void _addCallback(SCSOpUnit op) {
+      op.calibrate();
+      operations.add(op);
+    }
+
+    @Override
+    protected void _deleteCallback(SCSOpUnit op) {
+      //do whatever
+    }
+
+  };
+
   //this is the function that should be called in the high frequency interval method
   void runSCS() {
     for (int i = 0; i < operations.size(); i++) {
@@ -41,11 +62,7 @@ public class SCS {
 
   //adds, calibrates, and starts a new operation.
   public SCSOpUnit addOperation(SCSOpUnit op) throws Exception {
-    if (op.isRunning) throw new Exception("The SCS operation you are trying to run is already running");
-
-    op.calibrate();
-    op.isRunning = true;
-    operations.add(op);
+    consumer.add(op);
     return op;
   }
 
