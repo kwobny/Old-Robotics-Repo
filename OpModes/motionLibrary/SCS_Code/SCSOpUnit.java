@@ -3,11 +3,28 @@ package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.MathFunctions.*;
 import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.CancelCallback.*;
 
+
 //Each object of this class contains all the data necessary to represent one SCS operation.
 
 public class SCSOpUnit extends CancellableCallback {
 
   //data members
+  private final CCConsumer<WaitTask> consumer = new CCConsumer<>() {
+    @Override
+    protected void _actualRun(WaitTask task) {
+      task.run();
+    }
+
+    @Override
+    protected void _addCallback(WaitTask task) {
+      waitTask = task;
+    }
+
+    @Override
+    protected void _deleteCallback(WaitTask task) {
+      waitTask = null;
+    }
+  };
 
   //these three things always need to be defined.
   public InputSource input;
@@ -37,8 +54,12 @@ public class SCSOpUnit extends CancellableCallback {
   }
 
   public void setWaitTask(final WaitTask waitTask) {
-    this.waitTask = waitTask;
-    waitTask._isActive = true;
+    if (this.waitTask != null) {
+      consumer.markForDelete(this.waitTask);
+    }
+    if (waitTask != null) {
+      consumer.add(waitTask);
+    }
   }
 
   public void calibrate() {
@@ -50,10 +71,7 @@ public class SCSOpUnit extends CancellableCallback {
     latestOutput = graphFunc.yValueOf(latestInput);
     output.set(latestOutput);
     if (waitTask != null) {
-      if (waitTask._isActive)
-        waitTask.run();
-      else
-        waitTask = null;
+      consumer.run(waitTask);
     }
   }
 

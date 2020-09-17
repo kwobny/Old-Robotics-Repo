@@ -8,4 +8,9 @@ public abstract class CancellableCallback {
   boolean isActive = false; //is the main boolean which indicates if the wait is active or not.
   boolean needsDeletion = false; //is just a helper/auxiliary boolean.
 
+  protected final turnOffCallback() {
+    isActive = false;
+    needsDeletion = true;
+  }
+
 }

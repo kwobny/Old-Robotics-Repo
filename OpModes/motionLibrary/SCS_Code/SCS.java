@@ -25,7 +25,7 @@ public class SCS {
     //
   }
 
-  private CCConsumer<SCSOpUnit> consumer = new CCConsumer<>() {
+  private final CCConsumer<SCSOpUnit> consumer = new CCConsumer<>() {
   
     @Override
     protected void _actualRun(SCSOpUnit op) {
