@@ -7,37 +7,26 @@ public abstract class CCConsumer<T extends CancellableCallback> {
   //these methods should be PRIVATE, but are protected because they need to be accessible and overridable from any subclass
   protected abstract void _actualRun(T obj);
 
-  protected abstract void _deleteCallback(T obj);
+  //protected abstract void _removeCallback(T obj);
 
-  protected abstract void _addCallback(T obj);
+  //protected abstract void _addCallback(T obj);
 
   //these methods are public because the consumer object itself is likely to be private.
   public final void run(T obj) {
     if (obj.isActive)
       _actualRun(obj);
-    else {
-      obj.needsDeletion = false;
-      _deleteCallback(obj);
-    }
   }
 
-  public final void add(T obj) throws Exception {
+  public final void markAsAdded(T obj) throws Exception {
     if (obj.isActive)
       throw new Exception("You cannot add a cancellable callback that is already added.");
     obj.isActive = true;
-    if (obj.needsDeletion) {
-      obj.needsDeletion = false;
-    }
-    else {
-      _addCallback(obj);
-    }
   }
 
-  public final void markForDelete(T obj) throws Exception {
+  public final void markAsDeleted(T obj) throws Exception {
     if (!obj.isActive)
       throw new Exception("You cannot delete a cancellable callback that has not been added yet.");
     obj.isActive = false;
-    obj.needsDeletion = true;
   }
 
 }

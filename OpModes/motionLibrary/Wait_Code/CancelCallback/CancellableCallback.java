@@ -4,13 +4,7 @@ package org.firstinspires.ftc.teamcode.OpModes.motionLibrary.CancelCallback;
 //Also, when you subclass this, you can also say that the subclass is a Callback, and implement your own personal run function if you so desire.
 public abstract class CancellableCallback {
   
-  //both of these properties have default access modifiers.
-  boolean isActive = false; //is the main boolean which indicates if the wait is active or not.
-  boolean needsDeletion = false; //is just a helper/auxiliary boolean.
-
-  protected final turnOffCallback() {
-    isActive = false;
-    needsDeletion = true;
-  }
+  //this property has protected access modifier. This means that it is normally going to be accessed only by the corresponding consumer, but it can also be accessed by any subclass.
+  protected boolean isActive = false; //is the main boolean which indicates if the wait is active or not.
 
 }
