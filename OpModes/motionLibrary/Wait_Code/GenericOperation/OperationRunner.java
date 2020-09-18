@@ -4,13 +4,18 @@ import java.util.ArrayList;
 
 
 //IMPORTANT: ----------------------------------------
-//This class assumes that there will be only 1 runner per type of operation.
+//This class assumes that there will be only 1 runner per operation (whole lifespan).
 public class OperationRunner {
 
   //data members
   private final ArrayList<Operation> opList = new ArrayList<>();
   
   public void add(Operation op) {
+    if (op.currentRunner != null && op.currentRunner != this) {
+      throw new Exception("Each operation can only be assigned to 1 runner");
+    }
+    op.currentRunner = this;
+
     if (op.isActive)
       throw new Exception("You cannot add an operation that is already added.");
     op.isActive = true;
@@ -25,7 +30,7 @@ public class OperationRunner {
 
   public void delete(Operation op) {
     if (!op.isActive)
-      throw new Exception("You cannot add an operation that -is already added.");
+      throw new Exception("You cannot add an operation that is already added.");
     op.isActive = false;
 
     op.needsDelete = true;
@@ -37,9 +42,11 @@ public class OperationRunner {
       final Operation op = opList.get(i);
       if (!op.needsDelete) {
         //run the operation code. In here, the is active properties can be set to true/false/whatever
+        op.run();
       }
 
     }
+    //scan and delete
     for (int i = 0; i < opList.size(); i++) {
       final Operation op = opList.get(i);
       if (op.needsDelete) {

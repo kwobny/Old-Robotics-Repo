@@ -6,4 +6,9 @@ public abstract class Operation {
   boolean needsDelete = false;
   boolean isActive = false;
 
+  OperationRunner currentRunner;
+
+  //this method can either be protected (package private) or public
+  protected abstract void run();
+
 }
