@@ -3,7 +3,7 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 
 import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.MathFunctions.*;
-import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.CancelCallback.*;
+import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.GenericOperation.*;
 import java.util.ArrayList;
 
 //Every acceleration or automatic change in an output (motor buffer speedfactors mainly) is called an operation
@@ -17,58 +17,27 @@ import java.util.ArrayList;
 public class SCS {
 
   //variables
-  ArrayList<SCSOpUnit> operations = new ArrayList<>();
-  ArrayList<Integer> indices = new ArrayList<>();
+  private final OperationRunner opRunner = new OperationRunner();
   
   //class cannot be instantiated outside of package
   SCS() {
     //
   }
 
-  private final CCConsumer<SCSOpUnit> consumer = new CCConsumer<>() {
-  
-    @Override
-    protected void _actualRun(SCSOpUnit op) {
-      op.update();
-    }
-
-    @Override
-    protected void _addCallback(SCSOpUnit op) {
-      op.calibrate();
-      operations.add(op);
-    }
-
-    @Override
-    protected void _deleteCallback(SCSOpUnit op) {
-      //do whatever
-    }
-
-  };
-
   //this is the function that should be called in the high frequency interval method
   void runSCS() {
-    for (int i = 0; i < operations.size(); i++) {
-      SCSOpUnit j = operations.get(i);
-      if (j.isRunning)
-      {
-        j.update();
-      }
-      else {
-        indices.add(i);
-      }
-    }
-    Constants.removeFromArray(operations, indices);
+    opRunner.runAll();
   }
 
   //adds, calibrates, and starts a new operation.
   public SCSOpUnit addOperation(SCSOpUnit op) throws Exception {
-    consumer.add(op);
+    opRunner.add(op);
+    op.calibrate();
     return op;
   }
 
   public void removeOperation(SCSOpUnit op) throws Exception {
-    if (!op.isRunning) throw new Exception("Cannot remove an SCS operation that has not been added in the first place");
-    op.running = false;
+    opRunner.delete(op);
   }
 
   public class AddOpCallback implements Callback {

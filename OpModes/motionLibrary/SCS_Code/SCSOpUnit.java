@@ -1,12 +1,12 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 
 import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.MathFunctions.*;
-import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.CancelCallback.*;
+import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.GenericOperation.*;
 
 
 //Each object of this class contains all the data necessary to represent one SCS operation.
 
-public class SCSOpUnit extends CancellableCallback {
+public class SCSOpUnit extends Operation {
 
   //data members
   private final CCConsumer<WaitTask> consumer = new CCConsumer<>() {
@@ -66,7 +66,8 @@ public class SCSOpUnit extends CancellableCallback {
     this.refInput = input.get();
   }
 
-  void update() {
+  @Override
+  protected void run() {
     latestInput = input.get() - refInput;
     latestOutput = graphFunc.yValueOf(latestInput);
     output.set(latestOutput);
