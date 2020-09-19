@@ -68,6 +68,10 @@ public class WaitCore {
     
     @Override
     protected void runOp(WaitTask op) {
+      if (!op.isRunning()) {
+        remove(op);
+        return;
+      }
       op.run();
       if (!op.isRunning()) {
         remove(op);
