@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 
 //IMPORTANT: ----------------------------------------
-//This class assumes that there will be only 1 runner per operation (whole lifespan).
+//This class assumes that there will be only 1 runner per operation (whole lifespan). The operation could theoretically run on multiple platforms, just make sure that there is only 1 runner instance. However, this is not advised. Just try to run each operation on 1 thing only.
 public abstract class OperationRunner<T extends Operation> {
 
   //data members
