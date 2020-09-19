@@ -9,22 +9,6 @@ import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.GenericOperation.*;
 public class SCSOpUnit extends Operation {
 
   //data members
-  private final CCConsumer<WaitTask> consumer = new CCConsumer<>() {
-    @Override
-    protected void _actualRun(WaitTask task) {
-      task.run();
-    }
-
-    @Override
-    protected void _addCallback(WaitTask task) {
-      waitTask = task;
-    }
-
-    @Override
-    protected void _deleteCallback(WaitTask task) {
-      waitTask = null;
-    }
-  };
 
   //these three things always need to be defined.
   public InputSource input;
@@ -54,25 +38,25 @@ public class SCSOpUnit extends Operation {
   }
 
   public void setWaitTask(final WaitTask waitTask) {
-    if (this.waitTask != null) {
-      consumer.markForDelete(this.waitTask);
-    }
-    if (waitTask != null) {
-      consumer.add(waitTask);
-    }
+    this.waitTask = waitTask;
+    waitTask.markAsAdd();
   }
 
   public void calibrate() {
     this.refInput = input.get();
   }
 
-  @Override
-  protected void run() {
+  void run() {
     latestInput = input.get() - refInput;
     latestOutput = graphFunc.yValueOf(latestInput);
     output.set(latestOutput);
     if (waitTask != null) {
-      consumer.run(waitTask);
+      if (waitTask.isRunning()) {
+        waitTask.run(waitTask);
+      }
+      else {
+        waitTask = null;
+      }
     }
   }
 

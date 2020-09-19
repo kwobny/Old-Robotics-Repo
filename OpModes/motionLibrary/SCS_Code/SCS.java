@@ -17,7 +17,14 @@ import java.util.ArrayList;
 public class SCS {
 
   //variables
-  private final OperationRunner opRunner = new OperationRunner();
+  private final OperationRunner<SCSOpUnit> opRunner = new OperationRunner<>() {
+    
+    @Override
+    protected void runOp(SCSOpUnit op) {
+      op.run();
+    }
+
+  };
   
   //class cannot be instantiated outside of package
   SCS() {
