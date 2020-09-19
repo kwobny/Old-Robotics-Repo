@@ -93,6 +93,9 @@ public class SCSOpUnit extends Operation {
     public InputCond(final double threshold, final boolean isAbove) {
       super(threshold, isAbove);
     }
+    public InputCond() {
+      //
+    }
 
     @Override
     public boolean pollCondition() {

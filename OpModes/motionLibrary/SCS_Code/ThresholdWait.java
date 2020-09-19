@@ -11,6 +11,10 @@ public abstract class ThresholdWait implements WaitCondition {
     this.isAbove = isAbove;
   }
 
+  protected ThresholdWait() {
+    //
+  }
+
   @Override
   public boolean pollCondition() {
     return (isAbove && getCompVal() > threshold) || (!isAbove && getCompVal() < threshold);

@@ -33,22 +33,19 @@ public class MotionProfiles {
     private final double lastStartVelocity;
 
     private final SCSOpUnit operation;
-    private WaitTask waitTask = new WaitTask();
+    private final WaitTask waitTask = new WaitTask();
+    private final SCSOpUnit.InputCond condition;
 
     //These are the properties for detection of when the wait is done.
+    //this denotes if the profile operation has completed running.
     private boolean isDone = false;
     public Callback opCallback;
-    private WaitCondition opCondition = new WaitCondition() {
+    public final WaitCondition opCondition = new WaitCondition() {
       @Override
       public boolean pollCondition() {
         return isDone;
       }
     };
-
-    public WaitCondition getOpCondition() {
-      return opCondition;
-    }
-    
 
     public SubSCurve(final OutputSink output, final Callback opCallback, final ) throws Exception {
 
@@ -68,14 +65,30 @@ public class MotionProfiles {
       this.opCallback = opCallback;
       operation = new SCSOpUnit(main.time, output, null);
       waitTask.autoEndTask = false;
+
+      condition = new operation.InputCond();
+      condition.isAbove = true;
+      waitTask.condition = condition;
     }
 
-    public void start() {
+    //this denotes if the profile operation is running.
+    private boolean isActive = false;
+
+    public void start() throws Exception {
+      //make sure that the operation is not running before using it.
+      if (isActive) {
+        throw new Exception("You cannot start a motion profile which is already running");
+      }
+      isActive = true;
+      isDone = false;
+
       //starts the first part of the operation (positive jerk)
       operation.graphFunc = new CommonOps.ConstJerk(jerk, 0, initialVelocity);
-      scs.addOperation(operation);
-      waitTask.condition = new operation.InputCond(jerkTime, true);
+
+      condition.threshold = jerkTime;
       waitTask.callback = callback1;
+
+      scs.addOperation(operation);
       main.wait.setTimeout(waitTask);
       
     }
@@ -89,7 +102,7 @@ public class MotionProfiles {
           MathFunction constAccel = new CommonOps.ConstAccel(maxAccel, accelStartVelocity);
           constAccel = TransUtils.applyTrans(constAccel, new CommonTrans.Translate(jerkTime, 0.0));
 
-          ((SCSOpUnit.InputCond) waitTask.condition).threshold = jerkTime + accelTime;
+          condition.threshold += accelTime;
           waitTask.callback = callback2;
 
           operation.graphFunc = constAccel;
@@ -107,7 +120,7 @@ public class MotionProfiles {
         MathFunction constJerk = new CommonOps.ConstJerk(-jerk, maxAccel, lastStartVelocity);
         constJerk = TransUtils.applyTrans(constJerk, new CommonTrans.Translate(jerkTime + accelTime, 0.0));
 
-        ((SCSOpUnit.InputCond) waitTask.condition).threshold = 2 * jerkTime + accelTime;
+        condition.threshold += jerkTime;
         waitTask.callback = opCallback;
 
         operation.graphFunc = constJerk;
@@ -118,6 +131,7 @@ public class MotionProfiles {
       @Override
       public void run() {
         isDone = true;
+        isActive = false;
         scs.removeOperation(operation);
         main.wait.removeTimeout(waitTask);
 
