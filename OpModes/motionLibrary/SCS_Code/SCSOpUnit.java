@@ -87,12 +87,16 @@ public class SCSOpUnit extends Operation {
   }
 
   //the difference between this and the last input condition is that the last input condition tests using the input when the operation was last run. This condition uses the real time input.
-  //WARNING:
-  //You cannot use this wait until after the operation is started!!!
+  //This condition only runs when the actual operation is running.
   public class InputCond extends ThresholdWait {
 
     public InputCond(final double threshold, final boolean isAbove) {
       super(threshold, isAbove);
+    }
+
+    @Override
+    public boolean pollCondition() {
+      return getIsActive() && super.pollCondition();
     }
 
     @Override
