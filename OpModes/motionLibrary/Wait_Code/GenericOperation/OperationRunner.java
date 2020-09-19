@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 //IMPORTANT: ----------------------------------------
 //This class assumes that there will be only 1 runner per operation (whole lifespan).
-public class OperationRunner {
+public abstract class OperationRunner<T extends Operation> {
 
   //data members
   private final ArrayList<Operation> opList = new ArrayList<>();
@@ -28,7 +28,7 @@ public class OperationRunner {
     }
   }
 
-  public void delete(Operation op) {
+  public void remove(Operation op) {
     if (!op.isActive)
       throw new Exception("You cannot add an operation that is already added.");
     op.isActive = false;
@@ -42,7 +42,7 @@ public class OperationRunner {
       final Operation op = opList.get(i);
       if (!op.needsDelete) {
         //run the operation code. In here, the is active properties can be set to true/false/whatever
-        op.run();
+        runOp(op);
       }
 
     }
@@ -56,6 +56,8 @@ public class OperationRunner {
       }
     }
   }
+
+  protected abstract void runOp(T op);
   
   /*
   private final ArrayList<Integer> indices = new ArrayList<>();

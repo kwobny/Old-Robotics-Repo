@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 
+import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.GenericOperation.*;
 import java.util.ArrayList;
 import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -49,12 +50,12 @@ public class WaitCore {
     simpleWait(task);
   }
   public void simpleWait(WaitTask task) {
-    task._isActive = true;
+    task.markAsAdd();
     do {
       loop();
       task.run();
     }
-    while (task._isActive);
+    while (task.isRunning());
   }
 
   //timeout functionality
@@ -63,7 +64,17 @@ public class WaitCore {
   private ArrayList<Integer> indices = new ArrayList<Integer>();
 
   //allows things to execute once condition met, does not pause code execution
-  private ArrayList<WaitTask> timeoutTasks = new ArrayList<>();
+  private final OperationRunner timeoutRunner = new OperationRunner<WaitTask>() {
+    
+    @Override
+    protected void runOp(WaitTask op) {
+      op.run();
+      if (!op.isRunning()) {
+        remove(op);
+      }
+    }
+
+  };
   
   public WaitTask setTimeout(WaitCondition addCondition, Callback callback, Callback runWhile) {
     final WaitTask retTask = new WaitTask(addCondition, callback, runWhile);
@@ -73,26 +84,14 @@ public class WaitCore {
     return setTimeout(addCondition, callback, null);
   }
   public WaitTask setTimeout(WaitTask task) throws Exception {
-    if (task._isActive)
-      throw new Exception("You cannot add a wait timeout/task which is already running");
+    timeoutRunner.add(task);
     
-    task._isActive = true;
-    timeoutTasks.add(task);
+    task.markAsAdd();
     return task;
   }
 
   void runTimeouts() {
-    for (int i = 0; i < timeoutTasks.size(); i++) {
-      final WaitTask task = timeoutTasks.get(i);
-      if (task._isActive) {
-        task.run();
-      }
-      else {
-        indices.add(i);
-      }
-    }
-    Constants.removeFromArray(timeoutTasks, indices);
-    indices.clear();
+    timeoutRunner.runAll();
   }
 
   //these callbacks are run on every loop, and can be added and removed.

@@ -8,7 +8,4 @@ public abstract class Operation {
 
   OperationRunner currentRunner;
 
-  //this method can either be protected (package private) or public
-  protected abstract void run();
-
 }
