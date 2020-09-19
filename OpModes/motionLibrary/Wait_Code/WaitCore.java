@@ -134,24 +134,20 @@ public class WaitCore {
 
 
   //Interval code
-  private ArrayList<WaitInterval> intervals = new ArrayList<>();
   private OperationRunner<WaitInterval> intervalRunner = new OperationRunner<>() {
     @Override
     protected void runOp(WaitInterval op) {
-      //
+      op.run();
     }
   };
 
-  public WaitInterval addInterval(final WaitInterval interv) throws Exception {
-    if (interv.isActive) throw new Exception("Cannot add an interval that has already been added");
-    interv.isActive = true;
-    intervals.add(interv);
+  public WaitInterval addInterval(final WaitInterval interv) {
+    intervalRunner.add(interv);
 
     return interv;
   }
   public void removeInterval(final WaitInterval interv) {
-    if (!interv.isActive) throw new Exception("Cannot remove an interval which was not added in the first place");
-    interv.isActive = false;
+    intervalRunner.remove(interv);
   }
 
   private WaitInterval[] staticIntervals = null;
@@ -169,19 +165,7 @@ public class WaitCore {
     }
 
     //then run the normal intervals
-    for (int i = 0; i < intervals.size(); i++) {
-      WaitInterval interval = intervals.get(i);
-
-      if (interval.isActive) {
-        interval.run();
-      }
-      else {
-        indices.add(i);
-      }
-
-    }
-    Constants.removeFromArray(intervals, indices);
-    indices.clear();
+    intervalRunner.runAll();
   }
 
 }

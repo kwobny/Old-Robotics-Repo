@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 
-public abstract class WaitInterval {
+import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.GenericOperation;
+
+public abstract class WaitInterval extends Operation {
 
   protected WaitCondition cond;
   public Callback callback;
-
-  boolean isActive = false; //boolean representing if the interval is active or not. Is only manipulated by outside wait core class.
 
   public WaitInterval() {
     _incrementCondition();
