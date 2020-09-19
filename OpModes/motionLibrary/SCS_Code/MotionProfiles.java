@@ -65,13 +65,15 @@ public class MotionProfiles {
       this.lastStartVelocity = this.accelStartVelocity + this.accelTime * this.maxAccel;
 
       //setting up the actual operation
-      operation = new SCSOpUnit(main.time, output, null);
-      operation.graphFunc = new CommonOps.ConstJerk(jerk, 0, initialVelocity);
-      waitTask.endTaskAfter = false;
       this.opCallback = opCallback;
+      operation = new SCSOpUnit(main.time, output, null);
     }
 
     public void start() {
+      //do some operation setup
+      operation.graphFunc = new CommonOps.ConstJerk(jerk, 0, initialVelocity);
+      waitTask.endTaskAfter = false;
+
       //starts the first part of the operation (positive jerk)
       scs.addOperation(operation);
       waitTask.condition = new operation.InputCond(jerkTime, true);

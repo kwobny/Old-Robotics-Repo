@@ -52,7 +52,7 @@ public class SCSOpUnit extends Operation {
     output.set(latestOutput);
     if (waitTask != null) {
       if (waitTask.isRunning()) {
-        waitTask.run(waitTask);
+        waitTask.run();
       }
       else {
         waitTask = null;
