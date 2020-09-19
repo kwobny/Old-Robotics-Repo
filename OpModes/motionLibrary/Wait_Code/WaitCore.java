@@ -95,16 +95,22 @@ public class WaitCore {
   }
 
   //these callbacks are run on every loop, and can be added and removed.
-  private ArrayList<CancellableCallback> loopCallbacks = new ArrayList<>();
+  private OperationRunner<CancellableCallback> loopCallbackRunner = new OperationRunner<>() {
+    @Override
+    protected void runOp(CancellableCallback op) {
+      op.run();
+    }
+  };
 
-  public CancellableCallback addLoopCallback(final CancellableCallback callback) throws Exception {
-    if (callback.isActive) throw new Exception("Cannot add a loop callback that is already added");
-    callback.isActive = true;
-    loopCallbacks.add(callback);
+  public CancellableCallback addLoopCallback(final Callback callback) {
+    return addLoopCallback(new CancellableCallback(callback));
   }
-  public CancellableCallback removeLoopCallback(final CancellableCallback callback) throws Exception {
-    if (!callback.isActive) throw new Exception("Cannot remove a loop callback that has not been added in the first place");
-    callback.isActive = false;
+  public CancellableCallback addLoopCallback(final CancellableCallback callback) {
+    loopCallbackRunner.add(callback);
+    return callback;
+  }
+  public CancellableCallback removeLoopCallback(final CancellableCallback callback) {
+    loopCallbackRunner.remove(callback);
   }
 
   //the static callbacks are only meant to be used by the systems, not by the user.
@@ -123,17 +129,7 @@ public class WaitCore {
     }
 
     //now run the main callbacks
-    for (int i = 0; i < loopCallbacks.size(); i++) {
-      CancellableCallback callback = loopCallbacks.get(i);
-      if (callback.isActive) {
-        callback.run();
-      }
-      else {
-        indices.add(i);
-      }
-    }
-    Constants.removeFromArray(loopCallbacks, indices);
-    indices.clear();
+    loopCallbackRunner.runAll();
   }
 
 
