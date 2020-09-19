@@ -154,7 +154,8 @@ public class MotionProfiles {
         scs.removeOperation(operation);
         main.wait.removeTimeout(waitTask);
 
-        opCallback.run();
+        if (opCallback != null)
+          opCallback.run();
       }
     };
 
