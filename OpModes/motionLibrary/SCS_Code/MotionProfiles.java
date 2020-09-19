@@ -67,14 +67,12 @@ public class MotionProfiles {
       //setting up the actual operation
       this.opCallback = opCallback;
       operation = new SCSOpUnit(main.time, output, null);
+      waitTask.autoEndTask = false;
     }
 
     public void start() {
-      //do some operation setup
-      operation.graphFunc = new CommonOps.ConstJerk(jerk, 0, initialVelocity);
-      waitTask.endTaskAfter = false;
-
       //starts the first part of the operation (positive jerk)
+      operation.graphFunc = new CommonOps.ConstJerk(jerk, 0, initialVelocity);
       scs.addOperation(operation);
       waitTask.condition = new operation.InputCond(jerkTime, true);
       waitTask.callback = callback1;
@@ -121,7 +119,7 @@ public class MotionProfiles {
       public void run() {
         isDone = true;
         scs.removeOperation(operation);
-        waitTask.endTaskAfter = true;
+        main.wait.removeTimeout(waitTask);
 
         opCallback.run();
       }

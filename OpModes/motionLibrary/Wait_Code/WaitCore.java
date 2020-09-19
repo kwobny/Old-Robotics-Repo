@@ -90,10 +90,10 @@ public class WaitCore {
     return task;
   }
 
-  /*public void cancelTimeout(final WaitTask task) {
+  //cancel/remove the timeout
+  public void removeTimeout(final WaitTask task) {
     timeoutRunner.remove(task);
-    task._isActive2 = true;
-  }*/
+  }
 
   void runTimeouts() {
     timeoutRunner.runAll();

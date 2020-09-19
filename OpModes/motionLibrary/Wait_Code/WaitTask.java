@@ -11,8 +11,8 @@ public class WaitTask extends Operation {
   public Callback runWhile; //this is basically an optional callback that continuously runs in the main loop while the wait is ongoing.
   //It is run after the wait condition is tested, so if the wait is determined to be over, then this does not run.
 
-  public boolean endTaskAfter = true;
-  //is a property that specifies whether or not to end the wait after the condition has been met.
+  public boolean autoEndTask = true;
+  //is a property that specifies whether or not to automatically end the wait after the condition has been met.
 
   //IMPORTANT: this property is not meant to be used by the end user, but only by any other libraries.
   private boolean _isActive2 = false;
@@ -27,7 +27,7 @@ public class WaitTask extends Operation {
       if (callback != null) {
         callback.run();
       }
-      if (endTaskAfter) {
+      if (autoEndTask) {
         _isActive2 = false;
         return;
       }
