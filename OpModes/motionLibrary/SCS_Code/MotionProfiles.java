@@ -37,8 +37,8 @@ public class MotionProfiles {
     private final SCSOpUnit.InputCond condition;
 
     private final CommonTrans.Translate graphTransformation = new CommonTrans.Translate();
-    private final CommonOps.ConstAccel constAccel;
-    private final CommonOps.ConstJerk constJerk;
+    private final CommonOps.ConstAccel constAccel = new CommonOps.ConstAccel();
+    private final CommonOps.ConstJerk constJerk = new CommonOps.ConstJerk();
 
     //These are the properties for detection of when the wait is done.
     //this denotes if the profile operation has completed running.
@@ -74,7 +74,7 @@ public class MotionProfiles {
       condition.isAbove = true;
       waitTask.condition = condition;
 
-      operation
+      operation.graphFunc = graphTransformation;
     }
 
     //this denotes if the profile operation is running.
@@ -89,7 +89,11 @@ public class MotionProfiles {
       isDone = false;
 
       //starts the first part of the operation (positive jerk)
-      operation.graphFunc = new CommonOps.ConstJerk(jerk, 0, initialVelocity);
+      //operation.graphFunc = new CommonOps.ConstJerk(jerk, 0, initialVelocity);
+      graphTransformation.next = constJerk;
+      constJerk.jerk = jerk;
+      constJerk.initialAcceleration = 0;
+      constJerk.initialVelocity = initialVelocity;
 
       condition.threshold = jerkTime;
       waitTask.callback = callback1;
@@ -105,8 +109,12 @@ public class MotionProfiles {
         //second part of operation (constant acceleration)
         //if the time spent on acceleration is 0, then run alternative code
         if (accelTime != 0.0) {
-          MathFunction constAccel = new CommonOps.ConstAccel(maxAccel, accelStartVelocity);
-          constAccel = TransUtils.applyTrans(constAccel, new CommonTrans.Translate(jerkTime, 0.0));
+          /*MathFunction constAccel = new CommonOps.ConstAccel(maxAccel, accelStartVelocity);
+          constAccel = TransUtils.applyTrans(constAccel, new CommonTrans.Translate(jerkTime, 0.0));*/
+          constAccel.acceleration = maxAccel;
+          constAccel.initialVelocity = accelStartVelocity;
+          graphTransformation.next = constAccel;
+          graphTransformation.shiftX = jerkTime;
 
           condition.threshold += accelTime;
           waitTask.callback = callback2;
@@ -123,8 +131,13 @@ public class MotionProfiles {
       @Override
       public void run() {
         //last part of operation, constant jerk
-        MathFunction constJerk = new CommonOps.ConstJerk(-jerk, maxAccel, lastStartVelocity);
-        constJerk = TransUtils.applyTrans(constJerk, new CommonTrans.Translate(jerkTime + accelTime, 0.0));
+        /*MathFunction constJerk = new CommonOps.ConstJerk(-jerk, maxAccel, lastStartVelocity);
+        constJerk = TransUtils.applyTrans(constJerk, new CommonTrans.Translate(jerkTime + accelTime, 0.0));*/
+        constJerk.jerk = -jerk;
+        constJerk.initialAcceleration = maxAccel;
+        constJerk.initialVelocity = lastStartVelocity;
+        graphTransformation.next = constJerk;
+        graphTransformation.shiftX += accelTime;
 
         condition.threshold += jerkTime;
         waitTask.callback = opCallback;

@@ -12,6 +12,9 @@ public class CommonOps {
       this.acceleration = accel;
       this.initialVelocity = initialVelocity;
     }
+    public ConstAccel() {
+      //
+    }
     
     @Override
     public double yValueOf(final double x) {
@@ -33,6 +36,9 @@ public class CommonOps {
       this.jerk = jerk;
       this.initialAcceleration = initialAcceleration;
       this.initialVelocity = initialVelocity;
+    }
+    public ConstJerk() {
+      //
     }
     
     @Override
