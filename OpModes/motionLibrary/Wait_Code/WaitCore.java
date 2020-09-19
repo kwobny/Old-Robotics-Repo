@@ -64,7 +64,7 @@ public class WaitCore {
   private ArrayList<Integer> indices = new ArrayList<Integer>();
 
   //allows things to execute once condition met, does not pause code execution
-  private final OperationRunner timeoutRunner = new OperationRunner<WaitTask>() {
+  private final OperationRunner<WaitTask> timeoutRunner = new OperationRunner<>() {
     
     @Override
     protected void runOp(WaitTask op) {
