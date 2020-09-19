@@ -36,6 +36,10 @@ public class MotionProfiles {
     private final WaitTask waitTask = new WaitTask();
     private final SCSOpUnit.InputCond condition;
 
+    private final CommonTrans.Translate graphTransformation = new CommonTrans.Translate();
+    private final CommonOps.ConstAccel constAccel;
+    private final CommonOps.ConstJerk constJerk;
+
     //These are the properties for detection of when the wait is done.
     //this denotes if the profile operation has completed running.
     private boolean isDone = false;
@@ -69,6 +73,8 @@ public class MotionProfiles {
       condition = new operation.InputCond();
       condition.isAbove = true;
       waitTask.condition = condition;
+
+      operation
     }
 
     //this denotes if the profile operation is running.

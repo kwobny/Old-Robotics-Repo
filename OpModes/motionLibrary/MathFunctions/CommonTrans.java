@@ -11,11 +11,16 @@ public class CommonTrans {
       this.shiftX = shiftX;
       this.shiftY = shiftY;
     }
+    public Translate() {
+      //
+    }
 
+    @Override
     public double alteredX(final double input) {
       return input - shiftX;
     }
 
+    @Override
     public double alteredY(final double output) {
       return output + shiftY;
     }
@@ -30,11 +35,16 @@ public class CommonTrans {
       this.scaleX = scaleX;
       this.scaleY = scaleY;
     }
+    public Scale() {
+      //
+    }
 
+    @Override
     public double alteredX(final double input) {
       return input/scaleX;
     }
 
+    @Override
     public double alteredY(final double output) {
       return output * scaleY;
     }
