@@ -20,26 +20,17 @@ public class MotionProfiles {
 
   //this is the curve which is used to build the full S curve profile. This curve is immutable.
   public class SubSCurve {
-    
-    //public double changeInVelocity;
-    //public double changeInTime;
-    private final double jerk;
-    private final double maxAccel;
 
-    private final double initialVelocity;
     private final double jerkTime; //the time spent on constant jerk mode
     private final double accelTime; //the time spent on the constant acceleration part
-    private final double accelStartVelocity;
-    private final double lastStartVelocity;
 
     private final SCSOpUnit operation;
     private final WaitTask waitTask = new WaitTask();
     private final SCSOpUnit.InputCond condition;
 
-    private final CommonTrans.Translate graphTransformation = new CommonTrans.Translate();
-    private final CommonOps.ConstAccel constAccel;
-    private final CommonOps.ConstJerk constJerk1 = new CommonOps.ConstJerk();
-    private final CommonOps.ConstJerk constJerk2 = new CommonOps.ConstJerk();
+    private final CommonTrans.TranslateX constAccel;
+    private final CommonOps.ConstJerk constJerk1;
+    private final CommonTrans.TranslateX constJerk2;
 
     //These are the properties for detection of when the wait is done.
     //this denotes if the profile operation has completed running.
@@ -53,22 +44,21 @@ public class MotionProfiles {
     };
 
     public SubSCurve(final OutputSink output, final Callback opCallback, final double ...curveArgs) {
-      //the argument list is jerk, highest acceleration, time spent on jerk, time spent on const accel, change in velocity in jerk, change in velocity on const accel.
+      //the argument list is jerk, highest acceleration, time spent on jerk, time spent on const accel, change in velocity in jerk, change in velocity on const accel, initial velocity.
+      //0: jerk
+      //1: highest/most magnitude accel
+      //2: time on jerk
+      //3: time on const accel
+      //4: change in velocity on jerk
+      //5: change in velocity on accel
+      //6: initial velocity
+
       //if the time spent on const accel is 0.0, then it is a triangular acceleration profile.
 
-      /*
-      //finding the required constants
-      this.jerk = jerk;
-      this.maxAccel = maxAcceleration;
-      this.initialVelocity = initialOutput;
-      this.jerkTime = this.maxAccel/this.jerk;
-
-      //edit this a little. Works for everything
-      this.accelTime = (finalOutput - this.initialVelocity) - (1/this.jerk);
-
-      this.accelStartVelocity = 1/2 * this.jerkTime * this.maxAccel;
-      this.lastStartVelocity = this.accelStartVelocity + this.accelTime * this.maxAccel;
-      */
+      //checking if argument length is valid
+      if (curveArgs.length != 7) {
+        throw new Exception("Incorrect number of arguments given.");
+      }
 
       //setting up the actual operation
       this.opCallback = opCallback;
@@ -79,12 +69,22 @@ public class MotionProfiles {
       condition.isAbove = true;
       waitTask.condition = condition;
 
-      operation.graphFunc = graphTransformation;
-
       //inputting in the required constants
-      if (curveArgs[3] != 0.0) {
-        constAccel = new CommonOps.ConstAccel();
+      if (curveArgs[3] == 0.0) {
+        constAccel = null;
       }
+      else {
+        constAccel = new CommonTrans.TranslateX(curveArgs[2]);
+        constAccel.next = new CommonOps.ConstAccel(curveArgs[1], curveArgs[6] + curveArgs[4]);
+      }
+
+      constJerk1 = new CommonOps.ConstJerk(curveArgs[0], 0.0, curveArgs[6]);
+
+      constJerk2 = new CommonTrans.TranslateX(curveArgs[2] + curveArgs[3]);
+      constJerk2.next = new CommonOps.ConstJerk(-curveArgs[0], curveArgs[1], curveArgs[6] + curveArgs[4] + curveArgs[5]);
+
+      jerkTime = curveArgs[2];
+      accelTime = curveArgs[3];
     }
 
     //this denotes if the profile operation is running.
@@ -99,11 +99,7 @@ public class MotionProfiles {
       isDone = false;
 
       //starts the first part of the operation (positive jerk)
-      //operation.graphFunc = new CommonOps.ConstJerk(jerk, 0, initialVelocity);
-      graphTransformation.next = constJerk;
-      constJerk.jerk = jerk;
-      constJerk.initialAcceleration = 0;
-      constJerk.initialVelocity = initialVelocity;
+      operation.graphFunc = constJerk1;
 
       condition.threshold = jerkTime;
       waitTask.callback = callback1;
@@ -118,13 +114,8 @@ public class MotionProfiles {
       public void run() {
         //second part of operation (constant acceleration)
         //if the time spent on acceleration is 0, then run alternative code
-        if (accelTime != 0.0) {
-          /*MathFunction constAccel = new CommonOps.ConstAccel(maxAccel, accelStartVelocity);
-          constAccel = TransUtils.applyTrans(constAccel, new CommonTrans.Translate(jerkTime, 0.0));*/
-          constAccel.acceleration = maxAccel;
-          constAccel.initialVelocity = accelStartVelocity;
-          graphTransformation.next = constAccel;
-          graphTransformation.shiftX = jerkTime;
+        if (constAccel != null) {
+          operation.graphFunc = constAccel;
 
           condition.threshold += accelTime;
           waitTask.callback = callback2;
@@ -139,16 +130,10 @@ public class MotionProfiles {
       @Override
       public void run() {
         //last part of operation, constant jerk
-        /*MathFunction constJerk = new CommonOps.ConstJerk(-jerk, maxAccel, lastStartVelocity);
-        constJerk = TransUtils.applyTrans(constJerk, new CommonTrans.Translate(jerkTime + accelTime, 0.0));*/
-        constJerk.jerk = -jerk;
-        constJerk.initialAcceleration = maxAccel;
-        constJerk.initialVelocity = lastStartVelocity;
-        graphTransformation.next = constJerk;
-        graphTransformation.shiftX += accelTime;
+        operation.graphFunc = constJerk2;
 
         condition.threshold += jerkTime;
-        waitTask.callback = opCallback;
+        waitTask.callback = endCallback;
       }
     };
 
@@ -170,6 +155,21 @@ public class MotionProfiles {
   //this function returns a set of complete arguments for the sub scs curve when given a partial set of arguments.
   //arguments that are missing/not given are denoted with null.
   public static void getSubSCurveArgs(final Double changeInTime, final Double initialOutput, final Double finalOutput, final Double jerk, final Double maxAcceleration) {
+
+    /*
+      //finding the required constants
+      this.jerk = jerk;
+      this.maxAccel = maxAcceleration;
+      this.initialVelocity = initialOutput;
+      this.jerkTime = this.maxAccel/this.jerk;
+
+      //edit this a little. Works for everything
+      this.accelTime = (finalOutput - this.initialVelocity) - (1/this.jerk);
+
+      this.accelStartVelocity = 1/2 * this.jerkTime * this.maxAccel;
+      this.lastStartVelocity = this.accelStartVelocity + this.accelTime * this.maxAccel;
+      */
+
     //finding input numbers if some parameters are missing
 
     //check to see if initial and final output are both missing.
