@@ -1,6 +1,29 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary.MathFunctions;
 
 public class CommonTrans {
+
+  public static class Translate extends Transformation {
+
+    public double shiftX;
+    public double shiftY;
+
+    public Translate(final double shiftX, final double shiftY) {
+      this.shiftX = shiftX;
+      this.shiftY = shiftY;
+    }
+    public Translate() {
+      //
+    }
+
+    @Override
+    public double alteredX(final double input) {
+      return input - shiftX;
+    }
+    @Override
+    public double alteredY(final double input) {
+      return input + shiftY;
+    }
+  }
   
   public static class TranslateX extends Transformation {
 
@@ -33,6 +56,29 @@ public class CommonTrans {
     @Override
     public double alteredY(final double input) {
       return input + shiftY;
+    }
+  }
+
+  public static class Scale extends Transformation {
+
+    public double factorX;
+    public double factorY;
+
+    public Scale(final double factorX, final double factorY) {
+      this.factorX = factorX;
+      this.factorY = factorY;
+    }
+    public Scale() {
+      //
+    }
+
+    @Override
+    public double alteredX(final double input) {
+      return input/factorX;
+    }
+    @Override
+    public double alteredY(final double input) {
+      return input * factorY;
     }
   }
 
