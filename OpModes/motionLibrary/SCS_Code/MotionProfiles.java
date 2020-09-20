@@ -18,7 +18,7 @@ public class MotionProfiles {
 
   }
 
-  //this is the curve which is used to build the full S curve profile.
+  //this is the curve which is used to build the full S curve profile. This curve is immutable.
   public class SubSCurve {
     
     //public double changeInVelocity;
@@ -37,8 +37,9 @@ public class MotionProfiles {
     private final SCSOpUnit.InputCond condition;
 
     private final CommonTrans.Translate graphTransformation = new CommonTrans.Translate();
-    private final CommonOps.ConstAccel constAccel = new CommonOps.ConstAccel();
-    private final CommonOps.ConstJerk constJerk = new CommonOps.ConstJerk();
+    private final CommonOps.ConstAccel constAccel;
+    private final CommonOps.ConstJerk constJerk1 = new CommonOps.ConstJerk();
+    private final CommonOps.ConstJerk constJerk2 = new CommonOps.ConstJerk();
 
     //These are the properties for detection of when the wait is done.
     //this denotes if the profile operation has completed running.
@@ -51,8 +52,11 @@ public class MotionProfiles {
       }
     };
 
-    public SubSCurve(final OutputSink output, final Callback opCallback, final ) throws Exception {
+    public SubSCurve(final OutputSink output, final Callback opCallback, final double ...curveArgs) {
+      //the argument list is jerk, highest acceleration, time spent on jerk, time spent on const accel, change in velocity in jerk, change in velocity on const accel.
+      //if the time spent on const accel is 0.0, then it is a triangular acceleration profile.
 
+      /*
       //finding the required constants
       this.jerk = jerk;
       this.maxAccel = maxAcceleration;
@@ -64,6 +68,7 @@ public class MotionProfiles {
 
       this.accelStartVelocity = 1/2 * this.jerkTime * this.maxAccel;
       this.lastStartVelocity = this.accelStartVelocity + this.accelTime * this.maxAccel;
+      */
 
       //setting up the actual operation
       this.opCallback = opCallback;
@@ -75,6 +80,11 @@ public class MotionProfiles {
       waitTask.condition = condition;
 
       operation.graphFunc = graphTransformation;
+
+      //inputting in the required constants
+      if (curveArgs[3] != 0.0) {
+        constAccel = new CommonOps.ConstAccel();
+      }
     }
 
     //this denotes if the profile operation is running.
@@ -118,8 +128,6 @@ public class MotionProfiles {
 
           condition.threshold += accelTime;
           waitTask.callback = callback2;
-
-          operation.graphFunc = constAccel;
         }
         else {
           callback2.run();
@@ -141,8 +149,6 @@ public class MotionProfiles {
 
         condition.threshold += jerkTime;
         waitTask.callback = opCallback;
-
-        operation.graphFunc = constJerk;
       }
     };
 
