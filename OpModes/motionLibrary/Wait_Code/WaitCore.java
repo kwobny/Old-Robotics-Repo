@@ -1,9 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 
 import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.GenericOperation.*;
-import java.util.ArrayList;
-import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class WaitCore {
 
@@ -59,9 +56,6 @@ public class WaitCore {
   }
 
   //timeout functionality
-
-  //indices to pass to remove indices function
-  private ArrayList<Integer> indices = new ArrayList<Integer>();
 
   //allows things to execute once condition met, does not pause code execution
   private final OperationRunner<WaitTask> timeoutRunner = new OperationRunner<>() {
