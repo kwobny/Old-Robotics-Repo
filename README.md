@@ -13,6 +13,9 @@ Not committing:
 
 How to delete a branch from local repository: execute "git branch -d 'branch name'"
 
+How to roll back to/revert to a specific commit:
+https://stackoverflow.com/questions/4372435/how-can-i-rollback-a-github-repository-to-a-specific-commit
+
 If all else fails: just make a new repl it and reconnect it to github. Make sure that the .replit file has correct information. if not, then delete it
 
 # Notes:
