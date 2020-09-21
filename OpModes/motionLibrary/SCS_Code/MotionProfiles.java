@@ -157,6 +157,10 @@ public class MotionProfiles {
       }
     };
 
+    public SubSCurve(final Double changeInTime, final Double initialOutput, final Double finalOutput, final Double jerk, final Double maxAcceleration) {
+      //
+    }
+
   }
 
   //this function returns a set of complete arguments for the sub scs curve when given a partial set of arguments.
