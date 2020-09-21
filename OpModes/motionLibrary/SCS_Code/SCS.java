@@ -2,9 +2,7 @@
 
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 
-import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.MathFunctions.*;
 import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.GenericOperation.*;
-import java.util.ArrayList;
 
 //Every acceleration or automatic change in an output (motor buffer speedfactors mainly) is called an operation
 

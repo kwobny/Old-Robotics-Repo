@@ -19,15 +19,6 @@ public class Constants {
   public static final double defaultSectorSize = 90; //The default size of the sector for wait for displacement.
   public static final double motor_down_scale = 0.2; //specifies the universal buffer reference speed factor
 
-  static void removeFromArray(ArrayList<?> primaryArray, ArrayList<Integer> indexArray) {
-    //the index array is expected to be sorted from least to greatest
-    int valueDecrease = 0;
-    for (int i : indexArray) {
-      primaryArray.remove(i-valueDecrease);
-      valueDecrease += 1;
-    }
-  }
-
   //an is equal function for doubles
   static boolean isEqual(double a, double b) {
     return Math.abs(a - b) < 0.0001;

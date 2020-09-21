@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.motionLibrary.CancelCallback;
+package org.firstinspires.ftc.teamcode.OpModes.motionLibrary.GenericOperation;
 
 //this class is mainly meant to be subclassed, but it can also be used just as is.
 public class Operation {

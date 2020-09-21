@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 
+import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.MathFunctions.*;
+
 public class CommonOps {
 
   //constant acceleration

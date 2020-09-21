@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 
 import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 class MoveCore {
   //SETTING VARIABLES
@@ -12,7 +11,6 @@ class MoveCore {
   //RESOURCE OBJECTS
   protected RPS rpss;
   protected MadHardware mhw;
-  protected ElapsedTime baseRuntime = new ElapsedTime();
 
   //START MOTOR COMMANDS
 
