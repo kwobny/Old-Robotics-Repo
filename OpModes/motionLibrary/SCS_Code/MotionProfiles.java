@@ -21,13 +21,16 @@ public class MotionProfiles {
   //this is the curve which is used to build the full S curve profile. This curve is immutable.
   public class SubSCurve {
 
+    //data members
     private final double jerkTime; //the time spent on constant jerk mode
     private final double accelTime; //the time spent on the constant acceleration part
 
+    //dependent stuff/objects
     private final SCSOpUnit operation;
     private final WaitTask waitTask = new WaitTask();
     private final SCSOpUnit.InputCond condition;
 
+    //graph functions
     private final CommonTrans.TranslateX constAccel;
     private final CommonOps.ConstJerk constJerk1;
     private final CommonTrans.TranslateX constJerk2;
@@ -35,6 +38,9 @@ public class MotionProfiles {
     //These are the properties for detection of when the wait is done.
     //this denotes if the profile operation has completed running.
     private boolean isDone = false;
+    //this denotes if the profile operation is running.
+    private boolean isActive = false;
+
     public Callback opCallback;
     public final WaitCondition opCondition = new WaitCondition() {
       @Override
@@ -43,6 +49,7 @@ public class MotionProfiles {
       }
     };
 
+    //The curve arguments need to be exact and accurate, or else the curve falls apart.
     public SubSCurve(final OutputSink output, final Callback opCallback, final double ...curveArgs) {
       //the argument list is jerk, highest acceleration, time spent on jerk, time spent on const accel, change in velocity in jerk, change in velocity on const accel, initial velocity.
       //0: jerk
@@ -60,7 +67,7 @@ public class MotionProfiles {
         throw new Exception("Incorrect number of arguments given.");
       }
 
-      //setting up the actual operation
+      //setting up the dependent systems
       this.opCallback = opCallback;
       operation = new SCSOpUnit(main.time, output, null);
       waitTask.autoEndTask = false;
@@ -69,7 +76,8 @@ public class MotionProfiles {
       condition.isAbove = true;
       waitTask.condition = condition;
 
-      //inputting in the required constants
+      //setting up the graph functions
+      //setting up acceleration curve, if needed
       if (curveArgs[3] == 0.0) {
         constAccel = null;
       }
@@ -78,17 +86,16 @@ public class MotionProfiles {
         constAccel.next = new CommonOps.ConstAccel(curveArgs[1], curveArgs[6] + curveArgs[4]);
       }
 
+      //setting up constant jerk curves
       constJerk1 = new CommonOps.ConstJerk(curveArgs[0], 0.0, curveArgs[6]);
 
       constJerk2 = new CommonTrans.TranslateX(curveArgs[2] + curveArgs[3]);
       constJerk2.next = new CommonOps.ConstJerk(-curveArgs[0], curveArgs[1], curveArgs[6] + curveArgs[4] + curveArgs[5]);
 
+      //filling in jerk time and accel time
       jerkTime = curveArgs[2];
       accelTime = curveArgs[3];
     }
-
-    //this denotes if the profile operation is running.
-    private boolean isActive = false;
 
     public void start() throws Exception {
       //make sure that the operation is not running before using it.
