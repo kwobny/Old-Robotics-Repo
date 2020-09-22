@@ -53,7 +53,7 @@ public class MotionProfiles {
     public SubSCurve(final OutputSink output, final Callback opCallback, final double ...curveArgs) {
       //the argument list is jerk, highest acceleration, time spent on jerk, time spent on const accel, change in velocity in jerk, change in velocity on const accel, initial velocity.
       //0: jerk
-      //1: highest/most magnitude accel
+      //1: peak/most magnitude accel
       //2: time on jerk
       //3: time on const accel
       //4: change in velocity on jerk
@@ -61,6 +61,7 @@ public class MotionProfiles {
       //6: initial velocity
 
       //if the time spent on const accel is 0.0, then it is a triangular acceleration profile.
+      //time on jerk is the time spent on each individual jerk curve. 2 times this number gives the total time spent on jerk.
 
       //checking if argument length is valid
       if (curveArgs.length != 7) {
@@ -157,25 +158,27 @@ public class MotionProfiles {
       }
     };
 
-    public SubSCurve(final OutputSink output, final Callback callback, final Double maxJerk, final Double maxAcceleration, final Double changeInTime, final Double initialOutput, final Double finalOutput) throws Exception {
+    //the using ref as final output is self explanatory. If false (in most cases), the reference will be counted as the initial output. If true, the reference will be counted as the final output.
+    //the reference output is required for obvious reasons
+    public SubSCurve(final OutputSink output, final Callback callback, final Double maxJerk, final Double maxAcceleration, final Double changeInTime, final Double changeInOutput, final double refOutput, final boolean using_ref_as_final_output) throws Exception {
       //0: jerk
-      //1: highest/most magnitude accel
+      //1: peak/most magnitude accel
       //2: time on jerk
       //3: time on const accel
       //4: change in velocity on jerk
       //5: change in velocity on accel
       //6: initial velocity
 
-      //check to see if initial and final output are both missing.
-      if (initialOutput == null && finalOutput == null) {
-        throw new Exception("both the initial and final outputs are null. The function does not know where to place the graph. At least provide something like 0.0 for the initial output.");
-      }
+      //defining the output variables needed
+      //dV stands for change in velocity
+      //as stated in other constructor, time on jerk is the time spent on each individual jerk curve.
+      double jerk, peakAccel, timeOnJerk, timeOnAccel, dVJerk, dVAccel, velInitial;
 
       //find how many inputs are missing
       int missing = 0;
       if (changeInTime == null)
         i++;
-      if (initialOutput == null || finalOutput == null)
+      if (changeInOutput == null)
         i++;
       if (maxJerk == null)
         i++;
@@ -211,6 +214,44 @@ public class MotionProfiles {
       else if (missing == 1) {
         if (maxJerk == null) {
           //jerk
+          //You don't need to have the peak acceleration be the max acceleration, because its just a max acceleration. The real dependencies are the change in velocity and time.
+          
+          //first, you find the jerk and peak acceleration, pretending that there is no max acceleration. If the peak acceleration is greater than the max, than you use scenario 2.
+
+          //for testing if scenario 1
+
+          //dV = dt/2 * (dt/2 * jerk)
+          //dV = dt^2/4 * jerk
+          //jerk = dV/(dt^2/4)
+          //jerk = 4 * dV / dt^2
+
+          //peakAccel = j * (dt/2)
+          //peakAccel = 4 * dV/dt^2 * dt/2
+          //peakAccel = 2 * dV/dt
+          //jerk = peakAccel/(dt/2) = 2 * peakAccel/dt
+
+          //for finding values if using scenario 2
+
+          //peakAccel = maxAcceleration
+          //peakAccel * (changeInTime - timeOnJerk) = changeInVelocity
+
+          //changeInVelocity/peakAccel = changeInTime - timeOnJerk
+          //timeOnJerk = changeInTime - changeInVelocity/peakAccel
+
+          //timeOnAccel = changeInTime - 2 * timeOnJerk
+          //timeOnAccel = changeInTime - 2 * (changeInTime - changeInVelocity/peakAccel)
+          //timeOnAccel = changeInTime - 2 * changeInTime - 2 * changeInVelocity/peakAccel
+          //timeOnAccel = -changeInTime - 2 * changeInVelocity/peakAccel
+
+          peakAccel = 2.0 * changeInOutput/changeInTime;
+          if (peakAccel < maxAcceleration) {
+            //all good, use scenario 1
+            jerk = 2 * peakAccel/changeInTime;
+          }
+          else {
+            //not great, use scenario 2
+            //
+          }
         }
         else if (changeInTime == null) {
           //change in time
@@ -231,7 +272,7 @@ public class MotionProfiles {
             //if 
           }
         }
-        else if (initialOutput == null || finalOutput == null) {
+        else if (changeInOutput == null) {
           //change in velocity
         }
         else {
