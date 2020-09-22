@@ -51,7 +51,7 @@ public class MotionProfiles {
 
     //The curve arguments need to be exact and accurate, or else the curve falls apart.
     public SubSCurve(final OutputSink output, final Callback opCallback, final double ...curveArgs) {
-      //the argument list is jerk, highest acceleration, time spent on jerk, time spent on const accel, change in velocity in jerk, change in velocity on const accel, initial velocity.
+      //the argument list is jerk, peak acceleration, time spent on jerk, time spent on const accel, change in velocity in jerk, change in velocity on const accel, initial velocity.
       //0: jerk
       //1: peak/most magnitude accel
       //2: time on jerk
