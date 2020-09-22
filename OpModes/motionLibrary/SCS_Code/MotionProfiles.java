@@ -157,10 +157,114 @@ public class MotionProfiles {
       }
     };
 
-    public SubSCurve(final Double changeInTime, final Double initialOutput, final Double finalOutput, final Double jerk, final Double maxAcceleration) {
-      //
-    }
+    public SubSCurve(final OutputSink output, final Callback callback, final Double maxJerk, final Double maxAcceleration, final Double changeInTime, final Double initialOutput, final Double finalOutput) throws Exception {
+      //0: jerk
+      //1: highest/most magnitude accel
+      //2: time on jerk
+      //3: time on const accel
+      //4: change in velocity on jerk
+      //5: change in velocity on accel
+      //6: initial velocity
 
+      //check to see if initial and final output are both missing.
+      if (initialOutput == null && finalOutput == null) {
+        throw new Exception("both the initial and final outputs are null. The function does not know where to place the graph. At least provide something like 0.0 for the initial output.");
+      }
+
+      //find how many inputs are missing
+      int missing = 0;
+      if (changeInTime == null)
+        i++;
+      if (initialOutput == null || finalOutput == null)
+        i++;
+      if (maxJerk == null)
+        i++;
+      if (maxAcceleration == null)
+        i++;
+      
+      if (missing > 2)
+        throw new Exception("There were more than 2 missing arguments out of 4.");
+      
+      else if (missing == 2) {
+
+        if (maxAcceleration == null) {
+          if (maxJerk == null) {
+            //jerk
+          }
+          else if (changeInTime == null) {
+            //change in time
+          }
+          else {
+            //change in velocity
+          }
+        }
+        else if (maxJerk == null) {
+          //jerk and either time or velocity is missing
+          throw new Exception("Change in time or change in velocity cannot be null if maxJerk is also null. Look at scs notes for explanation as to why.");
+        }
+        else {
+          //time and velocity is missing, which is impossible
+          throw new Exception("Change in time and change in velocity cannot be null together.");
+        }
+
+      }
+      else if (missing == 1) {
+        if (maxJerk == null) {
+          //jerk
+        }
+        else if (changeInTime == null) {
+          //change in time
+
+          //for scenario 1
+          //v = (dt/2)^2 * j
+          //2 * sqrt(v/j) = dt
+
+          //for scenario 2
+          //v = amax * (dt - amax/j)
+          //
+
+          double dtDiv2 = Math.sqrt((finalOutput - initialOutput)/maxJerk);
+          if (dtDiv2 * maxJerk < maxAcceleration) {
+            changeInTime = dtDiv2 * 2;
+          }
+          else {
+            //if 
+          }
+        }
+        else if (initialOutput == null || finalOutput == null) {
+          //change in velocity
+        }
+        else {
+          //max acceleration
+        }
+      }
+      else {
+        //nothing is missing, check to see that everything is valid and checks out
+        /*
+        ((1/2 * dt)^2 * j == dv)
+
+        (amax/j) = tjerk
+        (amax * (dt - amax/j) == dv)
+        */
+
+        final boolean usingConstAccel = changeInTime/2.0 * maxJerk > maxAcceleration;
+
+        if (usingConstAccel) {
+          //check if the change in velocity given matches the calculated value. This is for scenario with const accel
+          if (!Constants.isEqual(maxAcceleration * (changeInTime - maxAcceleration/maxJerk), finalOutput - initialOutput)) {
+            throw new Exception("the 4 arguments given were not valid with each other. They didn't check out for a scenario with constant acceleration portion.");
+          }
+        }
+        else {
+          //not having a constant acceleration portion
+          //check if velocity given matches calculated velocity.
+          if (!Constants.isEqual(changeInTime * changeInTime/4.0 * maxJerk, finalOutput - initialOutput)) {
+            throw new Exception("the 4 arguments given were not valid with each other. Didn't check out for a scenario without const accel portion");
+          }
+        }
+        
+      }
+    }
   }
 
   //this function returns a set of complete arguments for the sub scs curve when given a partial set of arguments.
