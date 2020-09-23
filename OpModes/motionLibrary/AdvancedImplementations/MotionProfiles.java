@@ -67,7 +67,7 @@ public class MotionProfiles {
 
       //checking if argument length is valid
       if (curveArgs.length != 7) {
-        throw new Exception("Incorrect number of arguments given.");
+        throw new RuntimeException("Incorrect number of arguments given.");
       }
 
       //setting up the dependent systems
@@ -100,10 +100,10 @@ public class MotionProfiles {
       accelTime = curveArgs[3];
     }
 
-    public void start() throws Exception {
+    public void start() {
       //make sure that the operation is not running before using it.
       if (isActive) {
-        throw new Exception("You cannot start a motion profile which is already running");
+        throw new RuntimeException("You cannot start a motion profile which is already running");
       }
       isActive = true;
       isDone = false;
@@ -162,7 +162,7 @@ public class MotionProfiles {
 
     //the using ref as final output is self explanatory. If false (in most cases), the reference will be counted as the initial output. If true, the reference will be counted as the final output.
     //the reference output is required for obvious reasons
-    public SubSCurve(final OutputSink output, final Callback callback, final Double maxJerk, final Double maxAcceleration, final Double changeInTime, final Double changeInOutput, final double refOutput, final boolean using_ref_as_final_output) throws Exception {
+    public SubSCurve(final OutputSink output, final Callback callback, final Double maxJerk, final Double maxAcceleration, final Double changeInTime, final Double changeInOutput, final double refOutput, final boolean using_ref_as_final_output) {
       //0: jerk
       //1: peak/most magnitude accel
       //2: time on jerk
@@ -188,7 +188,7 @@ public class MotionProfiles {
         i++;
       
       if (missing > 2)
-        throw new Exception("There were more than 2 missing arguments out of 4.");
+        throw new RuntimeException("There were more than 2 missing arguments out of 4.");
       
       else if (missing == 2) {
 
@@ -205,11 +205,11 @@ public class MotionProfiles {
         }
         else if (maxJerk == null) {
           //jerk and either time or velocity is missing
-          throw new Exception("Change in time or change in velocity cannot be null if maxJerk is also null. Look at scs notes for explanation as to why.");
+          throw new RuntimeException("Change in time or change in velocity cannot be null if maxJerk is also null. Look at scs notes for explanation as to why.");
         }
         else {
           //time and velocity is missing, which is impossible
-          throw new Exception("Change in time and change in velocity cannot be null together.");
+          throw new RuntimeException("Change in time and change in velocity cannot be null together.");
         }
 
       }
@@ -295,14 +295,14 @@ public class MotionProfiles {
         if (usingConstAccel) {
           //check if the change in velocity given matches the calculated value. This is for scenario with const accel
           if (!Constants.isEqual(maxAcceleration * (changeInTime - maxAcceleration/maxJerk), finalOutput - initialOutput)) {
-            throw new Exception("the 4 arguments given were not valid with each other. They didn't check out for a scenario with constant acceleration portion.");
+            throw new RuntimeException("the 4 arguments given were not valid with each other. They didn't check out for a scenario with constant acceleration portion.");
           }
         }
         else {
           //not having a constant acceleration portion
           //check if velocity given matches calculated velocity.
           if (!Constants.isEqual(changeInTime * changeInTime/4.0 * maxJerk, finalOutput - initialOutput)) {
-            throw new Exception("the 4 arguments given were not valid with each other. Didn't check out for a scenario without const accel portion");
+            throw new RuntimeException("the 4 arguments given were not valid with each other. Didn't check out for a scenario without const accel portion");
           }
         }
         
@@ -332,7 +332,7 @@ public class MotionProfiles {
 
     //check to see if initial and final output are both missing.
     if (initialOutput == null && finalOutput == null) {
-      throw new Exception("both the initial and final outputs are null. The function does not know where to place the graph. At least provide something like 0.0 for the initial output.");
+      throw new RuntimeException("both the initial and final outputs are null. The function does not know where to place the graph. At least provide something like 0.0 for the initial output.");
     }
 
     //find how many inputs are missing
@@ -347,7 +347,7 @@ public class MotionProfiles {
       i++;
     
     if (missing > 2)
-      throw new Exception("There were more than 2 missing arguments out of 4.");
+      throw new RuntimeException("There were more than 2 missing arguments out of 4.");
     
     else if (missing == 2) {
 
@@ -364,11 +364,11 @@ public class MotionProfiles {
       }
       else if (jerk == null) {
         //jerk and either time or velocity is missing
-        throw new Exception("Change in time or change in velocity cannot be null if jerk is also null. Look at scs notes for explanation as to why.");
+        throw new RuntimeException("Change in time or change in velocity cannot be null if jerk is also null. Look at scs notes for explanation as to why.");
       }
       else {
         //time and velocity is missing, which is impossible
-        throw new Exception("Change in time and change in velocity cannot be null together.");
+        throw new RuntimeException("Change in time and change in velocity cannot be null together.");
       }
 
     }
@@ -413,11 +413,11 @@ public class MotionProfiles {
 
       if (changeInTime/2 * jerk < maxAcceleration) {
         if (!Constants.isEqual(changeInTime * changeInTime/4 * jerk, finalOutput - initialOutput)) {
-          throw new Exception("the 4 arguments given were not valid with each other.");
+          throw new RuntimeException("the 4 arguments given were not valid with each other.");
         }
       }
       else if (!Constants.isEqual(maxAcceleration * (changeInTime - maxAcceleration/jerk), finalOutput - initialOutput)) {
-        throw new Exception("the 4 arguments given were not valid with each other.");
+        throw new RuntimeException("the 4 arguments given were not valid with each other.");
       }
     }
   }

@@ -12,12 +12,12 @@ public abstract class OperationRunner<T extends Operation> {
   
   public void add(Operation op) {
     if (op.currentRunner != null && op.currentRunner != this) {
-      throw new Exception("Each operation can only be assigned to 1 runner");
+      throw new RuntimeException("Each operation can only be assigned to 1 runner");
     }
     op.currentRunner = this;
 
     if (op.isActive)
-      throw new Exception("You cannot add an operation that is already added.");
+      throw new RuntimeException("You cannot add an operation that is already added.");
     op.isActive = true;
 
     if (op.needsDelete) {
@@ -30,7 +30,7 @@ public abstract class OperationRunner<T extends Operation> {
 
   public void remove(Operation op) {
     if (!op.isActive)
-      throw new Exception("You cannot add an operation that is already added.");
+      throw new RuntimeException("You cannot add an operation that is already added.");
     op.isActive = false;
 
     op.needsDelete = true;

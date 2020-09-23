@@ -19,10 +19,10 @@ public class WaitTask extends Operation {
 
   //A return value of true means that the wait condition has been satisfied and the wait is over. A return value of false means that the wait is still ongoing.
   //the three methods below are not meant to be used commonly by the user.
-  public void _run() throws Exception {
+  public void _run() {
     
     if (!_isActive2)
-      throw new Exception("You cannot run a wait that is not running.");
+      throw new RuntimeException("You cannot run a wait that is not running.");
     
     if (condition.pollCondition()) {
       if (callback != null) {
@@ -50,9 +50,9 @@ public class WaitTask extends Operation {
     setWait(cond);
     setCallback(callback);
   }
-  public void setWait(final WaitCondition cond) throws Exception {
+  public void setWait(final WaitCondition cond) {
     if (cond == null) {
-      throw new Exception("wait condition cannot be null");
+      throw new RuntimeException("wait condition cannot be null");
     }
     condition = cond;
   }
@@ -60,9 +60,9 @@ public class WaitTask extends Operation {
     this.callback = callback;
   }
 
-  public WaitTask(final WaitCondition condition, final Callback callback, final Callback runWhile) throws Exception {
+  public WaitTask(final WaitCondition condition, final Callback callback, final Callback runWhile) {
     if (condition == null) {
-      throw new Exception("There is no WaitCondition provided");
+      throw new RuntimeException("There is no WaitCondition provided");
     }
     this.condition = condition;
     this.callback = callback;

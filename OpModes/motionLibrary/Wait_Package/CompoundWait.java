@@ -16,7 +16,7 @@ public abstract class CompoundWait implements WaitCondition {
         retVal = new OrPoll();
         break;
       default:
-        throw new Exception("I don't know how the F#ck you did this, but you managed to provide a value from the Comparator enum that was not accounted for in the CompoundWait functionality.");
+        throw new RuntimeException("I don't know how the F#ck you did this, but you managed to provide a value from the Comparator enum that was not accounted for in the CompoundWait functionality.");
     }
 
     retVal.tasks = tasks;

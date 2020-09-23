@@ -35,13 +35,13 @@ public class SCS {
   }
 
   //adds, calibrates, and starts a new operation.
-  public SCSOpUnit addOperation(SCSOpUnit op) throws Exception {
+  public SCSOpUnit addOperation(SCSOpUnit op) {
     opRunner.add(op);
     op.calibrate();
     return op;
   }
 
-  public void removeOperation(SCSOpUnit op) throws Exception {
+  public void removeOperation(SCSOpUnit op) {
     opRunner.delete(op);
   }
 

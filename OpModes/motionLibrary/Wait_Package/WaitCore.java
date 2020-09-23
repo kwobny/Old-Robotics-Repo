@@ -81,7 +81,7 @@ public class WaitCore {
   public WaitTask setTimeout(WaitCondition addCondition, Callback callback) {
     return setTimeout(addCondition, callback, null);
   }
-  public WaitTask setTimeout(final WaitTask task) throws Exception {
+  public WaitTask setTimeout(final WaitTask task) {
     timeoutRunner.add(task);
     
     task._markAsAdd();
