@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
+package org.firstinspires.ftc.teamcode.OpModes.motionLibrary.SCS_Package;
 
 //output interface for SCS
 

@@ -1,6 +1,6 @@
 //Speed (/speedfactor) Control System
 
-package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
+package org.firstinspires.ftc.teamcode.OpModes.motionLibrary.SCS_Package;
 
 import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.GenericOperation.*;
 
@@ -24,13 +24,13 @@ public class SCS {
 
   };
   
-  //class cannot be instantiated outside of package
-  SCS() {
+  //class ideally is used only inside motion library
+  public SCS() {
     //
   }
 
-  //this is the function that should be called in the high frequency interval method
-  void runSCS() {
+  //this is the function that should be called in the high frequency interval method. Ideally should be used only inside motion library
+  public void runSCS() {
     opRunner.runAll();
   }
 

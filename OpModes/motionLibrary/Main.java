@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 
 import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
+import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.SCS_Package.*;
 
 public class Main {
   //SETTING VARIABLES

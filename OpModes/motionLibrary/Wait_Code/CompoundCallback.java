@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 
 public class CompoundCallback implements Callback {
 
-  public Callback callbacks;
+  public Callback[] callbacks;
 
   public CompoundCallback(final Callback ...callbacks) {
     this.callbacks = callbacks;

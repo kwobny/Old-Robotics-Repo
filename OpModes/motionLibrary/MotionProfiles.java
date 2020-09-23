@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 
 import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.MathFunctions.*;
+import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.SCS_Package.*;
 
 public class MotionProfiles {
 
