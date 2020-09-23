@@ -23,6 +23,9 @@ public class WaitTask extends Operation {
     
     if (!_isActive2)
       throw new RuntimeException("You cannot run a wait that is not running.");
+    if (condition == null) {
+      throw new RuntimeException("There is no wait condition running. You always need a wait condition.");
+    }
     
     if (condition.pollCondition()) {
       if (callback != null) {
@@ -47,13 +50,10 @@ public class WaitTask extends Operation {
   }
 
   public void setTask(final WaitCondition cond, final Callback callback) {
-    setWait(cond);
+    setCondition(cond);
     setCallback(callback);
   }
-  public void setWait(final WaitCondition cond) {
-    if (cond == null) {
-      throw new RuntimeException("wait condition cannot be null");
-    }
+  public void setCondition(final WaitCondition cond) {
     condition = cond;
   }
   public void setCallback(final Callback callback) {
@@ -61,9 +61,6 @@ public class WaitTask extends Operation {
   }
 
   public WaitTask(final WaitCondition condition, final Callback callback, final Callback runWhile) {
-    if (condition == null) {
-      throw new RuntimeException("There is no WaitCondition provided");
-    }
     this.condition = condition;
     this.callback = callback;
     this.runWhile = runWhile;

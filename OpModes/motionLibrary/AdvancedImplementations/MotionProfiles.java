@@ -77,7 +77,7 @@ public class MotionProfiles {
 
       condition = new operation.InputCond();
       condition.isAbove = true;
-      waitTask.condition = condition;
+      waitTask.setCondition(condition);
 
       //setting up the graph functions
       //setting up acceleration curve, if needed
