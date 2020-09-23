@@ -5,7 +5,7 @@ import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.MathFunctions.*;
 public class CommonOps {
 
   //constant acceleration
-  public static class ConstAccel extends MathFunction {
+  public static class ConstAccel implements MathFunction {
 
     public double acceleration;
     public double initialVelocity;
@@ -26,7 +26,7 @@ public class CommonOps {
   }
 
   //used for a section of speed that has a constant jerk
-  public static class ConstJerk extends MathFunction {
+  public static class ConstJerk implements MathFunction {
 
     public double jerk;
     public double initialAcceleration;

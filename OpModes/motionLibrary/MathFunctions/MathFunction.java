@@ -4,8 +4,8 @@ package org.firstinspires.ftc.teamcode.OpModes.motionLibrary.MathFunctions;
 
 //normally the class would contain a constructor which initializes the data needed for the function itself.
 
-public abstract class MathFunction {
+public interface MathFunction {
   
-  public abstract double yValueOf(double input);
+  public double yValueOf(double input);
 
 }

@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary.MathFunctions;
 
-public abstract class Transformation extends MathFunction {
+public abstract class Transformation implements MathFunction {
 
   //default access modifiers used instead of private to make sure that they can be overridden by subclass
 
