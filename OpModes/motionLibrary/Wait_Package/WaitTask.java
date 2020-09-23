@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
+package org.firstinspires.ftc.teamcode.OpModes.motionLibrary.Wait_Package;
 
 import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.GenericOperation.*;
 
@@ -18,7 +18,8 @@ public class WaitTask extends Operation {
   private boolean _isActive2 = false;
 
   //A return value of true means that the wait condition has been satisfied and the wait is over. A return value of false means that the wait is still ongoing.
-  void run() throws Exception {
+  //the three methods below are not meant to be used commonly by the user.
+  public void run() throws Exception {
     
     if (!_isActive2)
       throw new Exception("You cannot run a wait that is not running.");
@@ -38,10 +39,10 @@ public class WaitTask extends Operation {
 
   }
 
-  void markAsAdd() {
+  public void markAsAdd() {
     _isActive2 = true;
   }
-  boolean isRunning() {
+  public boolean isRunning() {
     return _isActive2;
   }
 

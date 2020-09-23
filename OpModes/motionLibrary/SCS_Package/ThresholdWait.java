@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary.SCS_Package;
+import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.Wait_Package.*;
 
 public abstract class ThresholdWait implements WaitCondition {
 

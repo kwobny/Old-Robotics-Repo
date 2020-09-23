@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
+package org.firstinspires.ftc.teamcode.OpModes.motionLibrary.Wait_Package;
 
 //What the implementing wait class is recommended to look like
 /*

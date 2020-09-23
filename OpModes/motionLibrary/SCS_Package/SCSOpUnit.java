@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.OpModes.motionLibrary.SCS_Package;
 
 import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.MathFunctions.*;
 import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.GenericOperation.*;
+import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.Wait_Package.*;
 
 
 //Each object of this class contains all the data necessary to represent one SCS operation.

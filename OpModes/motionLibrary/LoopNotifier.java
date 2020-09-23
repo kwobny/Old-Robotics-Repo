@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 
+import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.Wait_Package.*;
+
 //Is the class that helps implement the OPLP (Once Per Loop Processing) functionality
 //Is a class that notifies a user when there is a new loop (used every time loop method is called for waits)
 //the notifier is run as a callback every time a new loop begins, which signifies that the new loop has begun.

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
+package org.firstinspires.ftc.teamcode.OpModes.motionLibrary.Wait_Package;
 
 import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.GenericOperation.*;
 
@@ -93,7 +93,7 @@ public class WaitCore {
     timeoutRunner.remove(task);
   }
 
-  void runTimeouts() {
+  private void runTimeouts() {
     timeoutRunner.runAll();
   }
 
@@ -119,11 +119,12 @@ public class WaitCore {
   //the static callbacks are only meant to be used by the systems, not by the user.
   private Callback[] staticLoopCallbacks;
 
-  void setStaticCallbacks(final Callback ...callbacks) {
+  //this function is not meant to be used by the user, only used by the motion library.
+  public void setStaticCallbacks(final Callback ...callbacks) {
     staticLoopCallbacks = callbacks;
   }
 
-  void runLoopCallbacks() {
+  private void runLoopCallbacks() {
     //run the static callbacks, and then the regular callbacks
     if (staticLoopCallbacks != null) {
       for (Callback i : staticLoopCallbacks) {
@@ -155,11 +156,12 @@ public class WaitCore {
 
   private WaitInterval[] staticIntervals = null;
 
-  void setStaticIntervals(final WaitInterval ...intervs) {
+  //This function should not be used outside of motion library.
+  public void setStaticIntervals(final WaitInterval ...intervs) {
     staticIntervals = intervs;
   }
 
-  void runIntervals() {
+  private void runIntervals() {
     //run the static intervals first because they are the system intervals
     if (staticIntervals != null) {
       for (WaitInterval i : staticIntervals) {

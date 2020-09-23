@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 
 import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
+import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.SCS_Package.*;
+import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.Wait_Package.*;
 
 //this class manages everything related to time
 
