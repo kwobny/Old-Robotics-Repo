@@ -40,7 +40,7 @@ public class SCSOpUnit extends Operation {
 
   public void setWaitTask(final WaitTask waitTask) {
     this.waitTask = waitTask;
-    waitTask.markAsAdd();
+    waitTask._markAsAdd();
   }
 
   public void calibrate() {
@@ -52,8 +52,8 @@ public class SCSOpUnit extends Operation {
     latestOutput = graphFunc.yValueOf(latestInput);
     output.set(latestOutput);
     if (waitTask != null) {
-      if (waitTask.isRunning()) {
-        waitTask.run();
+      if (waitTask._isRunning()) {
+        waitTask._run();
       }
       else {
         waitTask = null;

@@ -53,11 +53,11 @@ public class Main {
       }
     });
 
-    wait.setStaticIntervals(lowMaint, highMaint);
+    wait._setStaticIntervals(lowMaint, highMaint);
 
     //Setup the loop callbacks for the (new) loop notifiers
     if (Constants.turnOnOPLP)
-      wait.setStaticCallbacks(time.loop_notifer);
+      wait._setStaticCallbacks(time.loop_notifer);
   }
 
   // this function is called at the end of the program.
@@ -78,6 +78,6 @@ public class Main {
     move.motorCali();
   }
   void runHighInterval() {
-    scs.runSCS();
+    scs._runSCS();
   }
 }

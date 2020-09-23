@@ -30,7 +30,7 @@ public class SCS {
   }
 
   //this is the function that should be called in the high frequency interval method. Ideally should be used only inside motion library
-  public void runSCS() {
+  public void _runSCS() {
     opRunner.runAll();
   }
 

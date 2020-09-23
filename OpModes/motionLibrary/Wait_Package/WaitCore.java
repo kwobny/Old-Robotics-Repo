@@ -47,12 +47,12 @@ public class WaitCore {
     simpleWait(task);
   }
   public void simpleWait(WaitTask task) {
-    task.markAsAdd();
+    task._markAsAdd();
     do {
       loop();
-      task.run();
+      task._run();
     }
-    while (task.isRunning());
+    while (task._isRunning());
   }
 
   //timeout functionality
@@ -62,12 +62,12 @@ public class WaitCore {
     
     @Override
     protected void runOp(WaitTask op) {
-      if (!op.isRunning()) {
+      if (!op._isRunning()) {
         remove(op);
         return;
       }
-      op.run();
-      if (!op.isRunning()) {
+      op._run();
+      if (!op._isRunning()) {
         remove(op);
       }
     }
@@ -84,7 +84,7 @@ public class WaitCore {
   public WaitTask setTimeout(final WaitTask task) throws Exception {
     timeoutRunner.add(task);
     
-    task.markAsAdd();
+    task._markAsAdd();
     return task;
   }
 
@@ -120,7 +120,7 @@ public class WaitCore {
   private Callback[] staticLoopCallbacks;
 
   //this function is not meant to be used by the user, only used by the motion library.
-  public void setStaticCallbacks(final Callback ...callbacks) {
+  public void _setStaticCallbacks(final Callback ...callbacks) {
     staticLoopCallbacks = callbacks;
   }
 
@@ -157,7 +157,7 @@ public class WaitCore {
   private WaitInterval[] staticIntervals = null;
 
   //This function should not be used outside of motion library.
-  public void setStaticIntervals(final WaitInterval ...intervs) {
+  public void _setStaticIntervals(final WaitInterval ...intervs) {
     staticIntervals = intervs;
   }
 

@@ -19,7 +19,7 @@ public class WaitTask extends Operation {
 
   //A return value of true means that the wait condition has been satisfied and the wait is over. A return value of false means that the wait is still ongoing.
   //the three methods below are not meant to be used commonly by the user.
-  public void run() throws Exception {
+  public void _run() throws Exception {
     
     if (!_isActive2)
       throw new Exception("You cannot run a wait that is not running.");
@@ -39,10 +39,10 @@ public class WaitTask extends Operation {
 
   }
 
-  public void markAsAdd() {
+  public void _markAsAdd() {
     _isActive2 = true;
   }
-  public boolean isRunning() {
+  public boolean _isRunning() {
     return _isActive2;
   }
 
