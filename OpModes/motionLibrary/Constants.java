@@ -20,7 +20,7 @@ public class Constants {
   public static final double motor_down_scale = 0.2; //specifies the universal buffer reference speed factor
 
   //an is equal function for doubles
-  static boolean isEqual(double a, double b) {
-    return Math.abs(a - b) < 0.0001;
+  public static boolean isEqual(double a, double b) {
+    return a == b || Math.abs(a - b) < 1E-6;
   }
 }
