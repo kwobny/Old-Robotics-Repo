@@ -61,6 +61,7 @@ public abstract class Coroutine implements Callback {
     task.runWhile = callback;
   }
 
+  //these two abstract methods are meant to be private and only accessible to/used by the superclass.
   protected abstract void _start();
   protected abstract void _end();
 
