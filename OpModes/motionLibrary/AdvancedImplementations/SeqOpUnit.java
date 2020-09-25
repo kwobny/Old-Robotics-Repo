@@ -38,12 +38,8 @@ public class SeqOpUnit extends Coroutine {
   protected SCS scs;
 
   public SeqOpUnit(final WaitCore core, final SCS scs, final InputSource input, final OutputSink output, final Section ...sections) {
-    super(core);
-    this.scs = scs;
+    this(core, scs, input, output);
     this.sections = sections;
-
-    operation.input = input;
-    operation.output = output;
   }
   public SeqOpUnit(final WaitCore core, final SCS scs, final InputSource input, final OutputSink output) {
     super(core);
