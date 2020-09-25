@@ -28,14 +28,15 @@ public class SeqOpUnit extends Coroutine {
   private final SCSOpUnit.InputCond condition = new operation.InputCond();
   {
     condition.isAbove = true;
+    operation.graphFunc = transform;
   }
 
-  private final Section[] sections;
+  protected Section[] sections;
   private int index;
   private boolean isActive = false;
 
-  private final SCS scs;
-  
+  protected SCS scs;
+
   public SeqOpUnit(final WaitCore core, final SCS scs, final InputSource input, final OutputSink output, final Section ...sections) {
     super(core);
     this.scs = scs;
@@ -43,9 +44,13 @@ public class SeqOpUnit extends Coroutine {
 
     operation.input = input;
     operation.output = output;
-    operation.graphFunc = transform;
+  }
+  public SeqOpUnit(final WaitCore core, final SCS scs, final InputSource input, final OutputSink output) {
+    super(core);
+    this.scs = scs;
 
-    setNext(condition, changeGraph);
+    operation.input = input;
+    operation.output = output;
   }
 
   public void cancelOperation() {
@@ -85,6 +90,10 @@ public class SeqOpUnit extends Coroutine {
   protected void _end() {
     scs.removeOperation(operation);
     isActive = false;
+  }
+
+  {
+    setNext(condition, changeGraph);
   }
 
 }
