@@ -60,6 +60,7 @@ public class SeqOpUnit extends Coroutine {
     if (isActive)
       throw new RuntimeException("You cannot run a sequential operation that is already running. Call the cancel operation method to stop it.");
     isActive = true;
+    resetPoll();
 
     index = 0;
     changeGraph.run();

@@ -28,6 +28,10 @@ public abstract class Coroutine implements Callback {
     this.callback = callback;
   }
 
+  public final void resetPoll() {
+    isDone = false;
+  }
+
   @Override
   public final void run() {
     _start();
