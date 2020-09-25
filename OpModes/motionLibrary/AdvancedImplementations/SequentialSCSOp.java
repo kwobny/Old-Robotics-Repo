@@ -4,11 +4,12 @@ import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.Wait_Package.*;
 import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.SCS_Package.*;
 import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.MathFunctions.*;
 
+//Sequential SCS Op Unit
 //In this class, you basically input a bunch of graph sections. Each section will run in the order according to indices in which it is provided.
 //In each section, the class waits for the x value to be reached, and then continues on to the next section. For the graph functions, the point where x = 0 is always going to be where the section was activated, so no need to worry about translating it.
 //This class partitions the sections using the x value only
 //This class only works for x inputs which only increase.
-public class SequentialSCSOp extends Coroutine {
+public class SeqOpUnit extends Coroutine {
 
   public static class Section {
     public final double endXVal;
@@ -29,13 +30,13 @@ public class SequentialSCSOp extends Coroutine {
     condition.isAbove = true;
   }
 
-  private Section[] sections;
+  private final Section[] sections;
   private int index;
   private boolean isActive = false;
 
   private final SCS scs;
   
-  public SequentialSCSOp(final WaitCore core, final SCS scs, final InputSource input, final OutputSink output, final Section ...sections) {
+  public SeqOpUnit(final WaitCore core, final SCS scs, final InputSource input, final OutputSink output, final Section ...sections) {
     super(core);
     this.scs = scs;
     this.sections = sections;
