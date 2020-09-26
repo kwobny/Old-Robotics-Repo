@@ -11,6 +11,9 @@ public abstract class Coroutine implements Callback {
       return isDone;
     }
   };
+  public final void setRunWhile(final Callback runWhileCallback) {
+    task.runWhile = runWhileCallback;
+  }
 
   private boolean isDone;
   private final WaitTask task = new WaitTask();
@@ -60,9 +63,6 @@ public abstract class Coroutine implements Callback {
   protected final void setNext(final WaitCondition condition, final Callback callback) {
     task.condition = condition;
     task.callback = callback;
-  }
-  protected final void setRunWhile(final Callback callback) {
-    task.runWhile = callback;
   }
 
   //these two abstract methods are meant to be private and only accessible to/used by the superclass.
