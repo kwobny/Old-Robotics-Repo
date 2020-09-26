@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.MathFunctions.*;
 //This class only works for x inputs which only increase.
 public class SeqOpUnit extends Coroutine {
 
+  //endXVal parameter is where the section ends
   public static class Section {
     public final double endXVal;
     public final MathFunction graphFunc;

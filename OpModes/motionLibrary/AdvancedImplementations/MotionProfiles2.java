@@ -16,7 +16,7 @@ public class MotionProfiles2 {
 
     public SubSCurve(final InputSource input, final OutputSink output, final Callback opCallback, final double ...curveArgs) {
       this(input, output, curveArgs);
-      this.callback = opCallback
+      this.callback = opCallback;
     }
     public SubSCurve(final InputSource input, final OutputSink output, final double ...curveArgs) {
       super(main.wait, main.scs, input, output);
@@ -38,17 +38,18 @@ public class MotionProfiles2 {
         throw new RuntimeException("Incorrect number of arguments given.");
       }
 
-      //MathFunction constJerk1 = blah
-      //MathFunction constJerk2 = blah
-      final Section sect1 = new Section(/*blah*/, constJerk1);
-      final Section sect3 = new Section(/*blah*/, constJerk2);
+      MathFunction constJerk1 = new CommonOps.ConstJerk(curveArgs[0], 0.0, curveArgs[6]);
+      MathFunction constJerk2 = new CommonOps.ConstJerk(-curveArgs[0], curveArgs[1], curveArgs[6] + curveArgs[4] + curveArgs[5]);
+
+      final Section sect1 = new Section(curveArgs[2], constJerk1);
+      final Section sect3 = new Section(2 * curveArgs[2] + curveArgs[3], constJerk2);
 
       if (curveArgs[3] == 0.0) {
         sections = new Section[]{sect1, sect3};
       }
       else {
-        //MathFunction constAccel = blah
-        final Section sect2 = new Section(/*blah*/, constAccel);
+        MathFunction constAccel = new CommonOps.ConstAccel(curveArgs[1], curveArgs[6] + curveArgs[4]);
+        final Section sect2 = new Section(curveArgs[2] + curveArgs[3], constAccel);
         sections = new Section[]{sect1, sect2, sect3};
       }
     }
