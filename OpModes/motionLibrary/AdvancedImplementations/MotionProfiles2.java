@@ -14,12 +14,12 @@ public class MotionProfiles2 {
 
   public class SubSCurve extends SeqOpUnit {
 
-    public SubSCurve(final OutputSink output, final Callback opCallback, final double ...curveArgs) {
-      this(output, curveArgs);
+    public SubSCurve(final InputSource input, final OutputSink output, final Callback opCallback, final double ...curveArgs) {
+      this(input, output, curveArgs);
       this.callback = opCallback
     }
-    public SubSCurve(final OutputSink output, final double ...curveArgs) {
-      super(main.wait, main.scs, main.time, output);
+    public SubSCurve(final InputSource input, final OutputSink output, final double ...curveArgs) {
+      super(main.wait, main.scs, input, output);
 
       //the argument list is jerk, peak acceleration, time spent on jerk, time spent on const accel, change in velocity in jerk, change in velocity on const accel, initial velocity.
       //0: jerk
