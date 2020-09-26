@@ -18,6 +18,7 @@ public class MotionProfiles2 {
       this(input, output, curveArgs);
       this.callback = opCallback;
     }
+    //All curve arguments have to be as accurate as possible, or the whole curve falls apart.
     public SubSCurve(final InputSource input, final OutputSink output, final double ...curveArgs) {
       super(main.wait, main.scs, input, output);
 
@@ -31,7 +32,9 @@ public class MotionProfiles2 {
       //6: initial velocity
 
       //if the time spent on const accel is 0.0, then it is a triangular acceleration profile.
+      //change in velocity on accel has to also be 0.0 if time spent on it is 0.0.
       //time on jerk is the time spent on each individual jerk curve. 2 times this number gives the total time spent on jerk.
+      //change in velocity on jerk is the change in velocity for each jerk curve. Multiply this by 2 to get the total change in velocity on both jerk curves.
 
       //checking if argument length is valid
       if (curveArgs.length != 7) {
@@ -58,7 +61,7 @@ public class MotionProfiles2 {
 
   //the using ref as final output is self explanatory. If false (in most cases), the reference will be counted as the initial output. If true, the reference will be counted as the final output.
   //the reference output is required for obvious reasons
-  public static SubSCurve getSubSCurve(final InputSource input, final OutputSink output, final Double maxJerk, final Double maxAcceleration, final Double changeInTime, final Double changeInOutput, final double refOutput, final boolean using_ref_as_final_output) {
+  public SubSCurve getSubSCurve(final InputSource input, final OutputSink output, final Double maxJerk, final Double maxAcceleration, final Double changeInTime, final Double changeInOutput, double refOutput, final boolean using_ref_as_final_output) {
     //0: jerk
     //1: peak/most magnitude accel
     //2: time on jerk
@@ -70,7 +73,7 @@ public class MotionProfiles2 {
     //defining the output variables needed
     //dV stands for change in velocity
     //as stated in other constructor, time on jerk is the time spent on each individual jerk curve.
-    double jerk, peakAccel, timeOnJerk, timeOnAccel, dVJerk, dVAccel, velInitial;
+    double jerk, peakAccel, timeOnJerk, timeOnAccel, dVJerk, dVAccel;
 
     //find how many inputs are missing
     int missing = 0;
@@ -119,6 +122,9 @@ public class MotionProfiles2 {
         //for testing if scenario 1
 
         //dV = dt/2 * (dt/2 * jerk)
+        //general equation for scenario 1
+        //changeInOutput = (changeInTime/2)^2 * jerk
+
         //dV = dt^2/4 * jerk
         //jerk = dV/(dt^2/4)
         //jerk = 4 * dV / dt^2
@@ -131,7 +137,9 @@ public class MotionProfiles2 {
         //for finding values if using scenario 2
 
         //peakAccel = maxAcceleration
-        //peakAccel * (changeInTime - timeOnJerk) = changeInVelocity
+
+        //general equation for scenario 2
+        //peakAccel * (changeInTime - timeOnJerk) = changeInOutput
 
         //changeInVelocity/peakAccel = changeInTime - timeOnJerk
         //timeOnJerk = changeInTime - changeInVelocity/peakAccel
@@ -144,31 +152,86 @@ public class MotionProfiles2 {
         peakAccel = 2.0 * changeInOutput/changeInTime;
         if (peakAccel < maxAcceleration) {
           //all good, use scenario 1
-          jerk = 2 * peakAccel/changeInTime;
+          jerk = 2.0 * peakAccel/changeInTime;
+          timeOnJerk = changeInTime/2.0;
+          timeOnAccel = 0.0;
+
+          dVJerk = changeInOutput/2.0;
+          dVAccel = 0.0;
         }
         else {
           //not great, use scenario 2
-          //
+          peakAccel = maxAcceleration;
+          timeOnJerk = changeInTime - changeInOutput/peakAccel;
+          tineOnAccel = changeInTime - 2 * timeOnJerk;
+          jerk = peakAccel/timeOnJerk;
+
+          dVJerk = peakAccel * timeOnJerk/2;
+          dVAccel = peakAccel * timeOnAccel;
         }
       }
       else if (changeInTime == null) {
-        //change in time
+        //change in time is missing
 
-        //for scenario 1
-        //v = (dt/2)^2 * j
-        //2 * sqrt(v/j) = dt
+        //aim for the lowest possible change in time.
 
-        //for scenario 2
-        //v = amax * (dt - amax/j)
-        //
+        //-----first, test if using scenario 1
 
-        double dtDiv2 = Math.sqrt((finalOutput - initialOutput)/maxJerk);
-        if (dtDiv2 * maxJerk < maxAcceleration) {
-          changeInTime = dtDiv2 * 2;
+        //jerk = maxJerk
+        //timeOnJerk = changeInTime/2
+
+        //using standard scenario 1 equation:
+        //changeInOutput = (timeOnJerk)^2 * jerk
+
+        //timeOnJerk^2 = changeInOutput/jerk
+        //timeOnJerk = sqrt(changeInOutput/jerk)
+
+        //peakAccel = jerk * timeOnJerk
+        //peakAccel = jerk * sqrt(changeInOutput/jerk)
+        //peakAccel = sqrt(changeInOutput * jerk)
+
+        //-----get values for scenario 1
+
+        //peakAccel = timeOnJerk * jerk
+        //timeOnJerk = peakAccel/jerk
+
+        //timeOnAccel = 0.0
+
+        //-----if scenario 2, then get values
+
+        //jerk = maxJerk
+        //peakAccel = maxAcceleration
+
+        //general equation for scenario 2:
+        //peakAccel * (changeInTime - timeOnJerk) = changeInOutput
+        //peakAccel * (timeOnJerk + timeOnAccel) = changeInOutput
+
+        //timeOnJerk + timeOnAccel = changeInOutput/peakAccel
+        //timeOnAccel = changeInOutput/peakAccel - timeOnJerk
+
+        //timeOnJerk = peakAccel/jerk
+
+        jerk = maxJerk;
+        
+        peakAccel = Math.sqrt(changeInOutput * jerk);
+        if (peakAccel < maxAcceleration) {
+          //all good, use scenario 1
+          timeOnAccel = 0.0;
+          timeOnJerk = peakAccel/jerk;
+
+          dVJerk = changeInOutput/2;
+          dVAccel = 0.0;
         }
         else {
-          //if 
+          //not good, use scenario 2
+          peakAccel = maxAcceleration;
+          timeOnJerk = peakAccel/jerk;
+          timeOnAccel = changeInOutput/peakAccel - timeOnJerk;
+
+          dVJerk = (timeOnJerk * peakAccel)/2;
+          dVAccel = peakAccel * timeOnAccel;
         }
+
       }
       else if (changeInOutput == null) {
         //change in velocity
@@ -178,31 +241,38 @@ public class MotionProfiles2 {
       }
     }
     else {
-      //nothing is missing, check to see that everything is valid and checks out
-      /*
-      ((1/2 * dt)^2 * j == dv)
+      //nothing is missing
 
-      (amax/j) = tjerk
-      (amax * (dt - amax/j) == dv)
-      */
+      //basically using the procedure for when jerk is missing, but with one extra check
+      peakAccel = 2.0 * changeInOutput/changeInTime;
+      if (peakAccel < maxAcceleration) {
+        //all good, use scenario 1
+        jerk = 2.0 * peakAccel/changeInTime;
+        timeOnJerk = changeInTime/2.0;
+        timeOnAccel = 0.0;
 
-      final boolean usingConstAccel = changeInTime/2.0 * maxJerk > maxAcceleration;
-
-      if (usingConstAccel) {
-        //check if the change in velocity given matches the calculated value. This is for scenario with const accel
-        if (!Constants.isEqual(maxAcceleration * (changeInTime - maxAcceleration/maxJerk), finalOutput - initialOutput)) {
-          throw new RuntimeException("the 4 arguments given were not valid with each other. They didn't check out for a scenario with constant acceleration portion.");
-        }
+        dVJerk = changeInOutput/2.0;
+        dVAccel = 0.0;
       }
       else {
-        //not having a constant acceleration portion
-        //check if velocity given matches calculated velocity.
-        if (!Constants.isEqual(changeInTime * changeInTime/4.0 * maxJerk, finalOutput - initialOutput)) {
-          throw new RuntimeException("the 4 arguments given were not valid with each other. Didn't check out for a scenario without const accel portion");
-        }
+        //not great, use scenario 2
+        peakAccel = maxAcceleration;
+        timeOnJerk = changeInTime - changeInOutput/peakAccel;
+        tineOnAccel = changeInTime - 2 * timeOnJerk;
+        jerk = peakAccel/timeOnJerk;
+
+        dVJerk = peakAccel * timeOnJerk/2;
+        dVAccel = peakAccel * timeOnAccel;
       }
+      if (jerk > maxJerk)
+        throw new RuntimeException("The jerk needed for the curve is greater than the maximum jerk.");
       
     }
+
+    if (using_ref_as_final_output) {
+      refOutput -= 2 * dVJerk + dVAccel;
+    }
+
   }
 
 }
