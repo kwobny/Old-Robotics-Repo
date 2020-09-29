@@ -12,6 +12,7 @@ public class MotionProfiles2 {
     this.main = main;
   }
 
+  //This class is immutable. You need to set callback manually
   public class SubSCurve extends SeqOpUnit {
 
     public SubSCurve(final InputSource input, final OutputSink output, final Callback opCallback, final double ...curveArgs) {

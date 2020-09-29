@@ -9,6 +9,10 @@ import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.MathFunctions.*;
 //In each section, the class waits for the x value to be reached, and then continues on to the next section. For the graph functions, the point where x = 0 is always going to be where the section was activated, so no need to worry about translating it.
 //This class partitions the sections using the x value only
 //This class only works for x inputs which only increase.
+
+//You cannot input a callback into the constructor. You have to set callback manually.
+//This class is basically an immutable object, but the sections array can technically be changed (not recommended).
+//This class can be extended
 public class SeqOpUnit extends Coroutine {
 
   //endXVal parameter is where the section ends
@@ -42,7 +46,7 @@ public class SeqOpUnit extends Coroutine {
     this(core, scs, input, output);
     this.sections = sections;
   }
-  public SeqOpUnit(final WaitCore core, final SCS scs, final InputSource input, final OutputSink output) {
+  protected SeqOpUnit(final WaitCore core, final SCS scs, final InputSource input, final OutputSink output) {
     super(core);
     this.scs = scs;
 
