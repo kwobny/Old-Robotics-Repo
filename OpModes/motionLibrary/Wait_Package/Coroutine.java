@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary.Wait_Package;
 
+/*
 public abstract class Coroutine implements Callback {
 
   //data members
@@ -68,6 +69,45 @@ public abstract class Coroutine implements Callback {
   //these two abstract methods are meant to be private and only accessible to/used by the superclass.
   protected abstract void _start();
   protected abstract void _end();
+
+}
+*/
+
+public abstract class Coroutine {
+
+  //data members
+
+  public Callback callback;
+  public final WaitCondition condition = new WaitCondition() {
+    @Override
+    public boolean pollCondition() {
+      return isDone;
+    }
+  };
+
+  private boolean isDone;
+
+  public Coroutine() {
+    //
+  }
+  public Coroutine(final Callback callback) {
+    this.callback = callback;
+  }
+
+  public final void resetPoll() {
+    isDone = false;
+  }
+
+  protected final Callback endCallback = new Callback() {
+    @Override
+    public void run() {
+      isDone = true;
+      if (callback != null) {
+        callback.run();
+      }
+
+    }
+  };
 
 }
 
