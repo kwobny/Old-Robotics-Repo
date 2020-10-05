@@ -38,7 +38,8 @@ class MoveCore {
     public final double refSpeedFactor;
     public double speedFactor;
 
-    public void resetSpeedFactor() {
+    //reset speed factor
+    public void resetSF() {
       speedFactor = refSpeedFactor;
     }
 
@@ -140,8 +141,10 @@ class MoveCore {
   //universal motor calibration system
   private double[] globalPos = new double[4];
   private double[] caliPowerFactor = new double[4];
-  for (int i = 0; i < caliPowerFactor.length; i++) {
-    caliPowerFactor[i] = 1.0;
+  {
+    for (int i = 0; i < caliPowerFactor.length; i++) {
+      caliPowerFactor[i] = 1.0;
+    }
   }
 
   void motorCali() {
