@@ -46,6 +46,17 @@ public class SCSOpUnit extends Operation {
   public void calibrate() {
     this.refInput = input.get();
   }
+  //these methods are default access
+  void saveState() {
+    //latestInput = input.get() - refInput;
+    latestInput = input.get();
+  }
+  void restoreState() {
+    //refInput = input.get() - latestInput;
+    //refInput = newInput - oldInput + oldRefInput
+
+    refInput += input.get() - latestInput;
+  }
 
   void run() {
     latestInput = input.get() - refInput;

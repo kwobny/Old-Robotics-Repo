@@ -34,15 +34,23 @@ public class SCS {
     opRunner.runAll();
   }
 
-  //adds, calibrates, and starts a new operation.
-  public SCSOpUnit addOperation(SCSOpUnit op) {
+  //adds, calibrates, and starts a new operation. Can be used to restart an operation that was running before.
+  public SCSOpUnit addOperation(final SCSOpUnit op) {
     opRunner.add(op);
     op.calibrate();
     return op;
   }
 
+  //resumes the operation from the point when it was removed/paused.
+  public void resumeOperation(final SCSOpUnit op) {
+    opRunner.add(op);
+    op.restoreState();
+  }
+
+  //The remove operation also serves as a pause operation function.
   public void removeOperation(SCSOpUnit op) {
     opRunner.delete(op);
+    op.saveState();
   }
 
   public class AddOpCallback implements Callback {
