@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.MathFunctions.*;
 
 //this class is an immutable class
+//when extending this class, the one and only requirement is to set the sections variable to something.
 //this class only works when x value always increase.
 //the domain of each graph func includes its corresponding endXVal.
 //always manually reset the speed factors and set the output after this is done.

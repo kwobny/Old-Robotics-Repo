@@ -13,15 +13,10 @@ public class MotionProfiles2 {
   }
 
   //This class is immutable. You need to set callback manually
-  public class SubSCurve extends SeqOpUnit {
+  public class SubSCurve extends SeqOpFunc {
 
-    public SubSCurve(final InputSource input, final OutputSink output, final Callback opCallback, final double ...curveArgs) {
-      this(input, output, curveArgs);
-      this.callback = opCallback;
-    }
     //All curve arguments have to be as accurate as possible, or the whole curve falls apart.
-    public SubSCurve(final InputSource input, final OutputSink output, final double ...curveArgs) {
-      super(main.wait, main.scs, input, output);
+    public SubSCurve(final double ...curveArgs) {
 
       //the argument list is jerk, peak acceleration, time spent on jerk, time spent on const accel, change in velocity in jerk, change in velocity on const accel, initial velocity.
       //0: jerk
