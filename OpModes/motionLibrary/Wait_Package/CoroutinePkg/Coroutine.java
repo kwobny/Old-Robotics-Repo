@@ -4,17 +4,18 @@ import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.Wait_Package.*;
 
 //This is the generic/general coroutine class.
 
-public abstract class Coroutine {
+public abstract class Coroutine implements WaitCondition, Callback {
 
   //data members
 
   public Callback callback;
-  public final WaitCondition condition = new WaitCondition() {
-    @Override
-    public boolean pollCondition() {
-      return isDone;
-    }
-  };
+
+  @Override
+  public boolean pollCondition() {
+    return isDone;
+  }
+  @Override
+  public abstract void run();
 
   private boolean isDone;
 
