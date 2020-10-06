@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 
 import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.MathFunctions.*;
+import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.Wait_Package.*;
 
 //this class is an immutable class
 //this class only works when x value always increase.
@@ -18,6 +19,11 @@ public class SeqOpFunc implements MathFunction {
   }
   public static Section getSection(final double endXVal, final MathFunction graphFunc) {
     return new Section(endXVal, graphFunc);
+  }
+
+  //this method gets the x value where the domain of the whole seq op math function ends. This is the threshold you should wait for if you are doing an input wait.
+  public double getEndThreshold() {
+    return sections[sections.length-1].endXVal;
   }
   
   protected Section[] sections;
