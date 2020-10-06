@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary;
 
 import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.MathFunctions.*;
-import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.Wait_Package.*;
 
 //this class is an immutable class
 //this class only works when x value always increase.
