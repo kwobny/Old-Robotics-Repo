@@ -15,41 +15,37 @@ public class MotionProfiles {
   public class SubSCurve extends SeqOpFunc {
 
     //All curve arguments have to be as accurate as possible, or the whole curve falls apart.
-    public SubSCurve(final double ...curveArgs) {
+    public SubSCurve(final double jerk, final double peakAccel, final double timeOnJerk, final double timeOnAccel, final double dOJerk, final double dOAccel, final double initialOutput) {
 
       //the argument list is jerk, peak acceleration, time spent on jerk, time spent on const accel, change in velocity in jerk, change in velocity on const accel, initial velocity.
       //0: jerk
       //1: peak/most magnitude accel
       //2: time on jerk
       //3: time on const accel
-      //4: change in velocity on jerk
-      //5: change in velocity on accel
-      //6: initial velocity
+      //4: change in output on jerk
+      //5: change in output on accel
+      //6: initial output
 
       //if the time spent on const accel is 0.0, then it is a triangular acceleration profile.
       //change in velocity on accel has to also be 0.0 if time spent on it is 0.0.
       //time on jerk is the time spent on each individual jerk curve. 2 times this number gives the total time spent on jerk.
-      //change in velocity on jerk is the change in velocity for each jerk curve. Multiply this by 2 to get the total change in velocity on both jerk curves.
+      //change in output on jerk is the change in velocity for each jerk curve. Multiply this by 2 to get the total change in velocity on both jerk curves.
 
-      //checking if argument length is valid
-      if (curveArgs.length != 7) {
-        throw new RuntimeException("Incorrect number of arguments given.");
-      }
+      MathFunction constJerk1 = new CommonOps.ConstJerk(jerk, 0.0, initialOutput);
+      MathFunction constJerk2 = new CommonOps.ConstJerk(-jerk, peakAccel, initialOutput + dOJerk + dOAccel);
 
-      MathFunction constJerk1 = new CommonOps.ConstJerk(curveArgs[0], 0.0, curveArgs[6]);
-      MathFunction constJerk2 = new CommonOps.ConstJerk(-curveArgs[0], curveArgs[1], curveArgs[6] + curveArgs[4] + curveArgs[5]);
+      final Section sect1 = new Section(timeOnJerk, constJerk1);
+      final Section sect3 = new Section(2 * timeOnJerk + timeOnAccel, constJerk2);
 
-      final Section sect1 = new Section(curveArgs[2], constJerk1);
-      final Section sect3 = new Section(2 * curveArgs[2] + curveArgs[3], constJerk2);
-
-      if (curveArgs[3] == 0.0) {
+      if (timeOnAccel == 0.0) {
         sections = new Section[]{sect1, sect3};
       }
       else {
-        MathFunction constAccel = new CommonOps.ConstAccel(curveArgs[1], curveArgs[6] + curveArgs[4]);
-        final Section sect2 = new Section(curveArgs[2] + curveArgs[3], constAccel);
+        MathFunction constAccel = new CommonOps.ConstAccel(peakAccel, initialOutput + dOJerk);
+        final Section sect2 = new Section(timeOnJerk + timeOnAccel, constAccel);
         sections = new Section[]{sect1, sect2, sect3};
       }
+      
     }
 
   }
