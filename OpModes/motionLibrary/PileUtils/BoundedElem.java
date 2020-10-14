@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.motionLibrary.GenericOperation;
+package org.firstinspires.ftc.teamcode.OpModes.motionLibrary.PileUtils;
 
 //This class is mainly meant to be subclassed, but it can also be used just as is.
 //This class is the element which is stored in a binding full pile.

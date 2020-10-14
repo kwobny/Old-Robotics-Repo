@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary.Wait_Package;
 
-import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.GenericOperation.*;
+import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.PileUtils.*;
 
 public class WaitCore {
 
@@ -58,21 +58,7 @@ public class WaitCore {
   //timeout functionality
 
   //allows things to execute once condition met, does not pause code execution
-  private final OperationRunner<WaitTask> timeoutRunner = new OperationRunner<>() {
-    
-    @Override
-    protected void runOp(WaitTask op) {
-      if (!op._isRunning()) {
-        remove(op);
-        return;
-      }
-      op._run();
-      if (!op._isRunning()) {
-        remove(op);
-      }
-    }
-
-  };
+  private final BindingFullPile<WaitTask> timeoutPile = new BindingFullPile<>();
   
   public WaitTask setTimeout(WaitCondition addCondition, Callback callback, Callback runWhile) {
     final WaitTask retTask = new WaitTask(addCondition, callback, runWhile);
@@ -82,7 +68,7 @@ public class WaitCore {
     return setTimeout(addCondition, callback, null);
   }
   public WaitTask setTimeout(final WaitTask task) {
-    timeoutRunner.add(task);
+    timeoutPile.add(task);
     
     task._markAsAdd();
     return task;
@@ -90,30 +76,39 @@ public class WaitCore {
 
   //cancel/remove the timeout
   public void removeTimeout(final WaitTask task) {
-    timeoutRunner.remove(task);
+    timeoutPile.remove(task);
   }
 
+  private static final Consumer<WaitTask> waitTaskConsumer = new Consumer<>() {
+    @Override
+    public void run(final WaitTask op) {
+      if (!op._isRunning()) {
+        remove(op);
+        return;
+      }
+      op._run();
+      if (!op._isRunning()) {
+        remove(op);
+      }
+    }
+  };
+
   private void runTimeouts() {
-    timeoutRunner.runAll();
+    timeoutPile.forAll(waitTaskConsumer);
   }
 
   //these callbacks are run on every loop, and can be added and removed.
-  private OperationRunner<CancellableCallback> loopCallbackRunner = new OperationRunner<>() {
-    @Override
-    protected void runOp(CancellableCallback op) {
-      op.run();
-    }
-  };
+  private final BindingFullPile<CancellableCallback> loopCallbackPile = new BindingFullPile<>();
 
   public CancellableCallback addLoopCallback(final Callback callback) {
     return addLoopCallback(new CancellableCallback(callback));
   }
   public CancellableCallback addLoopCallback(final CancellableCallback callback) {
-    loopCallbackRunner.add(callback);
+    loopCallbackPile.add(callback);
     return callback;
   }
   public CancellableCallback removeLoopCallback(final CancellableCallback callback) {
-    loopCallbackRunner.remove(callback);
+    loopCallbackPile.remove(callback);
   }
 
   //the static callbacks are only meant to be used by the systems, not by the user.
@@ -124,6 +119,14 @@ public class WaitCore {
     staticLoopCallbacks = callbacks;
   }
 
+  //cancellable callback consumer
+  private static final Consumer<CancellableCallback> CCConsumer = new Consumer<>() {
+    @Override
+    public void run(final CancellableCallback op) {
+      op.run();
+    }
+  };
+
   private void runLoopCallbacks() {
     //run the static callbacks, and then the regular callbacks
     if (staticLoopCallbacks != null) {
@@ -133,25 +136,20 @@ public class WaitCore {
     }
 
     //now run the main callbacks
-    loopCallbackRunner.runAll();
+    loopCallbackPile.forAll(CCConsumer);
   }
 
 
   //Interval code
-  private OperationRunner<WaitInterval> intervalRunner = new OperationRunner<>() {
-    @Override
-    protected void runOp(WaitInterval op) {
-      op.run();
-    }
-  };
+  private final BindingFullPile<WaitInterval> intervalPile = new BindingFullPile<>();
 
   public WaitInterval addInterval(final WaitInterval interv) {
-    intervalRunner.add(interv);
+    intervalPile.add(interv);
 
     return interv;
   }
   public void removeInterval(final WaitInterval interv) {
-    intervalRunner.remove(interv);
+    intervalPile.remove(interv);
   }
 
   private WaitInterval[] staticIntervals = null;
@@ -160,6 +158,13 @@ public class WaitCore {
   public void _setStaticIntervals(final WaitInterval ...intervs) {
     staticIntervals = intervs;
   }
+
+  private static final Consumer<WaitInterval> intervalConsumer = new Consumer<>() {
+    @Override
+    public void run(final WaitInterval op) {
+      op.run();
+    }
+  };
 
   private void runIntervals() {
     //run the static intervals first because they are the system intervals
@@ -170,7 +175,7 @@ public class WaitCore {
     }
 
     //then run the normal intervals
-    intervalRunner.runAll();
+    intervalPile.forAll(intervalConsumer);
   }
 
 }

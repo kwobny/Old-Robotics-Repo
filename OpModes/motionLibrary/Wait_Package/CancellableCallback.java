@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary.Wait_Package;
 
-import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.GenericOperation;
+import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.PileUtils.BoundedElem;
 
-public class CancellableCallback extends Operation {
+public class CancellableCallback extends BoundedElem {
   
   public Callback callback;
 

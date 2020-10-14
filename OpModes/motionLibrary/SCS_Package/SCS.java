@@ -2,7 +2,7 @@
 
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary.SCS_Package;
 
-import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.GenericOperation.*;
+import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.PileUtils.*;
 
 //Every acceleration or automatic change in an output (motor buffer speedfactors mainly) is called an operation
 
@@ -15,41 +15,41 @@ import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.GenericOperation.*;
 public class SCS {
 
   //variables
-  private final OperationRunner<SCSOpUnit> opRunner = new OperationRunner<>() {
-    
-    @Override
-    protected void runOp(SCSOpUnit op) {
-      op.run();
-    }
-
-  };
+  private final BindingFullPile<SCSOpUnit> pile = new BindingFullPile<>();
   
   //class ideally is used only inside motion library
   public SCS() {
     //
   }
 
+  private final static Consumer<SCSOpUnit> pileConsumer = new Consumer<>() {
+    @Override
+    public void run(final SCSOpUnit unit) {
+      unit.run();
+    }
+  };
+  
   //this is the function that should be called in the high frequency interval method. Ideally should be used only inside motion library
   public void _runSCS() {
-    opRunner.runAll();
+    pile.forAll(pileConsumer);
   }
 
   //adds, calibrates, and starts a new operation. Can be used to restart an operation that was running before.
   public SCSOpUnit addOperation(final SCSOpUnit op) {
-    opRunner.add(op);
+    pile.add(op);
     op.calibrate();
     return op;
   }
 
   //resumes the operation from the point when it was removed/paused.
   public void resumeOperation(final SCSOpUnit op) {
-    opRunner.add(op);
+    pile.add(op);
     op.restoreState();
   }
 
   //The remove operation also serves as a pause operation function.
   public void removeOperation(SCSOpUnit op) {
-    opRunner.delete(op);
+    pile.remove(op);
     op.saveState();
   }
 

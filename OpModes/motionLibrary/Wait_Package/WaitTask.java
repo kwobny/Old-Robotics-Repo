@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary.Wait_Package;
 
-import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.GenericOperation.*;
+import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.PileUtils.BoundedElem;
 
 //is a class that contains all the information necessary to complete one wait with callbacks.
 //implements the command pattern
 
-public class WaitTask extends Operation {
+public class WaitTask extends BoundedElem {
   public WaitCondition condition;
   public Callback callback;
   public Callback runWhile; //this is basically an optional callback that continuously runs in the main loop while the wait is ongoing.

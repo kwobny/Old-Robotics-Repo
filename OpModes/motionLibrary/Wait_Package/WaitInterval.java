@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary.Wait_Package;
 
-import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.GenericOperation;
+import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.PileUtils.BoundedElem;
 
-public abstract class WaitInterval extends Operation {
+public abstract class WaitInterval extends BoundedElem {
 
   protected WaitCondition cond;
   public Callback callback;
