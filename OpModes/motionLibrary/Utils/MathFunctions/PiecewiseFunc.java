@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.motionLibrary.MathFunctions;
+package org.firstinspires.ftc.teamcode.OpModes.motionLibrary.Utils.MathFunctions;
 
 public class PiecewiseFunc implements MathFunction {
 

@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary.SCS_Package;
 
-import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.MathFunctions.*;
+import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.Utils.MathFunctions.*;
 
 public class CommonOps {
 
