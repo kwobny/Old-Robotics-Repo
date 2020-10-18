@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary.Wait_Package;
 
+import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.Utils.Callback;
+
 public class CompoundCallback implements Callback {
 
   public Callback[] callbacks;

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary.Wait_Package.CoroutinePkg;
 
 import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.Wait_Package.*;
+import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.Utils.Callback;
 
 //Single active coroutine: is a coroutine which can only have 1 running instance at a time.
 public abstract class SACoroutine extends Coroutine {

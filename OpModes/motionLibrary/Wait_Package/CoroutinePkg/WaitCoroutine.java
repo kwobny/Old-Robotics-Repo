@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary.Wait_Package.CoroutinePkg;
 
 import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.Wait_Package.*;
+import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.Utils.Callback;
 
 //This class is a more specific user friendly version of the Coroutine class. Is meant to be used by the user.
 
