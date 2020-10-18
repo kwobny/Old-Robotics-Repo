@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary.SCS_Package;
 
 import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.MathFunctions.*;
-import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.PileUtils.BoundedElem;
+import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.Utils.PileUtils.BoundedElem;
 import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.Wait_Package.*;
 
 
