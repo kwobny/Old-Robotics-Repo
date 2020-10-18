@@ -18,9 +18,4 @@ public class Constants {
   public static final double totalAngleMeasure = 360; //the number of angle units in a full circle
   public static final double defaultSectorSize = 90; //The default size of the sector for wait for displacement.
   public static final double motor_down_scale = 0.2; //specifies the universal buffer reference speed factor
-
-  //an is equal function for doubles
-  public static boolean isEqual(double a, double b) {
-    return a == b || Math.abs(a - b) < 1E-6;
-  }
 }
