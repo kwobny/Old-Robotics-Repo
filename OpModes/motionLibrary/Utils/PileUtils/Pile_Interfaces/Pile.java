@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes.motionLibrary.Utils.PileUtils.Pile_Interfaces;
 
+import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.Utils.Consumer;
+
 //A pile is something that contains a bunch of things (elements). These elements are referred to and accessed by their value, sort of like a hashset.
 public interface Pile<T> {
 

@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.OpModes.motionLibrary.SCS_Package;
 
 import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.Utils.PileUtils.*;
 import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.Utils.Callback;
+import org.firstinspires.ftc.teamcode.OpModes.motionLibrary.Utils.Consumer;
 
 //Every acceleration or automatic change in an output (motor buffer speedfactors mainly) is called an operation
 
