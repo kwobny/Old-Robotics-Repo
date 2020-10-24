@@ -1,6 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore;
-
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.MathFunctions.*;
+package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.MathFunctions;
 
 //this class is an immutable class
 //when extending this class, the one and only requirement is to set the sections variable to something.
