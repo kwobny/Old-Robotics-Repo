@@ -125,7 +125,7 @@ public class WaitCore {
   private static final Consumer<CancellableCallback> CCConsumer = new Consumer<>() {
     @Override
     public void run(final CancellableCallback op) {
-      op.run();
+      op.callback.run();
     }
   };
 
@@ -133,7 +133,8 @@ public class WaitCore {
     //run the static callbacks, and then the regular callbacks
     if (staticLoopCallbacks != null) {
       for (Callback i : staticLoopCallbacks) {
-        i.run();
+        if (i != null)
+          i.run();
       }
     }
 
@@ -172,7 +173,8 @@ public class WaitCore {
     //run the static intervals first because they are the system intervals
     if (staticIntervals != null) {
       for (WaitInterval i : staticIntervals) {
-        i.run();
+        if (i != null)
+          i.run();
       }
     }
 

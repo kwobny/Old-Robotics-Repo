@@ -5,7 +5,8 @@ import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.Consumer;
 
 import java.util.*;
 
-//This is a full pile, except that elements can only belong to one specific pile. Hence, they are "bound" to one pile.
+//This is a full pile, except that elements are bounded.
+//Elements can only belong to 1 instance of a binding pile. This means that they can belong to a binding pile and a hash pile, but not to two binding piles.
 //This is the recommended pile type if you don't care that the data type is bound and if you don't care that this class can only work with Bounded Elems.
 //You cannot add the same thing more than twice to the pile.
 //All elements are iterated in the same order that they are added in.

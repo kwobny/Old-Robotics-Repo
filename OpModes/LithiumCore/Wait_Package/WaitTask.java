@@ -15,10 +15,8 @@ public class WaitTask extends BoundedElem {
   public boolean autoEndTask = true;
   //is a property that specifies whether or not to automatically end the wait after the condition has been met.
 
-  //IMPORTANT: this property is not meant to be used by the end user, but only by any other libraries.
   private boolean _isActive2 = false;
 
-  //A return value of true means that the wait condition has been satisfied and the wait is over. A return value of false means that the wait is still ongoing.
   //the three methods below are not meant to be used commonly by the user.
   public void _run() {
     
@@ -46,6 +44,7 @@ public class WaitTask extends BoundedElem {
   public void _markAsAdd() {
     _isActive2 = true;
   }
+  //A return value of false means that the wait has ended, true means the wait is still running/waiting.
   public boolean _isRunning() {
     return _isActive2;
   }
