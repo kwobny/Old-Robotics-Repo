@@ -1,0 +1,42 @@
+***MOVING FUNCTIONS***
+
+
+**ESSENTIAL COMMANDS**
+
+moveLinTrans(rx, ry)
+This function moves for an infinite amount of time.
+Parameter rx is in the x direction, and a positive value indicates a rightward direction while a negative value indicates a leftward direction. Likewise, parameter ry is in the y direction, and a positive value indicates a forward direction while a negative value indicates a backward direction. waitForDistance is one possible pair, which causes the command to run until the robot has moved a specified distance. waitForTime is the other possible pair, which causes the command to run until the robot has moved for a specified amount of time.
+
+moveRotate(power)
+This function turns for an infinite amount of time. It uses one parameter to determine how fast the rotation should be done. This should be paired with waitForDegrees, which causes the command to run until the robot has turned for the specified number of degrees.
+
+**SPECIFIC COMMANDS**
+
+moveLinTransRel(rx, ry)
+This function allows you to program the robot to move and turn at the same time. Parameter rx is in the x direction, and a positive value indicates a rightward direction while a negative value indicates a leftward direction. Likewise, parameter ry is in the y direction, and a positive value indicates a forward direction while a negative value indicates a backward direction. waitForDistance is one possible pair, which causes the command to run until the robot has moved a specified distance. waitForTime is another possible pair, which causes the command to run until the robot has moved for a specified amount of time. waitForDegrees is the final possible pair, which causes the command to run until the robot has turned for the specified number of degrees.
+
+moveRotDriveTank(leftWheel, rightWheel)
+This awesome function allows you to control the power of both wheels individually for more complex driving involving turning in specific ways. The parameters are fairly straightforward- the leftWheel parameter controls the power of the left wheel (from -1 to 1) and the rightWheel parameter controls the power of the right wheel (from -1 to 1 as well). A positive value indicates a forward direction while a negative value indicates a backward direction, and a disparity allows the robot to turn. waitForDistance is one possible pair, which causes the command to run until the robot has moved a specified distance. waitForTime is the other possible pair, which causes the command to run until the robot has moved for a specified amount of time.
+
+moveRotDriveRadius(power, radius)
+This function turns the robot at an arc. It uses two parameters, the first one- "power"- involving the power of an imaginary wheel at the center of the robot and the second one- "radius"- involving the turning radius. This should be paired with waitForDegrees, which causes the command to run until the robot has turned for the specified number of degrees. Be careful to include the radius of the turn in your calculations for when the robot should turn!
+
+moveRotTransCoordinates(cx, cy, speed)
+This function turns around a circumcenter without changing its orientation. cx and cy help to define the location of the circumcenter in relation to the robot while speed determines the speed of the robot while doing so. waitForDistance is one possible pair, which causes the command to run until the robot has moved a specified distance. waitForTime is another possible pair, which causes the command to run until the robot has moved for a specified amount of time. waitForDegrees is the final possible pair, which causes the command to run until the robot has turned for the specified number of degrees.
+
+***WAIT FUNCTIONS***
+
+
+/* For any of these, you can use OR/AND with sensors to provide additional information about how long the robot can preform an action */
+
+waitForDistance(distanceInCentimeters)
+This command is a limiter for any move command related to direct motion. This tells the robot to continue carrying out the command until it has travelled for a certain distance, specified in centimeters. It is often a pair for moveLinTrans, moveLinTransRel, moveRotTransCoordinates, or moveRotDriveTank. The robot calibrates during this time.
+
+waitForTime(time)
+This command is a limiter for any move command related to direct motion. This tells the robot to continue carrying out the command until it has travelled for a certain time, specified in seconds. It is often a pair for moveLinTrans, moveLinTransRel, moveRotTransCoordinates, or moveRotDriveTank. The robot calibrates during this time.
+
+waitForDegrees(degrees)
+This command is a limiter for any move command related to turning. This tells the robot to continue carrying out the command until it has turned for a certain number of degrees. It is often a pair for moveRotate, moveRotDriveRadius, moveRotTransCoordinates, or moveLinTransRel. The robot calibrates during this time.
+
+waitForOrientation()
+This command is a limiter for any move command related to turning. This tells the robot to continue carrying out the command until it is in a specific orientation. It is often a pair for moveRotate, moveRotDriveRadius, moveRotTransCoordinates, or moveLinTransRel. The robot calibrates during this time.
