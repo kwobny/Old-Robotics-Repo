@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.OpModes.LithiumCore;
 
 import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.MathFunctions.*;
 
-//This function is used as the velocity vs. time graph for a curve that transitions from 1 velocity to another so that acceleration at both points is 0.
 //This class is immutable
 //This class can be extended. Only subclasses have access to a bare constructor. This is so that the subclass can set function properties in somewhere other than the first line. The subclass has to call setParams sometime.
 public class SigmoidFunc implements MathFunction {
