@@ -117,6 +117,7 @@ public class WaitCore {
   private Callback[] staticLoopCallbacks;
 
   //this function is not meant to be used by the user, only used by the motion library.
+  //It does not matter if some callbacks are null.
   public void _setStaticCallbacks(final Callback ...callbacks) {
     staticLoopCallbacks = callbacks;
   }
@@ -155,9 +156,10 @@ public class WaitCore {
     intervalPile.remove(interv);
   }
 
-  private WaitInterval[] staticIntervals = null;
+  private WaitInterval[] staticIntervals;
 
   //This function should not be used outside of motion library.
+  //It does not matter if some intervals are null.
   public void _setStaticIntervals(final WaitInterval ...intervs) {
     staticIntervals = intervs;
   }
