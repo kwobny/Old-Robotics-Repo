@@ -7,19 +7,19 @@ import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.MathFunctions.*;
 public class SigmoidFunc implements MathFunction {
 
   private double L; //curve's maximum value
-  private double x0; //midpoint of curve
   private double kNeg; //negative of the logistic growth rate
+  private double x0; //midpoint of curve
 
-  public SigmoidFunc(final double L, final double x0, final double k) {
-    setParams(L, x0, k);
+  public SigmoidFunc(final double L, final double k, final double x0) {
+    setParams(L, k, x0);
   }
   protected SigmoidFunc() {
     //
   }
-  protected void setParams(final double L, final double x0, final double k) {
+  protected void setParams(final double L, final double k, final double x0) {
     this.L = L;
-    this.x0 = x0;
     this.kNeg = -k;
+    this.x0 = x0;
   }
 
   @Override
