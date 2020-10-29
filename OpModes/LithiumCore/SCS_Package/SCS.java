@@ -39,7 +39,8 @@ public class SCS {
   //adds, calibrates, and starts a new operation. Can be used to restart an operation that was running before.
   public SCSOpUnit addOperation(final SCSOpUnit op) {
     pile.add(op);
-    op.calibrate();
+    if (op.graphFunc instanceof CalibratedFunc)
+      op.privateCalibrate();
     return op;
   }
 
