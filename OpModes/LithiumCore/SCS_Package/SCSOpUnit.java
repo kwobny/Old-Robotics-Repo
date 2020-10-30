@@ -57,16 +57,18 @@ public class SCSOpUnit extends BoundedElem {
   public void calibrate(final double refVal) {
     refInput = refVal;
   }
-  //these methods are default access
+
+  //these things are default access
+  private double stateSave;
   void saveState() {
     //latestInput = input.get() - refInput;
-    latestInput = input.get();
+    stateSave = input.get();
   }
   void restoreState() {
     //refInput = input.get() - latestInput;
     //refInput = newInput - oldInput + oldRefInput
 
-    refInput += input.get() - latestInput;
+    refInput += input.get() - stateSave;
   }
 
   void run() {

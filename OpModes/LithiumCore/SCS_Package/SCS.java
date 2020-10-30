@@ -36,24 +36,39 @@ public class SCS {
     pile.forAll(pileConsumer);
   }
 
-  //adds, calibrates, and starts a new operation. Can be used to restart an operation that was running before.
+  //adds, calibrates, and starts a new operation. It hard resets the operation.
   public SCSOpUnit addOperation(final SCSOpUnit op) {
     pile.add(op);
+    op.isPaused = false;
     if (op.graphFunc instanceof CalibratedFunc)
       op.privateCalibrate();
     return op;
   }
 
-  //resumes the operation from the point when it was removed/paused.
+  //Used to pause an operation to be resumed later.
+  public void pauseOperation(final SCSOpUnit op) {
+    if (!(op instanceof UniDirectionalFunc))
+      throw new RuntimeException("You cannot use the pausing mechanism on a function that is not unidirectional.");
+    pile.remove(op);
+    op.isPaused = true;
+    op.saveState();
+  }
+
+  //resumes the operation from the point when it was paused.
   public void resumeOperation(final SCSOpUnit op) {
+    if (!(op instanceof UniDirectionalFunc))
+      throw new RuntimeException("You cannot use the pausing mechanism on a function that is not unidirectional.");
+    if (!op.isPaused)
+      throw new RuntimeException("You cannot resume an scs op unit that was not paused before.");
     pile.add(op);
+    op.isPaused = false;
     op.restoreState();
   }
 
-  //The remove operation also serves as a pause operation function.
+  //Hard remove an operation
   public void removeOperation(SCSOpUnit op) {
     pile.remove(op);
-    op.saveState();
+    op.isPaused = false;
   }
 
   public class AddOpCallback implements Callback {
