@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.MathFunctions.*;
 //this class only works when x value always increase.
 //the domain of each graph func includes its corresponding endXVal.
 //always manually reset the speed factors and set the output after this is done.
-public class SeqOpFunc implements MathFunction {
+public class SeqOpFunc implements UniDirectionalFunc {
 
   public static class Section {
     public final double endXVal;
@@ -22,6 +22,7 @@ public class SeqOpFunc implements MathFunction {
   }
 
   //this method gets the x value where the domain of the whole seq op math function ends. This is the threshold you should wait for if you are doing an input wait.
+  @Override
   public double getEndThreshold() {
     return sections[sections.length-1].endXVal;
   }

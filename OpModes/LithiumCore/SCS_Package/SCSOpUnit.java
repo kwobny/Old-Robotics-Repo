@@ -43,15 +43,9 @@ public class SCSOpUnit extends BoundedElem {
     waitTask._markAsAdd();
   }
 
-  //this auto calibrates the function (sets reference value to current input). Only works on CalibratedFuncs.
-  void privateCalibrate() {
-    refInput = input.get();
-  }
+  //this auto calibrates the function (sets reference value to current input). Always needs to be called before doing an operation.
   public void calibrate() {
-    if (graphFunc instanceof CalibratedFunc)
-      privateCalibrate();
-    else
-      throw new RuntimeException("You cannot calibrate a function that is non-calibratable.");
+    refInput = input.get();
   }
   //this is an overload that is able to be used by all types of functions. You are able to manually set the reference value.
   public void calibrate(final double refVal) {

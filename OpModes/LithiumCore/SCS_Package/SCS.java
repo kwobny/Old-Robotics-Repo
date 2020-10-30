@@ -40,15 +40,11 @@ public class SCS {
   public SCSOpUnit addOperation(final SCSOpUnit op) {
     pile.add(op);
     op.isPaused = false;
-    if (op.graphFunc instanceof CalibratedFunc)
-      op.privateCalibrate();
     return op;
   }
 
   //Used to pause an operation to be resumed later.
   public void pauseOperation(final SCSOpUnit op) {
-    if (!(op instanceof UniDirectionalFunc))
-      throw new RuntimeException("You cannot use the pausing mechanism on a function that is not unidirectional.");
     pile.remove(op);
     op.isPaused = true;
     op.saveState();
@@ -56,8 +52,6 @@ public class SCS {
 
   //resumes the operation from the point when it was paused.
   public void resumeOperation(final SCSOpUnit op) {
-    if (!(op instanceof UniDirectionalFunc))
-      throw new RuntimeException("You cannot use the pausing mechanism on a function that is not unidirectional.");
     if (!op.isPaused)
       throw new RuntimeException("You cannot resume an scs op unit that was not paused before.");
     pile.add(op);
