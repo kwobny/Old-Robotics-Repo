@@ -4,11 +4,15 @@ import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.MathFunctions.*;
 import java.util.ArrayDeque;
 
 //This class chains a bunch of unidirectional functions together into 1 unidirectional function. Is basically a compound unidirectional function.
+//Coolest feature: you can nest multiple seq op funcs with low performance difference. This whle thing was designed on top of that.
 //this class is an immutable class, except when extended.
+
 //when extending this class, the one and only requirement is to set the funcs variable to something via the setFuncs function.
+
 //The funcs variable can be set to null, be a length of 0, and/or have null elements in it (also can be all null elements). If any of these conditions are met, the function is unusable and will be skipped over if nested in another seq op func.
 //Edge cases: func length 0, func is null, or individual elements null (all elements could be null)
 //if you forget to set the funcs variable, it is alright. The function will just be unusable.
+
 //always manually reset the speed factors and set the output after this is done.
 public class SeqOpFunc implements UniDirectionalFunc {
 
@@ -63,6 +67,7 @@ public class SeqOpFunc implements UniDirectionalFunc {
     return sum;
   }
 
+  //This function resets the index back to the lowest applicable function. If none exists, then the function is made unusable.
   public void reset() {
     index = -1;
 
@@ -80,7 +85,7 @@ public class SeqOpFunc implements UniDirectionalFunc {
     }
   }
 
-  //This is the function you call to set the funcs array. It automatically resets the function back to index 0 and/or makes it unusable.
+  //This is the function you call to set the funcs array. It automatically resets the function.
   protected void setFuncs(final UniDirectionalFunc ...funcs) {
     this.funcs = funcs;
     //check if the funcs array cannot be used. If so, then mark this seq op func as unusable by setting the current func to null.
