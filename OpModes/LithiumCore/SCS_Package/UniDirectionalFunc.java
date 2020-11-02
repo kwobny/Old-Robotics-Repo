@@ -6,6 +6,8 @@ import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.MathFunctions.*;
 //These functions require a get end threshold function.
 public interface UniDirectionalFunc extends MathFunction {
   
+  //This method might be a costly operation, so it is great to store the value as much as possible. The return value of this function should not change.
+  //This method returns the x value where the function ends.
   public double getEndThreshold();
   
 }
