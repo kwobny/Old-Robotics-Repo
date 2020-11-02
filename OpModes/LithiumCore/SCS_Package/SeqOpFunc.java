@@ -7,6 +7,7 @@ import java.util.ArrayDeque;
 //this class is an immutable class, except when extended.
 //when extending this class, the one and only requirement is to set the funcs variable to something via the setFuncs function.
 //The funcs variable can be set to null, be a length of 0, and/or have null elements in it (also can be all null elements). If any of these conditions are met, the function is unusable and will be skipped over if nested in another seq op func.
+//Edge cases: func length 0, func is null, or individual elements null (all elements could be null)
 //if you forget to set the funcs variable, it is alright. The function will just be unusable.
 //always manually reset the speed factors and set the output after this is done.
 public class SeqOpFunc implements UniDirectionalFunc {
@@ -96,8 +97,6 @@ public class SeqOpFunc implements UniDirectionalFunc {
 
   @Override
   public double yValueOf(final double input) {
-    //program reset function
-    //handle edge cases (func length 0 and null, or individual elements null)
 
     if (funcs == null) {
       throw new RuntimeException("You cannot get the y-value of a seq op function whose funcs array is null.");
