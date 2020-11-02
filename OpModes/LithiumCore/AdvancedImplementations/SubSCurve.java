@@ -26,9 +26,7 @@ public class SubSCurve extends SigmoidFunc implements UniDirectionalFunc {
     //set initial y value
     this.initialYValue = initialYValue;
 
-    double L;
     double k;
-    double x0;
 
     //find out how many arguments are missing
     int missingElems = 0;
@@ -59,14 +57,14 @@ public class SubSCurve extends SigmoidFunc implements UniDirectionalFunc {
     //put arguments into parameter variables (L, k, x0)
     L = changeInOutput;
     k = 2 * Math.log((1-Y_CUTOFF)/Y_CUTOFF) / domainLength;
-    x0 = domainLength / 2;
+    x0 = domainLength / 2.0;
 
-    setParams(L, k, x0);
+    setK(k);
   }
 
   @Override
   public double getEndThreshold() {
-    //
+    return x0 * 2;
   }
 
   @Override

@@ -6,9 +6,17 @@ import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.MathFunctions.*;
 //This class can be extended. Only subclasses have access to a bare constructor. This is so that the subclass can set function properties in somewhere other than the first line. The subclass has to call setParams sometime.
 public class SigmoidFunc implements MathFunction {
 
-  private double L; //curve's maximum value
+  protected double L; //curve's maximum value
   private double kNeg; //negative of the logistic growth rate
-  private double x0; //midpoint of curve
+  protected double x0; //midpoint of curve
+
+  //accessor methods for k.
+  protected double getK() {
+    return -kNeg;
+  }
+  protected void setK(final double val) {
+    kNeg = -val;
+  }
 
   //constructors
   public SigmoidFunc(final double L, final double k, final double x0) {
