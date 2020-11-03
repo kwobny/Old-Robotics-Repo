@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.UniDirectionalUtils;
 
 //This class is the basic / base sequential operation function.
+//A sequential operation function is basically a compound unidirectional function. It chains together multiple unidirectional functions into one unidirectional function.
 //The funcs array cannot have null elements, cannot have a length of 0, and cannot be null.
 //this class is immutable except when extended.
 public class BasicSOF implements UniDirectionalFunc {
