@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes.LithiumCore;
 
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SCS_Package.UniDirectionalFunc;
+import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.UniDirectionalUtils.UniDirectionalFunc;
 
 //There are 2 constants that you can change:
 //L, and k.
