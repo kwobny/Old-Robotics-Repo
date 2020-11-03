@@ -13,25 +13,25 @@ public class BasicSOF implements UniDirectionalFunc {
     setFuncs(funcs);
   }
 
-  private UniDirectionalFunc[] funcs;
-  private int index;
+  UniDirectionalFunc[] funcs; //default access
+  int index; //default access
   //this variable is used to store the y value of the function at the right most edge of the domain, to be returned when the function exits.
   double lastYVal; //default access
 
-  private double xTranslateVal;
-  private double xThreshold;
+  double xTranslateVal;
+  double xThreshold;
 
   //used by extending classes to set the funcs array.
   //resets the function automatically as well.
   protected void setFuncs(final UniDirectionalFunc ...funcs) {
     this.funcs = funcs;
+    lastYVal = funcs[funcs.length-1].getLastYValue();
     reset();
   }
 
   //reset function
   public void reset() {
     index = 0;
-    lastYVal = 0;
     
     xTranslateVal = 0;
     xThreshold = funcs[0].getEndThreshold();
@@ -42,27 +42,22 @@ public class BasicSOF implements UniDirectionalFunc {
   boolean increment() { //default access
     ++index;
 
-    if (index < funcs.length) {
-      xTranslateVal = xThreshold;
-      xThreshold += funcs[index].getEndThreshold();
-      return false;
-    }
-    else {
-      lastYVal = funcs[funcs.length-1].yValueOf(xThreshold - xTranslateVal);
+    if (index >= funcs.length) {
       return true;
     }
+    xTranslateVal = xThreshold;
+    xThreshold += funcs[index].getEndThreshold();
+    return false;
   }
 
   //If you get the y value of the function after it has ended, it automatically returns the absolutely last value. No error is thrown.
   @Override
   public double yValueOf(final double x) {
-    if (index >= funcs.length) {
-      return lastYVal;
-    }
     //check if x is higher than threshold. If so, then increment. If index overflows, return last y value.
-    if (x > xThreshold && increment()) {
+    if (index >= funcs.length || (x > xThreshold && increment())) {
       return lastYVal;
     }
+    
     return funcs[index].yValueOf(x - xTranslateVal);
   }
 
@@ -73,6 +68,11 @@ public class BasicSOF implements UniDirectionalFunc {
       sum += i.getEndThreshold();
     }
     return sum;
+  }
+
+  @Override
+  public double getLastYValue() {
+    return lastYVal;
   }
 
 }

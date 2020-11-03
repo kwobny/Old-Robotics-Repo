@@ -9,5 +9,17 @@ public interface UniDirectionalFunc extends MathFunction {
   //This method might be a costly operation, so it is great to store the value as much as possible. The return value of this function should not change.
   //This method returns the x value where the function ends.
   public double getEndThreshold();
+
+  //This function has the same characteristics and limitations as one above
+  //This function gets the y value at the right most point of the domain on the graph (typically at the threshold x value).
+  public double getLastYValue();
+
+  //default implementation:
+  /*
+  @Override
+  public double getLastYValue() {
+    return yValueOf(getEndThreshold());
+  }
+  */
   
 }
