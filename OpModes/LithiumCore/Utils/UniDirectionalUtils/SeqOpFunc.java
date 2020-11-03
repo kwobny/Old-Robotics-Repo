@@ -2,6 +2,11 @@ package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.UniDirectionalU
 
 import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.MathFunctions.*;
 
+//----------------------------------------------------
+//IMPORTANT:
+//THIS IS THE OLD VERSION OF THE NESTED SOF CLASS!!!
+//----------------------------------------------------
+
 //This class chains a bunch of unidirectional functions together into 1 unidirectional function. Is basically a compound unidirectional function.
 //Coolest feature: you can nest multiple seq op funcs with low performance difference. This whle thing was designed on top of that.
 //this class is an immutable class, except when extended.
