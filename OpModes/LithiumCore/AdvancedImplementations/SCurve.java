@@ -86,6 +86,11 @@ public class SCurve extends SigmoidFunc implements UniDirectionalFunc {
   }
 
   @Override
+  public double getLastYVal() {
+    return L + initialYValue;
+  }
+
+  @Override
   public double yValueOf(final double x) {
     return super.yValueOf(x) + initialYValue;
   }
