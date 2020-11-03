@@ -6,10 +6,10 @@ public abstract class Transformation implements MathFunction {
 
   public MathFunction next;
   
-  public double alteredX(final double xValue) {
+  protected double alteredX(final double xValue) {
     return xValue;
   }
-  public double alteredY(final double yValue) {
+  protected double alteredY(final double yValue) {
     return yValue;
   }
 

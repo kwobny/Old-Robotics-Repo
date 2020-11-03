@@ -4,6 +4,22 @@ import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.MathFunctions.*;
 
 public class CommonOps {
 
+  public static class ConstVelocity implements MathFunction {
+    public double velocity;
+
+    public ConstVelocity(final double velocity) {
+      this.velocity = velocity;
+    }
+    public ConstVelocity() {
+      //
+    }
+
+    @Override
+    public double yValueOf(final double x) {
+      return velocity;
+    }
+  }
+
   //constant acceleration
   public static class ConstAccel implements MathFunction {
 

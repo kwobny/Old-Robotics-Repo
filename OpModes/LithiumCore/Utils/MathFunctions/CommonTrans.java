@@ -16,11 +16,11 @@ public class CommonTrans {
     }
 
     @Override
-    public double alteredX(final double input) {
+    protected double alteredX(final double input) {
       return input - shiftX;
     }
     @Override
-    public double alteredY(final double input) {
+    protected double alteredY(final double input) {
       return input + shiftY;
     }
   }
@@ -37,7 +37,7 @@ public class CommonTrans {
     }
 
     @Override
-    public double alteredX(final double input) {
+    protected double alteredX(final double input) {
       return input - shiftX;
     }
   }
@@ -54,7 +54,7 @@ public class CommonTrans {
     }
 
     @Override
-    public double alteredY(final double input) {
+    protected double alteredY(final double input) {
       return input + shiftY;
     }
   }
@@ -73,11 +73,11 @@ public class CommonTrans {
     }
 
     @Override
-    public double alteredX(final double input) {
+    protected double alteredX(final double input) {
       return input/factorX;
     }
     @Override
-    public double alteredY(final double input) {
+    protected double alteredY(final double input) {
       return input * factorY;
     }
   }
@@ -94,7 +94,7 @@ public class CommonTrans {
     }
 
     @Override
-    public double alteredX(final double input) {
+    protected double alteredX(final double input) {
       return input/factorX;
     }
   }
@@ -111,7 +111,7 @@ public class CommonTrans {
     }
 
     @Override
-    public double alteredY(final double input) {
+    protected double alteredY(final double input) {
       return input * factorY;
     }
   }
