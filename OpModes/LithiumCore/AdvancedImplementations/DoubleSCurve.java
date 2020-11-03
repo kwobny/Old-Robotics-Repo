@@ -9,7 +9,7 @@ public class DoubleSCurve extends SeqOpFunc {
   //Max s curve acceleration or time on s curves (supply either one, or both)
   //Max output deviation
   //time on constant velocity
-  public DoubleSCurve(Double peakAccel, Double sCurveTime, double maxOutput) {
+  public DoubleSCurve(Double peakAccel, Double timeOnSCurve, double maxOutputDeviation, double timeOnConstVelocity) {
     //
   }
 

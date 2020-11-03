@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SCS_Package;
+package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.UniDirectionalUtils;
 
 import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.MathFunctions.*;
 
