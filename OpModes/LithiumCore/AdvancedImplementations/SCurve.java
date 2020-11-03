@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SCS_Package.UniDirecti
 
 //This function is used as the velocity vs. time graph for a curve that transitions from 1 velocity to another so that acceleration at both points is 0.
 //This class is immutable.
-public class SubSCurve extends SigmoidFunc implements UniDirectionalFunc {
+public class SCurve extends SigmoidFunc implements UniDirectionalFunc {
 
   //The y height and its complement that the function domain cuts off at, relative to the maximum height (when the max height is 1).
   private static final double Y_CUTOFF = 0.01;
@@ -29,7 +29,7 @@ public class SubSCurve extends SigmoidFunc implements UniDirectionalFunc {
 
   //At least 2 arguments have to be provided. If only 2 are provided, they can be any values possible, as long as they fit criteria above.
   //If all 3 arguments are provided, the function does not check them and assumes that all 3 are valid. Make sure to check this.
-  public SubSCurve(Double changeInOutput, Double domainLength, Double peakAccel, double initialYValue) {
+  public SCurve(Double changeInOutput, Double domainLength, Double peakAccel, double initialYValue) {
     //set initial y value
     this.initialYValue = initialYValue;
 
@@ -49,7 +49,7 @@ public class SubSCurve extends SigmoidFunc implements UniDirectionalFunc {
 
     //if there are more than 1 missing argument to solve for, raise an error.
     if (missingElems > 1)
-      throw new RuntimeException("There is more than 1 missing argument to the sub s curve constructor. There can only be 1 missing argument.");
+      throw new RuntimeException("There is more than 1 missing argument to the s curve constructor. There can only be 1 missing argument.");
     
     //if there is 1 missing argument, solve for it.
     if (missingElems == 1) {
