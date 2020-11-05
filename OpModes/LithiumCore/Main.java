@@ -30,7 +30,7 @@ public class Main {
     //SUB OBJECT INITIALIZATION
     this.mhw = mhw;
 
-    move.initialize(mhw, rps);
+    move.initialize(mhw, rps, new LoopNotifier());
 
     rps.initialize(mhw, move);
 
@@ -50,7 +50,11 @@ public class Main {
     Time.Interval highMaint = time.getInterval(highFreqMaintInterval, new Callback() {
       @Override
       public void run() {
+        move.SFSetNotifier.run();
         scs._runSCS();
+        if (move.SFSetNotifier.hasRunYet()) {
+          move.syncMotors();
+        }
       }
     });
 

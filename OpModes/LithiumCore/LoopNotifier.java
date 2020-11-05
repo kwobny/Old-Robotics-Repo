@@ -12,6 +12,7 @@ class LoopNotifier implements Callback {
   //Run in current loop. Signifies whether or not the user has run in the current loop yet
   private boolean runInCurrLoop = false;
   
+  //Sets the run in curr loop to false
   @Override
   public void run() {
     runInCurrLoop = false;

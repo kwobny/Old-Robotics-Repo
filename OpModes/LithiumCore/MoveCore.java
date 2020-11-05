@@ -10,6 +10,8 @@ class MoveCore {
   
   public double motorConversionRate = 0; //the rate of powerOutput/velocity (in centimeters/second)
 
+  LoopNotifier SFSetNotifier; //default access
+
   //RESOURCE OBJECTS
   protected RPS rpss;
   protected MadHardware mhw;
@@ -20,7 +22,7 @@ class MoveCore {
   //motor buffers make it possible to superimpose two or more different motions together to achieve a sum of the motions
 
   //motor buffer class
-  public static class MotorBufferClass implements InputSource, OutputSink {
+  public class MotorBufferClass implements InputSource, OutputSink {
     MotorBufferClass(final double refFactor) { //cannot be instantiated outside of package
       refSpeedFactor = refFactor;
       speedFactor = refFactor;
@@ -61,6 +63,7 @@ class MoveCore {
     @Override
     public void set(double val) {
       speedFactor = val * refSpeedFactor;
+      SFSetNotifier.setHasRun();
     }
 
     //wait class so that the motor buffer speed factor can be waited upon (wow, a THIRD ORDER class!!!!)

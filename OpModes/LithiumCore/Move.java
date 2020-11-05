@@ -35,9 +35,10 @@ public class Move extends MoveCore {
 
   Move() {} //default access constructor, cannot be instantiated outside of package
 
-  public void initialize(MadHardware hmw, RPS rps) {
+  public void initialize(MadHardware hmw, RPS rps, final LoopNotifier SFSetNotifier) {
     mhw = hmw;
     rpss = rps;
+    this.SFSetNotifier = SFSetNotifier;
   }
 
   //START MOVE COMMANDS
