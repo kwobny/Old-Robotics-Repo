@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Wait_Package.CoroutinePkg;
 
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Wait_Package.*;
 import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.Callback;
 
 //Single active coroutine: is a coroutine which can only have 1 running instance at a time.

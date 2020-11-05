@@ -20,12 +20,12 @@ class MoveCore {
   //motor buffers make it possible to superimpose two or more different motions together to achieve a sum of the motions
 
   //motor buffer class
-  public static class motorBufferClass implements InputSource, OutputSink {
-    motorBufferClass(final double refFactor) { //cannot be instantiated outside of package
+  public static class MotorBufferClass implements InputSource, OutputSink {
+    MotorBufferClass(final double refFactor) { //cannot be instantiated outside of package
       refSpeedFactor = refFactor;
       speedFactor = refFactor;
     }
-    motorBufferClass() {
+    MotorBufferClass() {
       this(1.0);
     }
 
@@ -38,9 +38,16 @@ class MoveCore {
     public final double refSpeedFactor;
     public double speedFactor;
 
-    //reset speed factor
+    //reset speed factor to relatively 1.0
     public void resetSF() {
       speedFactor = refSpeedFactor;
+    }
+    //sets all motors to one double value.
+    void setMotors(final double val) { //default access
+      leftFront = val;
+      leftRear = val;
+      rightFront = val;
+      rightRear = val;
     }
 
     //now, the methods/classes which make this compatible with other parts of the library
@@ -72,7 +79,7 @@ class MoveCore {
     }
     
   }
-  public static class UserBuffer extends motorBufferClass {
+  public static class UserBuffer extends MotorBufferClass {
     UserBuffer(final double refFactor) { //cannot be instantiated outside of package
       super(refFactor);
     }
@@ -94,30 +101,34 @@ class MoveCore {
     }
   }
 
-  //declaring all motor buffers
-  public motorBufferClass rotateBuffer = new motorBufferClass();
-  public motorBufferClass linTransBuffer = new linTransBufferClass();
+  //declaring all individual motor buffers
+  public MotorBufferClass rotateBuffer = new MotorBufferClass();
+  public MotorBufferClass linTransBuffer = new MotorBufferClass();
   //user controlled buffer
   public UserBuffer userBuffer = new UserBuffer();
 
-  //upload motor buffer function
-  protected motorBufferClass universalBuffer = new motorBufferClass(Constants.motor_down_scale);
-  private motorBufferClass[] bufferArray = new motorBufferClass[]{universalBuffer, rotateBuffer, linTransBuffer, userBuffer};
+  //universal buffer. Is the virtual, ideal robot wheel power state.
+  public MotorBufferClass universalBuffer = new MotorBufferClass(Constants.motor_down_scale);
 
+  //the motor buffer array, used to iterate through individual motors. Does not include universal buffer.
+  private MotorBufferClass[] bufferArray = new MotorBufferClass[]{rotateBuffer, linTransBuffer, userBuffer};
+
+  //This function syncs (updates) the universal buffer values with the buffer values from the individual buffers.
+  //It also uploads the change to the motors.
   public void syncMotors() {
     universalBuffer.leftFront = 0;
     universalBuffer.leftRear = 0;
     universalBuffer.rightFront = 0;
     universalBuffer.rightRear = 0;
 
-    for (int i = 1; i < bufferArray.length; i++) {
-      universalBuffer.leftFront += bufferArray[i].leftFront * bufferArray[i].speedFactor;
+    for (MotorBufferClass i : bufferArray) {
+      universalBuffer.leftFront += i.leftFront * i.speedFactor;
 
-      universalBuffer.leftRear += bufferArray[i].leftRear * bufferArray[i].speedFactor;
+      universalBuffer.leftRear += i.leftRear * i.speedFactor;
 
-      universalBuffer.rightFront += bufferArray[i].rightFront * bufferArray[i].speedFactor;
+      universalBuffer.rightFront += i.rightFront * i.speedFactor;
 
-      universalBuffer.rightRear += bufferArray[i].rightRear * bufferArray[i].speedFactor;
+      universalBuffer.rightRear += i.rightRear * i.speedFactor;
     }
 
     uploadToMotors();
@@ -127,11 +138,8 @@ class MoveCore {
   }
   //clear motor buffers function
   public void clearMotors() {
-    for (motorBufferClass i : bufferArray) {
-      i.leftFront = 0;
-      i.leftRear = 0;
-      i.rightFront = 0;
-      i.rightRear = 0;
+    for (MotorBufferClass i : bufferArray) {
+      i.setMotors(0.0);
     }
     syncMotors();
   }
@@ -147,7 +155,7 @@ class MoveCore {
     }
   }
 
-  void motorCali() {
+  void _motorCali() {
     /* CALCULATE DISTANCES TRAVELLED */
     double d0 = mhw.leftFront.getCurrentPosition() - globalPos[0];
     double d1 = mhw.rightFront.getCurrentPosition() - globalPos[1];
@@ -192,6 +200,8 @@ class MoveCore {
     globalPos[3] = mhw.leftRear.getCurrentPosition();
   }
 
+  //uploads the motor values from the universal buffer into the actual hardware.
+  //The universal buffer is the ideal wheel power state, and is a virtual robot wheel power state. This function converts the ideal state into the real state using help from the motor cali function.
   private void uploadToMotors() {
     double[] powers = new double[4];
 
@@ -217,15 +227,6 @@ class MoveCore {
       for (int i = 0; i < powers.length; i++) {
         powers[i] *= multiplier;
       }
-
-      //universalBuffer.speedFactor *= multiplier;
-
-      /*for (motorBufferClass j : bufferArray) {
-        if (j.acceleration * j.speedFactor > 0.0) {
-          j.acceleration = 0.0;
-        }
-      }*/
-      
     }
 
     mhw.leftFront.setPower(powers[0]);
@@ -233,52 +234,5 @@ class MoveCore {
     mhw.rightRear.setPower(powers[2]);
     mhw.leftRear.setPower(powers[3]);
   }
-
-  //START BASIC SYSTEM FUNCTIONS
-  /*
-  void runCommonAccelerationSystem(double changeInTime) {
-    //This function is run in the high interval
-    byte accel = 0;
-    for (motorBufferClass i : bufferArray) {
-      if (i.acceleration != 0.0) {
-        i.speedFactor += i.acceleration * changeInTime;
-
-        if (i == universalBuffer) {
-          accel = 1;
-        } else {
-          accel = 2;
-        }
-
-        if (i.thresholdEnabled) {
-          if (i.acceleration > 0.0) {
-            if (i.speedFactor > i.threshold) {
-              i.speedFactor = i.threshold;
-              i.acceleration = 0.0;
-              i.thresholdEnabled = false;
-            }
-          } else if (i.speedFactor < i.threshold) {
-            i.speedFactor = i.threshold;
-            i.acceleration = 0.0;
-            i.thresholdEnabled = false;
-          }
-        }
-      }
-      if (i.speedFactor > i.maxFactor) {
-        i.speedFactor = i.maxFactor;
-        i.acceleration = 0.0;
-      }
-      else if (i.speedFactor < i.minFactor) {
-        i.speedFactor = i.minFactor;
-        i.acceleration = 0.0;
-      }
-    }
-    if (accel == 1) {
-      uploadToMotors();
-    } else if (accel == 2) {
-      syncMotors();
-    }
-  }
-  */
-
-  //END BASIC SYSTEM FUNCTIONS
+  
 }

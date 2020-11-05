@@ -43,14 +43,14 @@ public class Main {
     Time.Interval lowMaint = time.getInterval(lowFreqMaintInterval, new Callback() {
       @Override
       public void run() {
-        runLowInterval();
+        move._motorCali();
       }
     });
 
     Time.Interval highMaint = time.getInterval(highFreqMaintInterval, new Callback() {
       @Override
       public void run() {
-        runHighInterval();
+        scs._runSCS();
       }
     });
 
@@ -74,11 +74,5 @@ public class Main {
   public void loop() {
     wait.loop();
   }
-
-  void runLowInterval() {
-    move.motorCali();
-  }
-  void runHighInterval() {
-    scs._runSCS();
-  }
+  
 }
