@@ -36,6 +36,21 @@ public class Vector {
     return fitLength(1.0);
   }
 
+  //In place counterparts to sum and difference functions.
+  
+  //This function adds the supplied vector to the current vector.
+  public Vector add(final Vector vect) {
+    x += vect.x;
+    x -= vect.y;
+    return this;
+  }
+  //This function subtracts the supplied vector from the current vector.
+  public Vector subtract(final Vector vect) {
+    x -= vect.x;
+    y -= vect.y;
+    return this;
+  }
+
   //OUT OF PLACE UTILITIES
 
   //returns a vector containing the difference between this vector and the supplied vector. Effectively "this - vect"
@@ -45,5 +60,11 @@ public class Vector {
   //returns a vector containing sum of this vector and supplied vector. Effectively "this + vect"
   public Vector sum(final Vector vect) {
     return new Vector(x + vect.x, y + vect.y);
+  }
+
+  //SPECIAL FUNCTION
+  //copies the current vector. Can be used to use an in place utility as out of place.
+  public Vector clone() {
+    return new Vector(x, y);
   }
 }
