@@ -36,10 +36,13 @@ public class SCS {
     pile.forAll(pileConsumer);
   }
 
+  //You need to call sync motors whenever you add and remove an operation. Just because.
+
   //adds, calibrates, and starts a new operation. It hard resets the operation.
   public SCSOpUnit addOperation(final SCSOpUnit op) {
     pile.add(op);
     op.isPaused = false;
+    op.run(); //run the operation once when it is added.
     return op;
   }
 
@@ -48,6 +51,7 @@ public class SCS {
     pile.remove(op);
     op.isPaused = true;
     op.saveState();
+    op.run(); //run the operation one last time before it pauses
   }
 
   //resumes the operation from the point when it was paused.
@@ -57,12 +61,14 @@ public class SCS {
     pile.add(op);
     op.isPaused = false;
     op.restoreState();
+    op.run(); //run the operation once when it is resumed.
   }
 
   //Hard remove an operation
   public void removeOperation(SCSOpUnit op) {
     pile.remove(op);
     op.isPaused = false;
+    op.run(); //run the operation one last time when it ends
   }
 
   public class AddOpCallback implements Callback {
