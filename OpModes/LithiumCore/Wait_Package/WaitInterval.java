@@ -8,13 +8,13 @@ public abstract class WaitInterval extends BoundedElem {
   private WaitCondition cond;
   public Callback callback;
 
-  private boolean hasStarted = false;
+  private boolean hasCalibrated = false;
 
   protected abstract WaitCondition _incrementCondition();
 
   void run() {
-    if (!hasStarted) {
-      throw new RuntimeException("You have ran a wait interval before it has been started.");
+    if (!hasCalibrated) {
+      throw new RuntimeException("You have ran a wait interval before it has been started/calibrated. You cannot do that.");
     }
     if (cond.pollCondition()) {
       callback.run();
@@ -22,11 +22,10 @@ public abstract class WaitInterval extends BoundedElem {
     }
   }
 
-  public WaitInterval start() {
-    if (hasStarted) {
-      throw new RuntimeException("You cannot start a wait interval more than once.");
-    }
-    hasStarted = true;
+  //Calibrates/starts the wait interval.
+  //Can be called again to restart the interval.
+  public WaitInterval calibrate() {
+    hasCalibrated = true;
     cond = _incrementCondition();
     return this;
   }
