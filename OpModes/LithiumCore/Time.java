@@ -35,23 +35,30 @@ public class Time implements InputSource {
     return saved_time;
   }
 
-  public class Wait implements WaitCondition {
-    private double time_delay;
+  //This class is immutable
+  public class Wait extends CheckedSC {
+    private final double time_delay;
     private double start_time;
     public double changeInTime;
 
     public Wait(final double delay) {
-      time_difference = delay;
+      time_delay = delay;
+      //start_time = getTime();
+    }
+
+    @Override
+    protected void _start() {
       start_time = getTime();
     }
 
     @Override
-    public boolean pollCondition() {
+    protected boolean _pollCondition() {
       changeInTime = getTime() - start_time;
       return changeInTime > time_delay;
     }
   }
 
+  //This class IS sort of MUTABLE.
   public class Interval extends WaitInterval {
     public double time_interval;
 
@@ -61,8 +68,8 @@ public class Time implements InputSource {
     }
     
     @Override
-    protected void _incrementCondition() {
-      cond = new Wait(time_interval);
+    protected WaitCondition _incrementCondition() {
+      return (new Wait(time_interval)).start();
     }
 
   }

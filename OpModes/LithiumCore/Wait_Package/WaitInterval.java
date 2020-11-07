@@ -5,20 +5,30 @@ import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.Callback;
 
 public abstract class WaitInterval extends BoundedElem {
 
-  protected WaitCondition cond;
+  private WaitCondition cond;
   public Callback callback;
 
-  public WaitInterval() {
-    _incrementCondition();
-  }
+  private boolean hasStarted = false;
 
-  protected abstract void _incrementCondition();
+  protected abstract WaitCondition _incrementCondition();
 
   void run() {
+    if (!hasStarted) {
+      throw new RuntimeException("You have ran a wait interval before it has been started.");
+    }
     if (cond.pollCondition()) {
       callback.run();
-      _incrementCondition();
+      cond = _incrementCondition();
     }
+  }
+
+  public WaitInterval start() {
+    if (hasStarted) {
+      throw new RuntimeException("You cannot start a wait interval more than once.");
+    }
+    hasStarted = true;
+    cond = _incrementCondition();
+    return this;
   }
 
   public WaitCondition getCond() {

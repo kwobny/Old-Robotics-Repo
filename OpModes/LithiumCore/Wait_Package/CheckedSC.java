@@ -5,7 +5,7 @@ public abstract class CheckedSC implements StartedCond {
   private boolean hasStarted = false;
 
   @Override
-  public boolean pollCondition() {
+  public final boolean pollCondition() {
     if (!hasStarted) {
       throw new RuntimeException("You cannot poll a checked started condition before it is started.");
     }
@@ -13,7 +13,7 @@ public abstract class CheckedSC implements StartedCond {
   }
 
   @Override
-  public StartedCond start() {
+  public final StartedCond start() {
     if (hasStarted) {
       throw new RuntimeException("You cannot start a checked started condition more than once.");
     }
