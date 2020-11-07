@@ -161,7 +161,7 @@ public class WaitCore {
     intervalPile.remove(interv);
   }
   //returns true if the supplied interval is currently running
-  public boolean IntervalIsRunning(final WaitInterval interval) {
+  public boolean intervalIsRunning(final WaitInterval interval) {
     return intervalPile.has(interval);
   }
 
