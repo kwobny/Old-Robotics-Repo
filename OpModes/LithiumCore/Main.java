@@ -58,7 +58,7 @@ public class Main {
       }
     });
 
-    wait._setStaticIntervals(lowMaint, highMaint);
+    wait._setStaticIntervals(lowMaint.start(), highMaint.start());
 
     //Setup the loop callbacks for the (new) loop notifiers
     if (Constants.turnOnOPLP)
