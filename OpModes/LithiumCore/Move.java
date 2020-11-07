@@ -1,43 +1,19 @@
 package org.firstinspires.ftc.teamcode.OpModes.LithiumCore;
 
+import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.Vector;
 import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
 
 public class Move extends MoveCore {
-  //time system has simple wait, complex wait (add wait and commence wait), set timeout, add interval
-  //concerns with time system: instantiate wait class and wait callbacks outside of motions function?
-  //motor cali
-  //moveLinTrans
 
-  // IMPORTANT NOTES:
-  // make sure to include loop method in main method
-  // make sure to provide MadHardware instance to this object
-  //make sure core system is adapted into the new api environment
-  //make sure to change class wide constants as fit
-  //make sure to include all java libraries needed
-  //moveRotDriveRadius can be used to test itself, moveRotDriveTank, and moveRotate
-
-  //methods to integrate:
-  //in motions:
-  //moveLinTrans
-
-  //in base:
-  //motorCali (make sure to incorporate conversionRate calculation)
-  //syncMotors
-
-  //incomplete functions:
-  //wait time
-  //rot trans (get current time)
-  //relative linear translate (configure gyro)
-
-  //things to do:
-  //consider including compound timeout (multiple polls in one callback)
-  //restructure/organize/increase efficiency of wait api
+  //UTILITY OBJECTS
+  private WaitCore wait;
 
   Move() {} //default access constructor, cannot be instantiated outside of package
 
-  public void initialize(MadHardware hmw, RPS rps, final LoopNotifier SFSetNotifier) {
+  void initialize(final MadHardware hmw, final RPS rps, final WaitCore wait, final LoopNotifier SFSetNotifier) { //default access
     mhw = hmw;
     rpss = rps;
+    this.wait = wait;
     this.SFSetNotifier = SFSetNotifier;
   }
 
@@ -47,7 +23,7 @@ public class Move extends MoveCore {
   //power is the power of the left front wheel (or left wheel for two wheel sim)
   //in two wheel sim mode, the robot is abstracted as a machine with two wheels, which are the robot's width distance apart.
   private final double ROTATE_CONSTANT = (Constants.robotWidth + Constants.robotLength)/Constants.robotWidth;
-  public void moveRotate(double power, boolean use2WheeledSimulation) {
+  public void rotate(double power, boolean use2WheeledSimulation) {
 
     if (use2WheeledSimulation) {
       power *= ROTATE_CONSTANT;
@@ -60,39 +36,24 @@ public class Move extends MoveCore {
   }
 
   //linear translate
-  public void moveLinTrans(double rx, double ry, boolean boostOverride) {
-
-    //using encoder to find magnitude of joystick x and y
-    /*if (gamepadControl) {
-      rx = gamepad1.right_stick_x;
-      ry = -gamepad1.left_stick_y;
-    }*/
+  public void linearTrans(final double rx, final double ry) {
 
     //calculating motor powers
     double a = rx + ry;
     double b = ry - rx;
 
-    if (boostOverride) {
-      a *= 2.0;
-      b *= 2.0;
-    }
-
-    //sets powers according to compensation
+    //set linear translate buffer
     linTransBuffer.leftFront = a;
-    //globalPow[0] = 0.1 * BOOOOOST * a;
     linTransBuffer.rightFront = b;
-    //globalPow[1] = 0.1 * BOOOOOST * b;
     linTransBuffer.leftRear = b;
-    //globalPow[3] = 0.1 * BOOOOOST * b;
     linTransBuffer.rightRear = a;
-    //globalPow[2] = 0.1 * BOOOOOST * a;
   }
-  public void moveLinTrans(double rx, double ry) {
-    moveLinTrans(rx, ry, false);
+  public void linearTrans(final Vector vect) {
+    linearTrans(vect.x, vect.y);
   }
 
   //linear translate, but relative to certain robot angle
-  private double robotCapturedAngle = 0;
+  /*private double robotCapturedAngle = 0;
   public void captureRobotAngle() {
     //
   }
@@ -105,6 +66,14 @@ public class Move extends MoveCore {
     //length = sqrt(rx^2 + ry^2)
     //resultantAngle = atan2(ry, rx)
     //newAngle = resultantAngle + angleOffset
+  }
+  */
+
+  public void linTransRel(final double rx, final double ry) {
+    //
+  }
+  public void linTransRel(final Vector vect) {
+    linTransRel(vect.x, vect.y);
   }
 
   //rotational drive (drive robot in a circle around a center point)
@@ -127,8 +96,8 @@ public class Move extends MoveCore {
       y = 1;
     }
 
-    moveRotate(deviation, true);
-    moveLinTrans(x * centerSpeed, y * centerSpeed);
+    rotate(deviation, true);
+    linearTrans(x * centerSpeed, y * centerSpeed);
     syncMotors();
   }
 
@@ -170,7 +139,7 @@ public class Move extends MoveCore {
       double deltaX = rotTransRadius * rotTransSpeed * -Math.sin(rotTransSpeed * time + rotTransPhase);
       double deltaY = rotTransRadius * rotTransSpeed * Math.cos(rotTransSpeed * time + rotTransPhase);
 
-      moveLinTrans(deltaX * motorConversionRate, deltaY * motorConversionRate);
+      linearTrans(deltaX * motorConversionRate, deltaY * motorConversionRate);
     }
   }
 

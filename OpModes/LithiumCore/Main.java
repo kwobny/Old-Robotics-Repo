@@ -30,7 +30,7 @@ public class Main {
     //SUB OBJECT INITIALIZATION
     this.mhw = mhw;
 
-    move.initialize(mhw, rps, new LoopNotifier());
+    move.initialize(mhw, rps, wait, new LoopNotifier());
 
     rps.initialize(mhw, move);
 

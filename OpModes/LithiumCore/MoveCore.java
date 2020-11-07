@@ -10,11 +10,10 @@ class MoveCore {
   
   public double motorConversionRate = 0; //the rate of powerOutput/velocity (in centimeters/second)
 
-  LoopNotifier SFSetNotifier; //default access
-
   //RESOURCE OBJECTS
   protected RPS rpss;
   protected MadHardware mhw;
+  LoopNotifier SFSetNotifier; //default access
 
   //START MOTOR COMMANDS
 
