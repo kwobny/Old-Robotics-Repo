@@ -11,9 +11,13 @@ public class BoundedElem {
 
   BindingFullPile<?> currentPile;
 
-  //a utility method accessible to any subclass
+  //Utility methods accessible to any subclass
   protected boolean getIsInPile() {
     return isInPile;
+  }
+
+  protected BindingFullPile<?> getOwningPile() {
+    return currentPile;
   }
   
 }

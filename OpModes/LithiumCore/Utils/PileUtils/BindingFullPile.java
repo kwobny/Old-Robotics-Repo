@@ -12,7 +12,7 @@ import java.util.*;
 //All elements are iterated in the same order that they are added in.
 //This type of pile can only work with BoundedElem and its subclasses.
 //This pile uses an arraylist, so nothing fancy is going on.
-public class BindingFullPile<T extends BoundedElem> extends SimplePile<T> implements FullPile {
+public class BindingFullPile<T extends BoundedElem> extends SimplePile<T> implements FullPile<T>, DPPile<T> {
 
   @Override
   public void add(T elem) {
@@ -43,6 +43,11 @@ public class BindingFullPile<T extends BoundedElem> extends SimplePile<T> implem
     elem.isInPile = false;
 
     elem.needsRemoving = true;
+  }
+
+  @Override
+  public boolean has(final T elem) {
+    return elem.currentPile == this && elem.isInPile;
   }
 
   @Override

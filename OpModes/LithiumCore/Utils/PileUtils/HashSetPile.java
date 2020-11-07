@@ -9,7 +9,7 @@ import java.util.*;
 //You cannot add the same thing more than twice to the pile.
 //Elements are not iterated in the same order as they were added.
 //This pile uses a hash set internally.
-public class HashSetPile<T> implements FullPile<T> {
+public class HashSetPile<T> implements FullPile<T>, DPPile<T> {
 
   private HashSet<T> elemSet = new HashSet<>();
 
@@ -27,6 +27,11 @@ public class HashSetPile<T> implements FullPile<T> {
       throw new RuntimeException("You cannot remove an element from a hash set pile that has not been added.");
     }
     elemSet.remove(elem);
+  }
+
+  @Override
+  public boolean has(final T elem) {
+    return elemSet.has(elem);
   }
 
   @Override
