@@ -112,6 +112,11 @@ public class WaitCore {
   public CancellableCallback removeLoopCallback(final CancellableCallback callback) {
     loopCallbackPile.remove(callback);
   }
+  //Loop Callback is running
+  //returns true if the supplied callback is currently running
+  public boolean LCIsRunning(final CancellableCallback callback) {
+    return loopCallbackPile.has(callback);
+  }
 
   //the static callbacks are only meant to be used by the systems, not by the user.
   private Callback[] staticLoopCallbacks;
@@ -154,6 +159,10 @@ public class WaitCore {
   }
   public void removeInterval(final WaitInterval interv) {
     intervalPile.remove(interv);
+  }
+  //returns true if the supplied interval is currently running
+  public boolean IntervalIsRunning(final WaitInterval interval) {
+    return intervalPile.has(interval);
   }
 
   private WaitInterval[] staticIntervals;
