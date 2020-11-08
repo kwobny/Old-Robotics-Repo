@@ -128,7 +128,7 @@ public class WaitCore {
   }
 
   //cancellable callback consumer
-  private static final Consumer<CancellableCallback> CCConsumer = new Consumer<>() {
+  public static final Consumer<CancellableCallback> CCConsumer = new Consumer<>() {
     @Override
     public void run(final CancellableCallback op) {
       op.callback.run();

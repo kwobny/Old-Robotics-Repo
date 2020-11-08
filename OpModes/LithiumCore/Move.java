@@ -10,11 +10,11 @@ public class Move extends MoveCore {
 
   Move() {} //default access constructor, cannot be instantiated outside of package
 
-  void initialize(final MadHardware hmw, final RPS rps, final WaitCore wait, final LoopNotifier SFSetNotifier) { //default access
+  void initialize(final MadHardware hmw, final RPS rps, final WaitCore wait, final LoopNotifier motorSyncNotifier) { //default access
     mhw = hmw;
     rpss = rps;
     this.wait = wait;
-    this.SFSetNotifier = SFSetNotifier;
+    this.motorSyncNotifier = motorSyncNotifier;
   }
 
   //START MOVE COMMANDS

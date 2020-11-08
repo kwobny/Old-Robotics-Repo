@@ -15,7 +15,7 @@ class MoveCore {
   //RESOURCE OBJECTS
   protected RPS rpss;
   protected MadHardware mhw;
-  LoopNotifier SFSetNotifier; //default access
+  LoopNotifier motorSyncNotifier; //default access
 
   //START MOTOR COMMANDS
 
@@ -64,7 +64,7 @@ class MoveCore {
     @Override
     public void set(double val) {
       speedFactor = val * refSpeedFactor;
-      SFSetNotifier.setHasRun();
+      motorSyncNotifier.setHasRun();
     }
 
     //wait class so that the motor buffer speed factor can be waited upon (wow, a THIRD ORDER class!!!!)
