@@ -10,6 +10,7 @@ import java.util.*;
 //This is the recommended pile type if you don't care that the data type is bound and if you don't care that this class can only work with Bounded Elems.
 //You cannot add the same thing more than twice to the pile.
 //All elements are iterated in the same order that they are added in.
+//You can modify (add to and remove from) the pile while iterating through it.
 //This type of pile can only work with BoundedElem and its subclasses.
 //This pile uses an arraylist, so nothing fancy is going on.
 public class BindingFullPile<T extends BoundedElem> extends SimplePile<T> implements FullPile<T>, DPPile<T> {
@@ -56,20 +57,17 @@ public class BindingFullPile<T extends BoundedElem> extends SimplePile<T> implem
     Iterator<T> iter = elemArr.iterator();
     while (iter.hasNext()) {
       final T elem = iter.next();
-      if (!elem.needsRemoving) {
+
+      //remove element if it is marked for removal. Otherwise, run it with consumer.
+      if (elem.needsRemoving) {
+        iter.remove();
+        elem.needsRemoving = false;
+      }
+      else {
         //run the operation code. In here, the is active properties can be set to true/false/whatever
         consumer.run(elem);
       }
-    }
 
-    //scan and delete
-    iter = elemArr.iterator();
-    while (iter.hasNext()) {
-      final T elem = iter.next();
-      if (elem.needsRemoving) {
-        elem.needsRemoving = false;
-        iter.remove();
-      }
     }
 
   }

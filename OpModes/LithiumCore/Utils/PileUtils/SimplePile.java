@@ -8,6 +8,7 @@ import java.util.*;
 //This class is basically a random pile of stuff.
 //You can't single out a specific thing or delete anything.
 //You can only add to the pile and go through everything at once.
+//You can add to the pile while iterating.
 //You can add the same thing to this pile twice.
 public class SimplePile<T> implements AddablePile<T> {
 
