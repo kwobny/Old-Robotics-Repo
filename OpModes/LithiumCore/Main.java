@@ -45,7 +45,7 @@ public class Main {
     Time.Interval lowMaint = time.getInterval(constants.config.lowFreqMaintInterval, new Callback() {
       @Override
       public void run() {
-        move._motorCali();
+        //move._motorCali();
       }
     });
 
