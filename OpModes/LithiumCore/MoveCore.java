@@ -5,10 +5,12 @@ import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SCS_Package.*;
 import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Wait_Package.*;
 
 class MoveCore {
+  /*
   //SETTING VARIABLES
   protected final double turnThreshold = 1.0; //the amount of rotation in degrees where the robot is considered to have turned.
   
   public double motorConversionRate = 0; //the rate of powerOutput/velocity (in centimeters/second)
+  */
 
   //RESOURCE OBJECTS
   protected RPS rpss;

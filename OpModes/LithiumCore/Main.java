@@ -4,13 +4,14 @@ import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
 import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SCS_Package.*;
 import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Wait_Package.*;
 import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.Callback;
+import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SharedState.*;
 
 public class Main {
-  //SETTING VARIABLES
-  public final double lowFreqMaintInterval = 0.2; //period in which low frequency periodic functions like motor cali run (in seconds)
-  public final double highFreqMaintInterval = 0.05; //period in which very high frequency accurate functions run (in seconds)
 
   // RESOURCE OBJECTS
+
+  //constants object
+  public final ConstantsContainer constants;
 
   //mad hardware
   public MadHardware mhw;
@@ -26,9 +27,10 @@ public class Main {
 
   //CONSTRUCTOR
 
-  public Main(MadHardware mhw) {
+  public Main(final MadHardware mhw, final ConstantsContainer constants) {
     //SUB OBJECT INITIALIZATION
     this.mhw = mhw;
+    this.constants = constants;
 
     move.initialize(mhw, rps, wait, new LoopNotifier());
 
@@ -40,14 +42,14 @@ public class Main {
   //this function is called to start the whole system
   public void start() {
     //Setup system intervals
-    Time.Interval lowMaint = time.getInterval(lowFreqMaintInterval, new Callback() {
+    Time.Interval lowMaint = time.getInterval(constants.config.lowFreqMaintInterval, new Callback() {
       @Override
       public void run() {
         move._motorCali();
       }
     });
 
-    Time.Interval highMaint = time.getInterval(highFreqMaintInterval, new Callback() {
+    Time.Interval highMaint = time.getInterval(constants.config.highFreqMaintInterval, new Callback() {
       @Override
       public void run() {
         move.SFSetNotifier.run();

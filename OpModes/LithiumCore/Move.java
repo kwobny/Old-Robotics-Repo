@@ -76,6 +76,7 @@ public class Move extends MoveCore {
     linTransRel(vect.x, vect.y);
   }
 
+  /*
   //rotational drive (drive robot in a circle around a center point)
 
   //2 wheel sim version
@@ -178,6 +179,7 @@ public class Move extends MoveCore {
     }
     moveRotTransRadius(radius, angle, speed);
   }
+  */
 
   //END MOVE COMMANDS
 }
