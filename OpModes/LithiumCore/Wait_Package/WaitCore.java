@@ -85,13 +85,10 @@ public class WaitCore {
     @Override
     public void run(final WaitTask op) {
       if (!op._isRunning()) {
-        remove(op);
+        timeoutPile.markAsRemove();
         return;
       }
       op._run();
-      if (!op._isRunning()) {
-        remove(op);
-      }
     }
   };
 

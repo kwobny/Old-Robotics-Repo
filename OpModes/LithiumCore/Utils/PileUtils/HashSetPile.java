@@ -55,7 +55,6 @@ public class HashSetPile<T> implements FullPile<T>, DPPile<T> {
   @Override
   public void forAll(final Consumer<T> consumer) {
     isIterating = true;
-    removeCurrElem = false;
     Iterator<T> iter = elemSet.iterator();
     while (iter.hasNext()) {
       final T elem = iter.next();

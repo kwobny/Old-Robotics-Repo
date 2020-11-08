@@ -46,6 +46,17 @@ public class BindingFullPile<T extends BoundedElem> extends SimplePile<T> implem
     elem.needsRemoving = true;
   }
 
+  private boolean isIterating = false;
+  private boolean removeCurrElem = false;
+
+  //used to remove the current element while iterating through the pile.
+  public void markAsRemove() {
+    if (!isIterating) {
+      throw new RuntimeException("You cannot use the mark as remove function when the pile is not being iterated.");
+    }
+    removeCurrElem = true;
+  }
+
   @Override
   public boolean has(final T elem) {
     return elem.currentPile == this && elem.isInPile;
@@ -53,6 +64,7 @@ public class BindingFullPile<T extends BoundedElem> extends SimplePile<T> implem
 
   @Override
   public void forAll(final Consumer<T> consumer) {
+    isIterating = true;
 
     Iterator<T> iter = elemArr.iterator();
     while (iter.hasNext()) {
@@ -66,9 +78,16 @@ public class BindingFullPile<T extends BoundedElem> extends SimplePile<T> implem
       else {
         //run the operation code. In here, the is active properties can be set to true/false/whatever
         consumer.run(elem);
+        if (removeCurrElem) {
+          iter.remove();
+          elem.isInPile = false;
+          removeCurrElem = false;
+        }
       }
 
     }
+
+    isIterating = false;
 
   }
 
