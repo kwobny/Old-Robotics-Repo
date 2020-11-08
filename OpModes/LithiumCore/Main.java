@@ -72,11 +72,21 @@ public class Main {
       }
     });
 
-    wait._setStaticIntervals(lowMaintCallback.calibrate(), highMaintCallback.calibrate());
+    WaitInterval[] staticIntervals = new WaitInterval[]{
+      lowMaintCallback.calibrate(),
+      highMaintCallback.calibrate()
+    };
+    for (WaitInterval i : staticIntervals)
+      wait.addInterval(i);
 
     //Setup the loop callbacks for the (new) loop notifiers
-    if (Constants.turnOnOPLP)
-      wait._setStaticCallbacks(time.loop_notifer);
+    if (Constants.turnOnOPLP) {
+      CancellableCallback[] staticLoopCallbacks = new CancellableCallback[]{
+        time.loop_notifier
+      };
+      for (CancellableCallback i : staticLoopCallbacks)
+        wait.addLoopCallback(i);
+    }
   }
 
   // this function is called at the end of the program.

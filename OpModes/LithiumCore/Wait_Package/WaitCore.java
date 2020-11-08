@@ -118,15 +118,6 @@ public class WaitCore {
     return loopCallbackPile.has(callback);
   }
 
-  //the static callbacks are only meant to be used by the systems, not by the user.
-  private Callback[] staticLoopCallbacks;
-
-  //this function is not meant to be used by the user, only used by the motion library.
-  //It does not matter if some callbacks are null, or if the whole callback array is null.
-  public void _setStaticCallbacks(final Callback ...callbacks) {
-    staticLoopCallbacks = callbacks;
-  }
-
   //cancellable callback consumer
   public static final Consumer<CancellableCallback> CCConsumer = new Consumer<>() {
     @Override
@@ -136,15 +127,7 @@ public class WaitCore {
   };
 
   private void runLoopCallbacks() {
-    //run the static callbacks, and then the regular callbacks
-    if (staticLoopCallbacks != null) {
-      for (Callback i : staticLoopCallbacks) {
-        if (i != null)
-          i.run();
-      }
-    }
-
-    //now run the main callbacks
+    //running callbacks
     loopCallbackPile.forAll(CCConsumer);
   }
 
@@ -165,14 +148,6 @@ public class WaitCore {
     return intervalPile.has(interval);
   }
 
-  private WaitInterval[] staticIntervals;
-
-  //This function should not be used outside of motion library.
-  //It does not matter if some intervals are null, or if the whole interval array is null.
-  public void _setStaticIntervals(final WaitInterval ...intervs) {
-    staticIntervals = intervs;
-  }
-
   private static final Consumer<WaitInterval> intervalConsumer = new Consumer<>() {
     @Override
     public void run(final WaitInterval op) {
@@ -181,15 +156,7 @@ public class WaitCore {
   };
 
   private void runIntervals() {
-    //run the static intervals first because they are the system intervals
-    if (staticIntervals != null) {
-      for (WaitInterval i : staticIntervals) {
-        if (i != null)
-          i.run();
-      }
-    }
-
-    //then run the normal intervals
+    //running intervals
     intervalPile.forAll(intervalConsumer);
   }
 
