@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore;
+package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.AdvancedStuff;
 
 import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.MathFunctions.*;
 
