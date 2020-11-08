@@ -25,7 +25,7 @@ public class Time implements InputSource {
   private double saved_time = 0.0;
 
   public double getTime() {
-    if (Constants.turnOnOPLP) {
+    if (!Constants.turnOnOPLP) {
       return getRawTime();
     }
     if (!loop_notifier.hasRunYet()) {
