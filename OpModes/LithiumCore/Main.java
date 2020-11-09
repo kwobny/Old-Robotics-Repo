@@ -42,11 +42,11 @@ public class Main {
 
     //SUB OBJECT INITIALIZATION
 
-    move.initialize(mhw, rps, wait, new LoopNotifier());
+    move.initialize(mhw, rps, wait, constants, new LoopNotifier());
 
-    rps.initialize(mhw, move);
+    rps.initialize(mhw, move, constants);
 
-    time = new Time(mhw);
+    time = new Time(mhw, constants);
   }
 
   //this function is called to start the whole system
@@ -80,7 +80,7 @@ public class Main {
       wait.addInterval(i);
 
     //Setup the loop callbacks for the (new) loop notifiers
-    if (Constants.turnOnOPLP) {
+    if (constants.config.turnOnOPLP) {
       CancellableCallback[] staticLoopCallbacks = new CancellableCallback[]{
         time.loop_notifier
       };

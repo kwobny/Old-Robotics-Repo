@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.OpModes.LithiumCore;
 import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.Vector;
 import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
 
+import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SharedState.*;
+
 public class Move extends MoveCore {
 
   //UTILITY OBJECTS
@@ -10,11 +12,12 @@ public class Move extends MoveCore {
 
   Move() {} //default access constructor, cannot be instantiated outside of package
 
-  void initialize(final MadHardware hmw, final RPS rps, final WaitCore wait, final LoopNotifier motorSyncNotifier) { //default access
+  void initialize(final MadHardware hmw, final RPS rps, final WaitCore wait, final ConstantsContainer constants, final LoopNotifier motorSyncNotifier) { //default access
     mhw = hmw;
     rpss = rps;
     this.wait = wait;
     this.motorSyncNotifier = motorSyncNotifier;
+    this.constants = constants;
   }
 
   //START MOVE COMMANDS
@@ -22,7 +25,7 @@ public class Move extends MoveCore {
   //rotate robot
   //power is the power of the left front wheel (or left wheel for two wheel sim)
   //in two wheel sim mode, the robot is abstracted as a machine with two wheels, which are the robot's width distance apart.
-  private final double ROTATE_CONSTANT = (Constants.robotWidth + Constants.robotLength)/Constants.robotWidth;
+  private final double ROTATE_CONSTANT = (constants.robotParameters.robotWidth + constants.robotParameters.robotLength)/constants.robotParameters.robotWidth;
   public void rotate(double power, boolean use2WheeledSimulation) {
 
     if (use2WheeledSimulation) {

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.OpModes.LithiumCore;
 import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
 import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SCS_Package.*;
 import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Wait_Package.*;
+import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SharedState.*;
 
 public class RPS {
   //NOTES
@@ -15,12 +16,14 @@ public class RPS {
   //RESOURCE OBJECTS
   private MadHardware mhw;
   private Move moveObj;
+  private ConstantsContainer constants;
 
   RPS() {} //cannot be instantiated outside of package
 
-  public void initialize(MadHardware hmw, Move obj) {
+  public void initialize(MadHardware hmw, Move obj, final ConstantsContainer constants) {
     mhw = hmw;
     moveObj = obj;
+    this.constants = constants;
   }
 
   //robot position and distance tracking system. All distance values in centimeters
@@ -44,7 +47,7 @@ public class RPS {
     wheelPosChange[3] = mhw.rightBack.getCurrentPosition() - lastWheelPos[3];
 
     for (int i = 0; i < 4; i++) {
-      wheelPosChange[i] *= Constants.distancePerTick;
+      wheelPosChange[i] *= constants.robotParameters.distancePerTick;
     }
 
     //isolate components
@@ -60,7 +63,7 @@ public class RPS {
     double dx = (a - b)/2.0;
     double dy = (a + b)/2.0;
     double dHyp = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-    double dAngle = (2 * r / Constants.robotWidth) * (180.0/Math.PI);
+    double dAngle = (2 * r / constants.robotParameters.robotWidth) * (180.0/Math.PI);
 
     return new double[]{dx, dy, dHyp, dAngle};
   }
@@ -78,12 +81,12 @@ public class RPS {
   //for everytime state variables are changed, save current position has to be called once and once only. the second parameter is a safeguard to make sure that happens.
   public void setAngle(final double angle, final boolean saveState) {
     if (saveState) saveCurrentPosition();
-    syncAngle = angle % Constants.totalAngleMeasure;
+    syncAngle = angle % constants.robotParameters.totalAngleMeasure;
   }
   //this sets the current angle to its lowest equivalent. Should be called every so often to avoid angle overflow.
   public void setAToLE(final boolean saveState) {
     if (saveState) saveCurrentPosition();
-    syncAngle = syncAngle % Constants.totalAngleMeasure;
+    syncAngle = syncAngle % constants.robotParameters.totalAngleMeasure;
   }
 
   //this function returns an array with the total distance (not displacement) traveled by the robot. index 0 is total distance, 1 is x distance, 2 is y distance

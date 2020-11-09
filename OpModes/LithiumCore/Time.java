@@ -4,6 +4,7 @@ import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
 import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SCS_Package.*;
 import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Wait_Package.*;
 import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.Callback;
+import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SharedState.*;
 
 //this class manages everything related to time
 
@@ -12,9 +13,12 @@ public class Time implements InputSource {
   private MadHardware mhw;
   LoopNotifer loop_notifier;
 
-  Time(MadHardware mhw) {
+  private final boolean turnOnOPLP;
+
+  Time(MadHardware mhw, final ConstantsContainer constants) {
     this.mhw = mhw;
-    if (Constants.turnOnOPLP)
+    this.turnOnOPLP = constants.config.turnOnOPLP;
+    if (turnOnOPLP)
       loop_notifier = new LoopNotifer();
   }
 
@@ -25,7 +29,7 @@ public class Time implements InputSource {
   private double saved_time = 0.0;
 
   public double getTime() {
-    if (!Constants.turnOnOPLP) {
+    if (!turnOnOPLP) {
       return getRawTime();
     }
     if (!loop_notifier.hasRunYet()) {

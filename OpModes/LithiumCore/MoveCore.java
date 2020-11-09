@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.OpModes.LithiumCore;
 import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
 import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SCS_Package.*;
 import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Wait_Package.*;
+import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SharedState.*;
 
 class MoveCore {
   /*
@@ -16,6 +17,8 @@ class MoveCore {
   protected RPS rpss;
   protected MadHardware mhw;
   LoopNotifier motorSyncNotifier; //default access
+
+  protected ConstantsContainer constants;
 
   //START MOTOR COMMANDS
 
@@ -112,7 +115,7 @@ class MoveCore {
   public UserBuffer userBuffer = new UserBuffer();
 
   //universal buffer. Is the virtual, ideal robot wheel power state.
-  public MotorBufferClass universalBuffer = new MotorBufferClass(Constants.motor_down_scale);
+  public MotorBufferClass universalBuffer = new MotorBufferClass(constants.config.motor_down_scale);
 
   //the motor buffer array, used to iterate through individual motors. Does not include universal buffer.
   private MotorBufferClass[] bufferArray = new MotorBufferClass[]{rotateBuffer, linTransBuffer, userBuffer};
