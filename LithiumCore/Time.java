@@ -12,6 +12,10 @@ public class Time implements InputSource {
 
   private MadHardware mhw;
   LoopNotifer loop_notifier;
+  private ElapsedTime runtime = new ElapsedTime();
+  {
+    runtime.reset();
+  }
 
   private final boolean turnOnOPLP;
 
@@ -23,7 +27,7 @@ public class Time implements InputSource {
   }
 
   public double getRawTime() {
-    return mhw.runtime.time();
+    return runtime.getTime();
   }
 
   private double saved_time = 0.0;

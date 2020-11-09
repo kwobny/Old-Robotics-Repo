@@ -43,8 +43,8 @@ public class RPS {
     //get change in wheel position
     wheelPosChange[0] = mhw.leftFront.getCurrentPosition() - lastWheelPos[0];
     wheelPosChange[1] = mhw.rightFront.getCurrentPosition() - lastWheelPos[1];
-    wheelPosChange[2] = mhw.leftBack.getCurrentPosition() - lastWheelPos[2];
-    wheelPosChange[3] = mhw.rightBack.getCurrentPosition() - lastWheelPos[3];
+    wheelPosChange[2] = mhw.leftRear.getCurrentPosition() - lastWheelPos[2];
+    wheelPosChange[3] = mhw.rightRear.getCurrentPosition() - lastWheelPos[3];
 
     for (int i = 0; i < 4; i++) {
       wheelPosChange[i] *= constants.robotParameters.distancePerTick;
@@ -171,8 +171,8 @@ public class RPS {
     //set last wheel ticks to the current one.
     lastWheelPos[0] = mhw.leftFront.getCurrentPosition();
     lastWheelPos[1] = mhw.rightFront.getCurrentPosition();
-    lastWheelPos[2] = mhw.leftBack.getCurrentPosition();
-    lastWheelPos[3] = mhw.rightBack.getCurrentPosition();
+    lastWheelPos[2] = mhw.leftRear.getCurrentPosition();
+    lastWheelPos[3] = mhw.rightRear.getCurrentPosition();
   }
 
 
