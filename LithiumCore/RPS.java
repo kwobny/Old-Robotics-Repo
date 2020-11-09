@@ -81,12 +81,12 @@ public class RPS {
   //for everytime state variables are changed, save current position has to be called once and once only. the second parameter is a safeguard to make sure that happens.
   public void setAngle(final double angle, final boolean saveState) {
     if (saveState) saveCurrentPosition();
-    syncAngle = angle % constants.robotParameters.totalAngleMeasure;
+    syncAngle = angle % constants.config.totalAngleMeasure;
   }
   //this sets the current angle to its lowest equivalent. Should be called every so often to avoid angle overflow.
   public void setAToLE(final boolean saveState) {
     if (saveState) saveCurrentPosition();
-    syncAngle = syncAngle % constants.robotParameters.totalAngleMeasure;
+    syncAngle = syncAngle % constants.config.totalAngleMeasure;
   }
 
   //this function returns an array with the total distance (not displacement) traveled by the robot. index 0 is total distance, 1 is x distance, 2 is y distance
@@ -117,6 +117,8 @@ public class RPS {
   private double[] tempDisplacement = new double[2];
   public double[] getPosition(double[] displArray) {
     double originalAngle = syncAngle + Math.atan2(displArray[0], displArray[1]) * (180/Math.PI);
+    //NOT DONE
+    return new double[]{};
   }
   public double[] getPosition() {
     return getPosition(coreDistFunc());
@@ -199,7 +201,7 @@ public class RPS {
   private class PositionInputClass implements InputSource {
 
     private final int coordinateNum;
-    PositionInput(final int coordinateNum) {
+    PositionInputClass(final int coordinateNum) {
       this.coordinateNum = coordinateNum;
     }
     
@@ -234,7 +236,7 @@ public class RPS {
       this(distance, true);
     }
 
-    @override
+    @Override
     public boolean pollCondition() {
       return getDistanceTraveled()[0] > target_distance;
     }

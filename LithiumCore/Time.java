@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SharedState.*;
 public class Time implements InputSource {
 
   private MadHardware mhw;
-  LoopNotifer loop_notifier;
+  LoopNotifier loop_notifier;
   private ElapsedTime runtime = new ElapsedTime();
   {
     runtime.reset();
@@ -23,11 +23,11 @@ public class Time implements InputSource {
     this.mhw = mhw;
     this.turnOnOPLP = constants.config.turnOnOPLP;
     if (turnOnOPLP)
-      loop_notifier = new LoopNotifer();
+      loop_notifier = new LoopNotifier();
   }
 
   public double getRawTime() {
-    return runtime.getTime();
+    return runtime.time();
   }
 
   private double saved_time = 0.0;

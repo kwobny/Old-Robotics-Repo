@@ -81,10 +81,10 @@ public class Main {
 
     //Setup the loop callbacks for the (new) loop notifiers
     if (constants.config.turnOnOPLP) {
-      CancellableCallback[] staticLoopCallbacks = new CancellableCallback[]{
+      Callback[] staticLoopCallbacks = new Callback[]{
         time.loop_notifier
       };
-      for (CancellableCallback i : staticLoopCallbacks)
+      for (Callback i : staticLoopCallbacks)
         wait.addLoopCallback(i);
     }
   }

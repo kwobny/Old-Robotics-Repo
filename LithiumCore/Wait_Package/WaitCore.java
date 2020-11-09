@@ -8,7 +8,7 @@ public class WaitCore {
 
   //RESOURCE OBJECTS
 
-  Waitcore() { //cannot be instantiated outside of package
+  public WaitCore() { //cannot be instantiated outside of package
     //
   }
 
@@ -81,7 +81,7 @@ public class WaitCore {
     timeoutPile.remove(task);
   }
 
-  private static final Consumer<WaitTask> waitTaskConsumer = new Consumer<>() {
+  private final Consumer<WaitTask> waitTaskConsumer = new Consumer<WaitTask>() {
     @Override
     public void run(final WaitTask op) {
       if (!op._isRunning()) {
@@ -108,6 +108,7 @@ public class WaitCore {
   }
   public CancellableCallback removeLoopCallback(final CancellableCallback callback) {
     loopCallbackPile.remove(callback);
+    return callback;
   }
   //Loop Callback is running
   //returns true if the supplied callback is currently running
@@ -116,7 +117,7 @@ public class WaitCore {
   }
 
   //cancellable callback consumer
-  public static final Consumer<CancellableCallback> CCConsumer = new Consumer<>() {
+  public static final Consumer<CancellableCallback> CCConsumer = new Consumer<CancellableCallback>() {
     @Override
     public void run(final CancellableCallback op) {
       op.callback.run();
@@ -145,7 +146,7 @@ public class WaitCore {
     return intervalPile.has(interval);
   }
 
-  private static final Consumer<WaitInterval> intervalConsumer = new Consumer<>() {
+  private static final Consumer<WaitInterval> intervalConsumer = new Consumer<WaitInterval>() {
     @Override
     public void run(final WaitInterval op) {
       op.run();

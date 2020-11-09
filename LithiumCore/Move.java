@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes.LithiumCore;
 
 import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.Vector;
+import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Wait_Package.*;
 import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
 
 import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SharedState.*;
@@ -39,7 +40,7 @@ public class Move extends MoveCore {
   }
 
   //linear translate
-  public void linearTrans(final double rx, final double ry) {
+  public void translate(final double rx, final double ry) {
 
     //calculating motor powers
     double a = rx + ry;
@@ -51,8 +52,8 @@ public class Move extends MoveCore {
     linTransBuffer.leftRear = b;
     linTransBuffer.rightRear = a;
   }
-  public void linearTrans(final Vector vect) {
-    linearTrans(vect.x, vect.y);
+  public void translate(final Vector vect) {
+    translate(vect.x, vect.y);
   }
 
   //linear translate, but relative to certain robot angle
@@ -101,7 +102,7 @@ public class Move extends MoveCore {
     }
 
     rotate(deviation, true);
-    linearTrans(x * centerSpeed, y * centerSpeed);
+    translate(x * centerSpeed, y * centerSpeed);
     syncMotors();
   }
 
@@ -143,7 +144,7 @@ public class Move extends MoveCore {
       double deltaX = rotTransRadius * rotTransSpeed * -Math.sin(rotTransSpeed * time + rotTransPhase);
       double deltaY = rotTransRadius * rotTransSpeed * Math.cos(rotTransSpeed * time + rotTransPhase);
 
-      linearTrans(deltaX * motorConversionRate, deltaY * motorConversionRate);
+      translate(deltaX * motorConversionRate, deltaY * motorConversionRate);
     }
   }
 

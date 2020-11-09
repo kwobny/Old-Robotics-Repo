@@ -86,7 +86,7 @@ class MoveCore {
     }
     
   }
-  public static class UserBuffer extends MotorBufferClass {
+  public class UserBuffer extends MotorBufferClass {
     UserBuffer(final double refFactor) { //cannot be instantiated outside of package
       super(refFactor);
     }
