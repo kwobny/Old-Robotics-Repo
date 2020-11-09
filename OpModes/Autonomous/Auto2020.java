@@ -1,16 +1,15 @@
 package org.firstinspires.ftc.teamcode.OpModes.Autonomous;
 
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.*;
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SCS_Package.*;
+import org.firstinspires.ftc.teamcode.LithiumCore.*;
+import org.firstinspires.ftc.teamcode.LithiumCore.SharedState.*;
 
-@Autonomous(name = "hi kian", group = "Autos")   // How opmode is displayed on phones
+@Autonomous(name = "Autonomous", group = "Autos")   // How opmode is displayed on phones
 public class Auto extends LinearOpMode
 {
 
-
     // Initializing the motor-control class.
     public static MadHardware mhw = new MadHardware();
-    public static ElapsedTime runtime = new ElapsedTime();
+    //public static ElapsedTime runtime = new ElapsedTime();
 
     // This method is run once when the "INIT" button is pressed on the phone.
     @Override
@@ -18,9 +17,9 @@ public class Auto extends LinearOpMode
     {
 
         {
-          mhw.flywheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-
+          //mhw.flywheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         }
+        /*
         //This code is for when you are starting on the left line
         final Main robotLib = new Main(mhw);
 
@@ -46,5 +45,30 @@ public class Auto extends LinearOpMode
 
         //position 3:
         robotLib.move.linTransRel();
+        */
+
+        final MadHardware mhw = new MadHardware();
+
+        final ConstantsContainer constants = new ConstantsContainer() {
+          @Override
+          protected void _initialize() {
+            this.robotParameters = new RobotParameters() {
+              @Override
+              protected void _initialize() {
+                robotWidth = ;
+                robotLength = ;
+              }
+            };
+          }
+        };
+
+        final Main robotLib = new Main(mhw, constants);
+
+        robotLib.move.translate(0, 1);
+        robotLib.move.syncMotors();
+
+        robotLib.wait.simpleWait(robotLib.time.getWait(2));
+
+        robotLib.move.clearMotors();
     }
 } // End of class

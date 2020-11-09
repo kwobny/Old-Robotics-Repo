@@ -6,7 +6,18 @@ public class ConstantsContainer extends ConstantsBaseClass {
   public RobotParameters robotParameters;
   
   public ConstantsContainer() {
-    //
+    if (config == null) {
+      config = new RobotConfig(){
+        @Override
+        protected void _initialize() {}
+      };
+    }
+    if (robotParameters == null) {
+      robotParameters = new RobotParameters() {
+        @Override
+        protected void _initialize() {}
+      };
+    }
   }
 
   @Override
