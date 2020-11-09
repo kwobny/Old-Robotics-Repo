@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SharedState;
 
-public abstract class RobotConfig extends ConstantsBaseClass {
+public class SystemConfig {
 
   //SYSTEM CONFIG
 
@@ -15,13 +15,5 @@ public abstract class RobotConfig extends ConstantsBaseClass {
   public double totalAngleMeasure = 360; //the number of angle units in a full circle
   public double defaultSectorSize = 90; //The default size of the sector for wait for displacement.
   public double motor_down_scale = 0.2; //specifies the universal buffer reference speed factor
-
-  //IMPLEMENTATION
-  public RobotConfig() {
-    //
-  }
-
-  @Override
-  protected abstract void _initialize();
 
 }

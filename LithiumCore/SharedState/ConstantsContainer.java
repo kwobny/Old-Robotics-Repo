@@ -1,26 +1,41 @@
 package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SharedState;
 
-public class ConstantsContainer extends ConstantsBaseClass {
+public class ConstantsContainer {
 
-  public RobotConfig config;
+  public SystemConfig config;
   public RobotParameters robotParameters;
-  
-  public ConstantsContainer() {
+
+  //This method is optional
+  public void defaultInitialize() {
     if (config == null) {
-      config = new RobotConfig(){
-        @Override
-        protected void _initialize() {}
-      };
+      config = new SystemConfig();
     }
     if (robotParameters == null) {
-      robotParameters = new RobotParameters() {
-        @Override
-        protected void _initialize() {}
-      };
+      robotParameters = new RobotParameters();
     }
   }
 
-  @Override
-  protected abstract void _initialize();
+}
+
+/*
+
+Two ways to define constants:
+1. Defining outside of class
+
+{CONSTANTS_CLASS} consts = new {CONSTANTS_CLASS}();
+
+consts.blahProp = blahVal;
+consts.blahProp2 = blahVal2;
+consts.moreInitialize();
+
+2. Define in a new class. Allows for easy reusability.
+
+public class {CONSTANTS_CLASS} extends {CONSTANTS_BASE} {
+
+  public {CONSTANTS_CLASS}() {
+    //define stuff
+  }
 
 }
+
+*/

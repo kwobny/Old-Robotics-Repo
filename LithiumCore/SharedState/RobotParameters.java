@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SharedState;
 
-public abstract class RobotParameters extends ConstantsBaseClass {
+public class RobotParameters {
   
   //CONSTANTS
 
@@ -15,14 +15,13 @@ public abstract class RobotParameters extends ConstantsBaseClass {
   public double robotDiagonalLen;
   public double distancePerTick; //how many centimeters wheel runs per wheel tick
 
-  public RobotParameters() {
+  //call this method after initializing all properties
+  //This method is mandatory
+  public void moreInitialize() {
     if (robotDiagonalLen != 0.0)
       robotDiagonalLen = Math.sqrt(robotWidth*robotWidth + robotLength*robotLength);
     if (distancePerTick != 0.0)
       distancePerTick = (Math.PI * wheelDiameter)/ticksPerRevolution;
   }
-
-  @Override
-  protected abstract void _initialize();
 
 }
