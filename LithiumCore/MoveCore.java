@@ -14,9 +14,8 @@ class MoveCore {
   */
 
   //RESOURCE OBJECTS
-  protected RPS rpss;
   protected MadHardware mhw;
-  LoopNotifier motorSyncNotifier; //default access
+  LoopNotifier motorSyncNotifier = new LoopNotifier(); //default access
   
   protected SystemConfig config;
   protected RobotParameters robotParams;

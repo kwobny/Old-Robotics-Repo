@@ -8,111 +8,183 @@ import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SharedState.*;
 public class RPS {
   //NOTES
   /*
-  1. When setting state, you need to explicitly call saveCurrentPosition, or have the second parameter of the first call to state setting function be true.
-  2. When you are measuring multiple quantities, it is helpful to call coreDistFunc explicitly, so that it is only called once and extra computation time is not wasted.
+  1. When setting state, you need to explicitly call saveVertex, or have the second parameter of the first call to state setting function be true.
+  2. When you are measuring multiple quantities, it is helpful to call updatePrimitiveState explicitly, so that it is only called once and extra computation time is not wasted.
   3: All functions that deal with translative motion are measured in whatever unit that the distance per tick constant is defined in (cm probably). All functions that deal with rotative motion are measured in the units defined in the total angle measure constant (degrees for now)
   */
 
   //RESOURCE OBJECTS
   private MadHardware mhw;
-  private Move moveObj;
-  private ConstantsContainer constants;
+
+  private SystemConfig config;
+  private RobotParameters robotParams;
+
+  CompoundCallback RPSLoopNotifiers; //default access
 
   RPS() {} //cannot be instantiated outside of package
 
-  public void initialize(MadHardware hmw, Move obj, final ConstantsContainer constants) {
+  public void initialize(MadHardware hmw, final ConstantsContainer constants) {
     mhw = hmw;
-    moveObj = obj;
-    this.constants = constants;
+
+    this.config = constants.config;
+    this.robotParams = constants.robotParameters;
+
+    if (config.turnOnOPLP) {
+      UPSNotifier = new LoopNotifier();
+      AngleNotifier = new LoopNotifier();
+
+      RPSLoopNotifiers = new CompoundCallback(
+        UPSNotifier,
+        AngleNotifier
+      );
+    }
   }
 
   //robot position and distance tracking system. All distance values in centimeters
 
-  //displacement and distance variables
-  private double[] syncDisplacement = {0.0, 0.0}; //0 index is x, 1 is y
-  private double[] syncDistance = new double[3]; //order is total distance, x distance, and y distance. positive x and y are in the right and up direction on the coordinate plane
-  private double syncAngle = 0.0; // in degrees, positive is clockwise, negative is counterclockwise. a direction of 0 indicates robot is facing upwards direction on coordinate plane
+  //VERTEX STATE
+  
+  //private double[] syncDisplacement = {0.0, 0.0}; //0 index is x, 1 is y
+  //private double[] syncDistance = new double[3]; //order is total distance, x distance, and y distance. positive x and y are in the right and up direction on the coordinate plane
+  private double vertexAngle = 0.0; // in degrees, positive is clockwise, negative is counterclockwise. a direction of 0 indicates robot is facing upwards direction on coordinate plane
+
+  //VARIABLES FOR PRIMITIVE STATE UPDATER
+
+  //update primitive state notifier
+  private final LoopNotifier UPSNotifier;
 
   //wheel position variables
   //left front, right front, left back, right back
   private int[] lastWheelPos = new int[4];
-  private double[] wheelPosChange = new double[4];
 
-  //get displacement from last sync position
-  public double[] coreDistFunc() {
-    //get change in wheel position
-    wheelPosChange[0] = mhw.leftFront.getCurrentPosition() - lastWheelPos[0];
-    wheelPosChange[1] = mhw.rightFront.getCurrentPosition() - lastWheelPos[1];
-    wheelPosChange[2] = mhw.leftRear.getCurrentPosition() - lastWheelPos[2];
-    wheelPosChange[3] = mhw.rightRear.getCurrentPosition() - lastWheelPos[3];
+  //primitive state compared to reference vertex
+  //a is translational value of LF and RB wheels, b is translational value of RF and LB wheels, r is rotational value of left wheels.
+  private double a, b, r;
 
-    for (int i = 0; i < 4; i++) {
-      wheelPosChange[i] *= constants.robotParameters.distancePerTick;
+  //get primitive displacement info from last sync position
+  private void updatePrimitiveState() {
+    if (config.turnOnOPLP) {
+      if (UPSNotifier.hasRunYet()) {
+        return;
+      }
+      else {
+        UPSNotifier.setHasRun();
+      }
     }
 
+    //get change in wheel position
+
+    double deltaLeftFront = (mhw.leftFront.getCurrentPosition() - lastWheelPos[0]) * robotParams.distancePerTick;
+    double deltaRightFront = (mhw.rightFront.getCurrentPosition() - lastWheelPos[1]) * robotParams.distancePerTick;
+    double deltaLeftRear = (mhw.leftRear.getCurrentPosition() - lastWheelPos[2]) * robotParams.distancePerTick;
+    double deltaRightRear = (mhw.rightRear.getCurrentPosition() - lastWheelPos[3]) * robotParams.distancePerTick;
+
     //isolate components
-    //a is value of LF and RB wheels, b is the value of RF and LB wheels, and r is the rotational value, with a positive value going clockwise
-    double a; double b; double r;
-    a = (wheelPosChange[0] + wheelPosChange[3])/2.0;
-    b = (wheelPosChange[1] + wheelPosChange[2])/2.0;
-    double aR = wheelPosChange[0] - a;
-    double bR = wheelPosChange[2] - b;
+    //a is value of LF and RB wheels, b is the value of RF and LB wheels, and r is the rotational value, with a positive value going clockwise. r is rotational displacement of left wheels.
+    a = (deltaLeftFront + deltaRightRear)/2.0;
+    b = (deltaRightFront + deltaLeftRear)/2.0;
+    double aR = deltaLeftFront - a;
+    double bR = deltaLeftRear - b;
     r = (aR + bR)/2.0;
 
     //determine dx, dy, and dAngle
-    double dx = (a - b)/2.0;
-    double dy = (a + b)/2.0;
-    double dHyp = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-    double dAngle = (2 * r / constants.robotParameters.robotWidth) * (180.0/Math.PI);
-
-    return new double[]{dx, dy, dHyp, dAngle};
+    //positive dx is right
+    //positive dy is forward
+    /*
+    dx = (a - b)/2.0;
+    dy = (a + b)/2.0;
+    dHyp = Math.sqrt(dx*dx + dy*dy);
+    dAngle = (2 * r / robotParams.robotWidth) * (180.0/Math.PI);
+    */
   }
 
-  //get the current angle orientation of the robot relative to the origin angle
-  //positive is clockwise relative to angle, negative is counterclockwise
-  public double getAngle(double[] varArray) {
-    return syncAngle + varArray[3];
+  //execute distance and displacement save function:
+  //Also run whenever you are setting the position parameters
+  //This function establishes a vertex in the path traveled (the robot path is made of many lines joined together).
+  //This function saves the current position state as the reference vertex. The system assumes that the robot has only traveled on a constant rotation and translation value from the vertex point and current point.
+
+  //sets the vertex point.
+  void saveVertex() { //default access
+
+    //syncDisplacement = getPosition(tempArray);
+    //syncDistance = getDistance(tempArray);
+    vertexAngle = getAngle();
+
+    RPSLoopNotifiers.run(); //reset loop notifiers
+
+    //set last wheel ticks to the current one.
+    lastWheelPos[0] = mhw.leftFront.getCurrentPosition();
+    lastWheelPos[1] = mhw.rightFront.getCurrentPosition();
+    lastWheelPos[2] = mhw.leftRear.getCurrentPosition();
+    lastWheelPos[3] = mhw.rightRear.getCurrentPosition();
   }
+
+
+  private double angleDispl;
+  private LoopNotifier angleNotifier;
+
+  //get the current angle difference of the robot relative to its starting orientation.
+  //positive means the current orientation is clockwise relative to starting orientation, negative is counterclockwise
+
+  //Gets angle in radians
+  public double getRadianAngle() {
+    if (config.turnOnOPLP) {
+      if (angleNotifier.hasRunYet()) {
+        return vertexAngle + angleDispl;
+      }
+      else {
+        angleNotifier.setHasRun();
+      }
+    }
+
+    angleDispl = blah;
+
+    return vertexAngle + angleDispl;
+    //current angle = vertex angle + angle displacement
+  }
+  //Gets angle in whatever unit that is specified by the total angle measure config.
   public double getAngle() {
-    return syncAngle + coreDistFunc()[3];
+    return getRadianAngle() * config.totalAngleMeasure / (2 * Math.PI);
   }
 
-  //sets the robot angle at the current heading.
-  //for everytime state variables are changed, save current position has to be called once and once only. the second parameter is a safeguard to make sure that happens.
-  public void setAngle(final double angle, final boolean saveState) {
-    if (saveState) saveCurrentPosition();
-    syncAngle = angle % constants.config.totalAngleMeasure;
+  //sets the current robot angle to the provided value. Unit is specified by total angle measure config
+  public void setAngle(final double angle) {
+    //vertexAngle = angle % config.totalAngleMeasure;
+    final double angleInRadians = angle * (2 * Math.PI) / config.totalAngleMeasure;
+    vertexAngle = (angleInRadians - angleDispl);
   }
   //this sets the current angle to its lowest equivalent. Should be called every so often to avoid angle overflow.
-  public void setAToLE(final boolean saveState) {
-    if (saveState) saveCurrentPosition();
-    syncAngle = syncAngle % constants.config.totalAngleMeasure;
+  public void setAToLE() {
+    saveVertex();
+    vertexAngle = vertexAngle % (2 * Math.PI);
   }
 
-  //this function returns an array with the total distance (not displacement) traveled by the robot. index 0 is total distance, 1 is x distance, 2 is y distance
-  //x and y is relative to robot itself
-  public double[] getDistanceTraveled(double[] displArray) {
+  //this function returns an array with the total distance (not displacement) traveled by the robot.
+  public double getDistance() {
+    /*
     double totalDistance = syncDistance[0] + displArray[2];
     double xDistance = syncDistance[1] + Math.abs(displArray[0]);
     double yDistance = syncDistance[2] + Math.abs(displArray[1]);
     
     return new double[] {totalDistance, xDistance, yDistance};
-  }
-  public double[] getDistanceTraveled() {
-    return getDistanceTraveled(coreDistFunc());
+    */
+    return 0.0;
   }
 
   //this function resets the total distance traveled to 0 centimeters.
   public void resetDistance(boolean saveState) {
-    if (saveState) saveCurrentPosition();
+    /*
+    if (saveState) saveVertex();
     for (int i = 0; i < 3; i++) {
       syncDistance[i] = 0.0;
     }
+    */
   }
 
   //these functions get the position of the robot relative to the reference point/origin
   //positive x and y quadrant is top right, like in normal graphs
   //return value array order is x, then y (in cm)
+  /*
   private double angleSum = 0.0;
   private double[] tempDisplacement = new double[2];
   public double[] getPosition(double[] displArray) {
@@ -121,7 +193,7 @@ public class RPS {
     return new double[]{};
   }
   public double[] getPosition() {
-    return getPosition(coreDistFunc());
+    return getPosition(updatePrimitiveState());
   }
   //this function gets the robot's position relative to a certain point, which itself is relative to the reference point/origin.
   //x and y signify a point, relative to current reference point
@@ -134,23 +206,23 @@ public class RPS {
 
   //This function sets the robot's current position.
   public void setPosition(final double x, final double y, final boolean saveState) {
-    if (saveState) saveCurrentPosition();
+    if (saveState) saveVertex();
     syncDisplacement[0] = x;
     syncDisplacement[1] = y;
   }
   public void setXPos(final double x, final boolean saveState) {
-    if (saveState) saveCurrentPosition();
+    if (saveState) saveVertex();
     syncDisplacement[0] = x;
   }
   public void setYPos(final double y, final boolean saveState) {
-    if (saveState) saveCurrentPosition();
+    if (saveState) saveVertex();
     syncDisplacement[0] = y;
   }
 
   //This function shifts the position/changes it
   //if the shiftRefPoint flag is set, then this function acts as a shift reference point function instead.
   public void shiftPosition(double x, double y, boolean shiftRefPoint, boolean saveState) {
-    if (saveState) saveCurrentPosition();
+    if (saveState) saveVertex();
     if (shiftRefPoint) {
       x *= -1.0;
       y *= -1.0;
@@ -158,28 +230,12 @@ public class RPS {
     syncDisplacement[0] += x;
     syncDisplacement[1] += y;
   }
-
-  //execute distance and displacement save function:
-  //Run this function on every upload to motors command or at every number of ticks traveled.
-  //Also run whenever you are setting the position parameters
-  //This function establishes a vertex in the path traveled (the robot path is made of many lines joined together. A vertex forms when the robot's translation direction changes (logically). This function must be called every time that happens)
-  public void saveCurrentPosition() {
-    //add dx and dy to displacement and distance
-    double[] tempArray = coreDistFunc();
-    syncDisplacement = getPosition(tempArray);
-    syncDistance = getDistanceTraveled(tempArray);
-    syncAngle = getAngle(tempArray);
-
-    //set last wheel ticks to the current one.
-    lastWheelPos[0] = mhw.leftFront.getCurrentPosition();
-    lastWheelPos[1] = mhw.rightFront.getCurrentPosition();
-    lastWheelPos[2] = mhw.leftRear.getCurrentPosition();
-    lastWheelPos[3] = mhw.rightRear.getCurrentPosition();
-  }
+  */
 
 
   //Now, for the classes and methods that make this compatible with other classes (mainly SCS)
 
+  /*
   public InputSource AngleInput = new InputSource() {
 
     @Override
@@ -193,7 +249,7 @@ public class RPS {
 
     @Override
     public double get() {
-      return getDistanceTraveled()[0];
+      return getDistance();
     }
 
   };
@@ -225,7 +281,7 @@ public class RPS {
     //2. flag if measuring change in distance (true) or just plain distance (false)
     public DistanceWait(final double distance, final boolean measure_mode) {
       if (measure_mode) {
-        target_distance = distance + getDistanceTraveled()[0];
+        target_distance = distance + getDistance();
       }
       else {
         target_distance = distance;
@@ -238,7 +294,7 @@ public class RPS {
 
     @Override
     public boolean pollCondition() {
-      return getDistanceTraveled()[0] > target_distance;
+      return getDistance() > target_distance;
     }
   }
 
@@ -246,6 +302,7 @@ public class RPS {
   public DistanceWait getDistWait(final double distance) {
     return new DistanceWait(distance);
   }
+  */
 
 }
 

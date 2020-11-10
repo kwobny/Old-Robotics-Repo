@@ -43,9 +43,9 @@ public class Main {
 
     //SUB OBJECT INITIALIZATION
 
-    move.initialize(mhw, rps, wait, constants, new LoopNotifier());
+    move.initialize(mhw, wait, constants);
 
-    rps.initialize(mhw, move, constants);
+    rps.initialize(mhw, constants);
 
     time = new Time(mhw, constants).reset();
   }
@@ -83,7 +83,8 @@ public class Main {
     //Setup the loop callbacks for the (new) loop notifiers
     if (constants.config.turnOnOPLP) {
       Callback[] staticLoopCallbacks = new Callback[]{
-        time.loop_notifier
+        time.loop_notifier,
+        rps.RPSLoopNotifiers
       };
       for (Callback i : staticLoopCallbacks)
         wait.addLoopCallback(i);

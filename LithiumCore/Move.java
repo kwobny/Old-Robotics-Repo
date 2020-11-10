@@ -13,11 +13,9 @@ public class Move extends MoveCore {
 
   Move() {} //default access constructor, cannot be instantiated outside of package
 
-  void initialize(final MadHardware hmw, final RPS rps, final WaitCore wait, final ConstantsContainer constants, final LoopNotifier motorSyncNotifier) { //default access
+  void initialize(final MadHardware hmw, final WaitCore wait, final ConstantsContainer constants) { //default access
     mhw = hmw;
-    rpss = rps;
     this.wait = wait;
-    this.motorSyncNotifier = motorSyncNotifier;
 
     this.config = constants.config;
     this.robotParams = constants.robotParameters;
