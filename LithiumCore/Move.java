@@ -9,14 +9,14 @@ import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SharedState.*;
 public class Move extends MoveCore {
 
   //UTILITY OBJECTS
-  private WaitCore wait;
+  private Main main;
   private RPS rps;
 
   Move() {} //default access constructor, cannot be instantiated outside of package
 
-  void initialize(final MadHardware hmw, final WaitCore wait, final RPS rps, final ConstantsContainer constants) { //default access
+  void initialize(final MadHardware hmw, final Main main, final RPS rps, final ConstantsContainer constants) { //default access
     mhw = hmw;
-    this.wait = wait;
+    this.main = main;
     this.rps = rps;
 
     this.config = constants.config;
@@ -78,12 +78,34 @@ public class Move extends MoveCore {
   }
   */
 
+  private Vector TRVector;
+  private final CancellableCallback TRRunner = new CancellableCallback(new Callback() {
+    @Override
+    public void run() {
+      final double currAngle = rps.getRadianAngle();
+      Vector newVector = TRVector.clone().rotate(currAngle);
+      translate(newVector);
+    }
+  });
+
   //Relative linear translate. Translates relative to the robot's 0 / origin angle.
   public void translateRel(final double rx, final double ry) {
-    //
+    translateRel(new Vector(rx, ry));
   }
   public void translateRel(final Vector vect) {
-    translateRel(vect.x, vect.y);
+    //relative translate runner is not in low maint pile
+    if (!main.highMaint.has(TRRunner)) {
+      main.highMaint.add(TRRunner);
+    }
+    TRVector = vect;
+  }
+
+  //stop doing relative translate
+  public void stopTR() {
+    //test if tr runner is in running pile
+    if (main.highMaint.has(TRRunner)) {
+      main.highMaint.remove(TRRunner);
+    }
   }
 
   /*

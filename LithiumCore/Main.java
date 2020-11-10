@@ -19,8 +19,8 @@ public class Main {
   public MadHardware mhw;
 
   //low and high maintenence interval piles
-  public final BindingFullPile<CancellableCallback> lowMaint;
-  public final BindingFullPile<CancellableCallback> highMaint;
+  public final BindingFullPile<CancellableCallback> lowMaint = new BindingFullPile<>();
+  public final BindingFullPile<CancellableCallback> highMaint = new BindingFullPile<>();
 
   //sub systems
   public Time time;
@@ -38,12 +38,9 @@ public class Main {
     this.mhw = mhw;
     this.constants = constants;
 
-    lowMaint = new BindingFullPile<>();
-    highMaint = new BindingFullPile<>();
-
     //SUB OBJECT INITIALIZATION
 
-    move.initialize(mhw, wait, rps, constants);
+    move.initialize(mhw, this, rps, constants);
 
     rps.initialize(mhw, constants);
 

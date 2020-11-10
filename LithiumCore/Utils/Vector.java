@@ -36,6 +36,17 @@ public class Vector {
     return fitLength(1.0);
   }
 
+  //rotate the vector by a certain angle measure (in radians). Positive rotates counter clockwise, negative rotates clockwise.
+  public Vector rotate(double radians) {
+    final double sin = Math.sin(radians);
+    final double cos = Math.cos(radians);
+
+    this.x = x*cos - y*sin;
+    this.y = x*sin + y*cos;
+
+    return this;
+  }
+
   //In place counterparts to sum and difference functions.
   
   //This function adds the supplied vector to the current vector.
