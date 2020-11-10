@@ -47,7 +47,7 @@ public class Main {
 
     rps.initialize(mhw, move, constants);
 
-    time = new Time(mhw, constants);
+    time = new Time(mhw, constants).reset();
   }
 
   //this function is called to start the whole system

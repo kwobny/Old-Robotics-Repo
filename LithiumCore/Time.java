@@ -13,9 +13,6 @@ public class Time implements InputSource {
   private MadHardware mhw;
   LoopNotifier loop_notifier;
   private ElapsedTime runtime = new ElapsedTime();
-  {
-    runtime.reset();
-  }
 
   private final boolean turnOnOPLP;
 
@@ -24,6 +21,11 @@ public class Time implements InputSource {
     this.turnOnOPLP = constants.config.turnOnOPLP;
     if (turnOnOPLP)
       loop_notifier = new LoopNotifier();
+  }
+  //Is also a start function. You need to invoke this before using the time class.
+  public Time reset() {
+    runtime.reset();
+    return this;
   }
 
   public double getRawTime() {
