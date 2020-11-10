@@ -108,7 +108,7 @@ public class RPS {
 
     //syncDisplacement = getPosition(tempArray);
     //syncDistance = getDistance(tempArray);
-    vertexAngle = getAngle();
+    vertexAngle = getRadianAngle();
 
     RPSLoopNotifiers.run(); //reset loop notifiers
 
@@ -117,14 +117,16 @@ public class RPS {
     lastWheelPos[1] = mhw.rightFront.getCurrentPosition();
     lastWheelPos[2] = mhw.leftRear.getCurrentPosition();
     lastWheelPos[3] = mhw.rightRear.getCurrentPosition();
+
+    angleDispl = 0.0;
   }
 
 
   private double angleDispl;
   private LoopNotifier angleNotifier;
 
-  //get the current angle difference of the robot relative to its starting orientation.
-  //positive means the current orientation is clockwise relative to starting orientation, negative is counterclockwise
+  //get the current angle difference of the robot relative to its origin/starting orientation.
+  //positive means the current orientation is clockwise relative to origin/starting orientation, negative is counterclockwise
 
   //Gets angle in radians
   public double getRadianAngle() {

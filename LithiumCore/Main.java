@@ -43,7 +43,7 @@ public class Main {
 
     //SUB OBJECT INITIALIZATION
 
-    move.initialize(mhw, wait, constants);
+    move.initialize(mhw, wait, rps, constants);
 
     rps.initialize(mhw, constants);
 

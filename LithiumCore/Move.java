@@ -10,12 +10,14 @@ public class Move extends MoveCore {
 
   //UTILITY OBJECTS
   private WaitCore wait;
+  private RPS rps;
 
   Move() {} //default access constructor, cannot be instantiated outside of package
 
-  void initialize(final MadHardware hmw, final WaitCore wait, final ConstantsContainer constants) { //default access
+  void initialize(final MadHardware hmw, final WaitCore wait, final RPS rps, final ConstantsContainer constants) { //default access
     mhw = hmw;
     this.wait = wait;
+    this.rps = rps;
 
     this.config = constants.config;
     this.robotParams = constants.robotParameters;
@@ -76,11 +78,12 @@ public class Move extends MoveCore {
   }
   */
 
-  public void linTransRel(final double rx, final double ry) {
+  //Relative linear translate. Translates relative to the robot's 0 / origin angle.
+  public void translateRel(final double rx, final double ry) {
     //
   }
-  public void linTransRel(final Vector vect) {
-    linTransRel(vect.x, vect.y);
+  public void translateRel(final Vector vect) {
+    translateRel(vect.x, vect.y);
   }
 
   /*
