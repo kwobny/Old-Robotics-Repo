@@ -18,10 +18,12 @@ public class Move extends MoveCore {
     rpss = rps;
     this.wait = wait;
     this.motorSyncNotifier = motorSyncNotifier;
-    this.constants = constants;
 
-    universalBuffer = new MotorBufferClass(constants.config.motor_down_scale);
-    ROTATE_CONSTANT = (constants.robotParameters.robotWidth + constants.robotParameters.robotLength)/constants.robotParameters.robotWidth;
+    this.config = constants.config;
+    this.robotParams = constants.robotParameters;
+
+    universalBuffer = new MotorBufferClass(config.motor_down_scale);
+    ROTATE_CONSTANT = (robotParams.robotWidth + robotParams.robotLength)/robotParams.robotWidth;
   }
 
   //START MOVE COMMANDS

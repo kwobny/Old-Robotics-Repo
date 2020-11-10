@@ -17,8 +17,9 @@ class MoveCore {
   protected RPS rpss;
   protected MadHardware mhw;
   LoopNotifier motorSyncNotifier; //default access
-
-  protected ConstantsContainer constants;
+  
+  protected SystemConfig config;
+  protected RobotParameters robotParams;
 
   //START MOTOR COMMANDS
 
