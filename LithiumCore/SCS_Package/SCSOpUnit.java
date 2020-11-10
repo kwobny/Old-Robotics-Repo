@@ -22,6 +22,8 @@ public class SCSOpUnit extends BoundedElem {
   private double latestOutput;
   private double latestInput;
 
+  boolean isPaused = false; //default access
+
   //boolean isRunning = false;
 
   public SCSOpUnit(final InputSource input, final OutputSink output, final MathFunction graphFunc) {

@@ -4,13 +4,13 @@ public class PropWrapper<T> {
 
   public T prop;
 
-  public final Getter<T> PropGetter = new Getter<>() {
+  public final Getter<T> PropGetter = new Getter<T>() {
     @Override
     public T get() {
       return prop;
     }
   };
-  public final Setter<T> PropSetter = new Setter<>() {
+  public final Setter<T> PropSetter = new Setter<T>() {
     @Override
     public void set(final T val) {
       prop = val;

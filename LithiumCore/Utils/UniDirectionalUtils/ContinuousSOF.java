@@ -21,8 +21,8 @@ public class ContinuousSOF extends BasicSOF {
 
   @Override
   boolean increment() {
-    lastYVal += funcs[index].getLastYVal();
-    super.increment();
+    lastYVal += funcs[index].getLastYValue();
+    return super.increment();
   }
 
   @Override
@@ -32,7 +32,7 @@ public class ContinuousSOF extends BasicSOF {
   }
 
   @Override
-  public void yValueOf(final double x) {
+  public double yValueOf(final double x) {
     if (index >= funcs.length || (x > xThreshold && increment())) {
       return lastYVal;
     }
@@ -41,10 +41,10 @@ public class ContinuousSOF extends BasicSOF {
   }
 
   @Override
-  public double getLastYVal() {
+  public double getLastYValue() {
     double sum = 0;
     for (UniDirectionalFunc i : funcs) {
-      sum += i.getLastYVal();
+      sum += i.getLastYValue();
     }
     return sum;
   }

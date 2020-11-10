@@ -49,7 +49,7 @@ public class HashSetPile<T> implements FullPile<T>, DPPile<T> {
 
   @Override
   public boolean has(final T elem) {
-    return elemSet.has(elem);
+    return elemSet.contains(elem);
   }
 
   @Override

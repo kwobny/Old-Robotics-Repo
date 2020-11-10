@@ -45,7 +45,7 @@ public class NestedSOF extends BasicSOF {
   }
 
   @Override
-  public double getLastYVal() {
+  public double getLastYValue() {
     return lastYVal;
   }
 

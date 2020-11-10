@@ -21,7 +21,7 @@ public class DoubleSCurve extends ContinuousSOF {
     }
     else {
       UniWrapper constantVel = new UniWrapper(timeOnSCurve,
-        new CommonOps.ConstVelocity(0.0);
+        new CommonOps.ConstVelocity(0.0)
       );
       setFuncs(curve, constantVel, oppositeCurve);
     }

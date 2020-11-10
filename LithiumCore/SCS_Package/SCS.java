@@ -24,7 +24,7 @@ public class SCS {
     //
   }
 
-  private final static Consumer<SCSOpUnit> pileConsumer = new Consumer<>() {
+  private final static Consumer<SCSOpUnit> pileConsumer = new Consumer<SCSOpUnit>() {
     @Override
     public void run(final SCSOpUnit unit) {
       unit.run();
