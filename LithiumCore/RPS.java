@@ -139,7 +139,7 @@ public class RPS {
       }
     }
 
-    angleDispl = blah;
+    angleDispl = 2 * r / robotParams.robotDiagonalLen;
 
     return vertexAngle + angleDispl;
     //current angle = vertex angle + angle displacement

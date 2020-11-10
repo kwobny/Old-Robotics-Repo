@@ -23,7 +23,8 @@ public class Move extends MoveCore {
     this.robotParams = constants.robotParameters;
 
     universalBuffer = new MotorBufferClass(config.motor_down_scale);
-    ROTATE_CONSTANT = (robotParams.robotWidth + robotParams.robotLength)/robotParams.robotWidth;
+    //ROTATE_CONSTANT = (robotParams.robotWidth + robotParams.robotLength)/robotParams.robotWidth;
+    ROTATE_CONSTANT = robotParams.robotDiagonalLen / robotParams.robotWidth;
   }
 
   //START MOVE COMMANDS

@@ -12,7 +12,7 @@ public class RobotParameters {
 
   //AUTO DISCERNED PARAMETERS
 
-  public double robotDiagonalLen;
+  public double robotDiagonalLen; //the length of the diagonal of the robot (imagined as a rectangle).
   public double distancePerTick; //how many centimeters wheel runs per wheel tick
 
   //call this method after initializing all properties
