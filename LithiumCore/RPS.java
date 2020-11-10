@@ -31,11 +31,11 @@ public class RPS {
 
     if (config.turnOnOPLP) {
       UPSNotifier = new RunNotifier();
-      AngleNotifier = new RunNotifier();
+      angleNotifier = new RunNotifier();
 
       RPSLoopNotifiers = new CompoundCallback(
         UPSNotifier,
-        AngleNotifier
+        angleNotifier
       );
     }
   }
@@ -51,7 +51,7 @@ public class RPS {
   //VARIABLES FOR PRIMITIVE STATE UPDATER
 
   //update primitive state notifier
-  private final RunNotifier UPSNotifier;
+  private RunNotifier UPSNotifier;
 
   //wheel position variables
   //left front, right front, left back, right back

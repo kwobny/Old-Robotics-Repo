@@ -144,6 +144,7 @@ class MoveCore {
     //rpss.saveCurrentPosition();
   }
   //clear motor buffers function
+  //This function automatically syncs the motors.
   public void clearMotors() {
     for (MotorBufferClass i : bufferArray) {
       i.setMotors(0.0);
