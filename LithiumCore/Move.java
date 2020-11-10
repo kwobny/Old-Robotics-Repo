@@ -19,6 +19,9 @@ public class Move extends MoveCore {
     this.wait = wait;
     this.motorSyncNotifier = motorSyncNotifier;
     this.constants = constants;
+
+    universalBuffer = new MotorBufferClass(constants.config.motor_down_scale);
+    ROTATE_CONSTANT = (constants.robotParameters.robotWidth + constants.robotParameters.robotLength)/constants.robotParameters.robotWidth;
   }
 
   //START MOVE COMMANDS
@@ -26,7 +29,7 @@ public class Move extends MoveCore {
   //rotate robot
   //power is the power of the left front wheel (or left wheel for two wheel sim)
   //in two wheel sim mode, the robot is abstracted as a machine with two wheels, which are the robot's width distance apart.
-  private final double ROTATE_CONSTANT = (constants.robotParameters.robotWidth + constants.robotParameters.robotLength)/constants.robotParameters.robotWidth;
+  private double ROTATE_CONSTANT;
   public void rotate(double power, boolean use2WheeledSimulation) {
 
     if (use2WheeledSimulation) {

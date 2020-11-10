@@ -115,7 +115,7 @@ class MoveCore {
   public UserBuffer userBuffer = new UserBuffer();
 
   //universal buffer. Is the virtual, ideal robot wheel power state.
-  public MotorBufferClass universalBuffer = new MotorBufferClass(constants.config.motor_down_scale);
+  public MotorBufferClass universalBuffer;
 
   //the motor buffer array, used to iterate through individual motors. Does not include universal buffer.
   private MotorBufferClass[] bufferArray = new MotorBufferClass[]{rotateBuffer, linTransBuffer, userBuffer};

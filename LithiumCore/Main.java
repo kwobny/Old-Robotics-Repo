@@ -33,6 +33,7 @@ public class Main {
 
   //CONSTRUCTOR
 
+  //constants object should not be modified after passing it into the main function.
   public Main(final MadHardware mhw, final ConstantsContainer constants) {
     this.mhw = mhw;
     this.constants = constants;
