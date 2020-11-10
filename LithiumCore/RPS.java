@@ -30,8 +30,8 @@ public class RPS {
     this.robotParams = constants.robotParameters;
 
     if (config.turnOnOPLP) {
-      UPSNotifier = new LoopNotifier();
-      AngleNotifier = new LoopNotifier();
+      UPSNotifier = new RunNotifier();
+      AngleNotifier = new RunNotifier();
 
       RPSLoopNotifiers = new CompoundCallback(
         UPSNotifier,
@@ -51,7 +51,7 @@ public class RPS {
   //VARIABLES FOR PRIMITIVE STATE UPDATER
 
   //update primitive state notifier
-  private final LoopNotifier UPSNotifier;
+  private final RunNotifier UPSNotifier;
 
   //wheel position variables
   //left front, right front, left back, right back
@@ -123,7 +123,7 @@ public class RPS {
 
 
   private double angleDispl;
-  private LoopNotifier angleNotifier;
+  private RunNotifier angleNotifier;
 
   //get the current angle difference of the robot relative to its origin/starting orientation.
   //positive means the current orientation is clockwise relative to origin/starting orientation, negative is counterclockwise

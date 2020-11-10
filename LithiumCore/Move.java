@@ -86,6 +86,7 @@ public class Move extends MoveCore {
       final double currAngle = rps.getRadianAngle();
       Vector newVector = TRVector.clone().rotate(currAngle);
       translate(newVector);
+      motorSyncNotifier.setHasRun();
     }
   });
 

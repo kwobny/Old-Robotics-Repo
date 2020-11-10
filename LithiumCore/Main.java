@@ -61,7 +61,7 @@ public class Main {
     Time.Interval highMaintCallback = time.getInterval(constants.config.highFreqMaintInterval, new Callback() {
       @Override
       public void run() {
-        move.motorSyncNotifier.run();
+        move.motorSyncNotifier.reset();
         scs._runSCS();
         highMaint.forAll(WaitCore.CCConsumer);
         if (move.motorSyncNotifier.hasRunYet()) {

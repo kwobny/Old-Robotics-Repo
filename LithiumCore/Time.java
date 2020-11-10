@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SharedState.*;
 public class Time implements InputSource {
 
   private MadHardware mhw;
-  LoopNotifier loop_notifier;
+  RunNotifier loop_notifier;
   private ElapsedTime runtime = new ElapsedTime();
 
   private final boolean turnOnOPLP;
@@ -20,7 +20,7 @@ public class Time implements InputSource {
     this.mhw = mhw;
     this.turnOnOPLP = constants.config.turnOnOPLP;
     if (turnOnOPLP)
-      loop_notifier = new LoopNotifier();
+      loop_notifier = new RunNotifier();
   }
   //Is also a start function. You need to invoke this before using the time class.
   public Time reset() {
