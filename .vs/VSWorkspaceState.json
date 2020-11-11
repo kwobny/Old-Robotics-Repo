@@ -3,8 +3,9 @@
     "",
     "\\new_code",
     "\\OpModes",
-    "\\OpModes\\motionLibrary"
+    "\\OpModes\\LithiumCore",
+    "\\OpModes\\LithiumCore\\AdvancedImplementations"
   ],
-  "SelectedNode": "\\new_code\\test.txt",
+  "SelectedNode": "\\OpModes\\LithiumCore\\Main.java",
   "PreviewInSolutionExplorer": false
 }
