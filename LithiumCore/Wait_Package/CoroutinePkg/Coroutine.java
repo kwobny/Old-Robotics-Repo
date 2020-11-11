@@ -32,14 +32,18 @@ public abstract class Coroutine implements WaitCondition, Callback {
   }
 
   //call this method ideally at the last line of the ending callback.
+  //Should be called to end the coroutine.
+  protected void endCoroutine() {
+    isDone = true;
+    if (callback != null) {
+      callback.run();
+    }
+  }
+  //Version that can be used to provide as callback instance
   protected final Callback endCallback = new Callback() {
     @Override
     public void run() {
-      isDone = true;
-      if (callback != null) {
-        callback.run();
-      }
-
+      endCoroutine();
     }
   };
 

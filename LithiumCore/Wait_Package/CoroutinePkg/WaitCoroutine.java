@@ -108,8 +108,6 @@ public abstract class WaitCoroutine extends SACoroutine {
     task.callback = callback;
   }
 
-  //protected final Callback endCallback;
-
   //these two abstract methods are meant to be private and only accessible to/used by the superclass.
   protected abstract void _start2();
   protected abstract void _end2();

@@ -1,67 +1,68 @@
 package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Wait_Package;
 
-public abstract class CompoundWait implements WaitCondition {
+//This class is immutable
+public abstract class CompoundCondition implements WaitCondition {
 
-  WaitTask[] tasks;
+  public final WaitCondition[] conditions;
 
-  public static CompoundWait getNew(Comparator mode, final WaitTask ...tasks) {
-
-    CompoundWait retVal;
-
-    switch (mode) {
-      case AND:
-        retVal = new AndPoll();
-        break;
-      case OR:
-        retVal = new OrPoll();
-        break;
-      default:
-        throw new RuntimeException("I don't know how the F#ck you did this, but you managed to provide a value from the Comparator enum that was not accounted for in the CompoundWait functionality.");
-    }
-
-    retVal.tasks = tasks;
-
-    return retVal;
+  public CompoundCondition(final WaitCondition ...conditions) {
+    this.conditions = conditions;
   }
 
-  private static class AndPoll extends CompoundWait {
+  public static class AndPoll extends CompoundCondition {
 
-    private boolean[] conditionSatisfied = new boolean[conditions.length];
+    private boolean[] conditionSatisfied;
+
+    public AndPoll(final WaitCondition ...conditions) {
+      super(conditions);
+      conditionSatisfied = new boolean[conditions.length];
+    }
     
     @Override
     public boolean pollCondition() {
-      for (WaitTask currentWait : tasks) {
+      int completeCounter = 0;
 
-        if (!conditionSatisfied[i] && currentWait.run()) {
+      for (int i = 0; i < conditions.length; ++i) {
+        WaitCondition cond = conditions[i];
+
+        if (conditionSatisfied[i]) {
+          ++completeCounter;
+        }
+        else if (cond.pollCondition()) {
           conditionSatisfied[i] = true;
+          ++completeCounter;
         }
 
       }
-      
-      for (boolean bool : conditionSatisfied) {
-        if (!bool) {
-          return false;
-        }
-      }
-      return true;
+
+      return completeCounter == conditions.length;
     }
 
   }
 
-  private static class OrPoll extends CompoundWait {
+  public static class OrPoll extends CompoundCondition {
+
+    public OrPoll(final WaitCondition ...conditions) {
+      super(conditions);
+    }
     
     @Override
     public boolean pollCondition() {
-      for (WaitTask currentWait : waits) {
-
-        if (currentWait.run()) {
+      for (WaitCondition cond : conditions) {
+        if (cond.pollCondition()) {
           return true;
         }
-
       }
       return false;
     }
 
+  }
+
+  public static AndPoll getAnd(final WaitCondition ...conditions) {
+    return new AndPoll(conditions);
+  }
+  public static OrPoll getOr(final WaitCondition ...conditions) {
+    return new OrPoll(conditions);
   }
 
 }

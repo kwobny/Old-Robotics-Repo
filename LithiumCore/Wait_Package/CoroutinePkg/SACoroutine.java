@@ -23,17 +23,15 @@ public abstract class SACoroutine extends Coroutine {
     resetPoll();
     _start();
   }
-
-  protected final Callback endCallback = new Callback() {
-    @Override
-    public void run() {
-      if (!isActive)
-        throw new RuntimeException("You cannot end a single active coroutine that is not running");
-      isActive = false;
-      _end();
-      SACoroutine.super.endCallback.run();
-    }
-  };
+  
+  @Override
+  protected void endCoroutine() {
+    if (!isActive)
+      throw new RuntimeException("You cannot end a single active coroutine that is not running");
+    isActive = false;
+    _end();
+    super.endCoroutine();
+  }
 
   //these two abstract methods are meant to be private and only accessible to/used by the superclass.
   protected abstract void _start();
