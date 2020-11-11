@@ -44,11 +44,13 @@ public class Main {
 
     rps.initialize(mhw, constants);
 
-    time = new Time(mhw, constants).reset();
+    time = new Time(mhw, constants);
   }
 
+  //Functions USED ONLY IN TELEOP
+
   //this function is called to start the whole system
-  public void start() {
+  public void initialize() {
     //Setup system intervals
     Time.Interval lowMaintCallback = time.getInterval(constants.config.lowFreqMaintInterval, new Callback() {
       @Override
@@ -84,22 +86,32 @@ public class Main {
         rps.RPSLoopNotifiers
       };
       for (Callback i : staticLoopCallbacks)
-        wait.addLoopCallback(i);
+        wait.addLoopCallback(i, WaitCore.LCRunBlock.BEGINNING);
     }
+
+    //start the clock
+    time.reset();
   }
 
-  // this function is called at the end of the program.
-  // ONLY USED FOR AUTONOMOUS
-  public void end() {
-    while (true) {
-      wait.loop();
-    }
+  public void loopAtBeginning() {
+    wait._loopBefore();
+  }
+  public void loopAtEnd() {
+    wait._loopAfter();
   }
 
-  // loop for the motions
-  //In teleop, it is best to run this method at the beginning of each loop
-  public void loop() {
-    wait.loop();
+  //Autonomous only functions. USED ONLY IN AUTONOMOUS
+  //These functions are only used in autonomous
+  
+  //start the autonomous
+  public void startAutonomous() {
+    initialize();
+    wait._start();
+  }
+
+  //end the autonomous
+  public void endAutonomous() {
+    wait._end();
   }
   
 }
