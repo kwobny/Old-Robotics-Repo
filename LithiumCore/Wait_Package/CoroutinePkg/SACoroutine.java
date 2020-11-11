@@ -31,7 +31,7 @@ public abstract class SACoroutine extends Coroutine {
         throw new RuntimeException("You cannot end a single active coroutine that is not running");
       isActive = false;
       _end();
-      super.endCallback.run();
+      SACoroutine.super.endCallback.run();
     }
   };
 
