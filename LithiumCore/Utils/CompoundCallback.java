@@ -1,6 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Wait_Package;
-
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.Callback;
+package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils;
 
 //This class doesn't null check the callback array or each individual callback. So if either set is null, then you be screwed.
 //This class is MUTABLE.
