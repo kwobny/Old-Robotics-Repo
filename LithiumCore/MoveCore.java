@@ -224,14 +224,15 @@ class MoveCore {
     //CHECK IF POWERS EXCEEDS BOUNDARIES
     //if they do, then power values (and only temporary power values) are adjusted.
 
-    double limit = 1.0;
+    double highestPower = 1.0;
     for (double i : powers) {
-      if (Math.abs(i) > limit) {
-        limit = Math.abs(i);
+      i = Math.abs(i);
+      if (i > highestPower) {
+        highestPower = i;
       }
     }
-    if (limit > 1.0) {
-      double multiplier = 0.999 / limit;
+    if (highestPower > config.wheelPowerLimit) {
+      double multiplier = 0.999 * config.wheelPowerLimit / highestPower;
       for (int i = 0; i < powers.length; i++) {
         powers[i] *= multiplier;
       }

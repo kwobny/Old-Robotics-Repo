@@ -1,6 +1,14 @@
 package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SharedState;
 
-public class RobotParameters {
+public abstract class RobotParameters {
+
+  //The defalt class can be used when no robot parameters object is provided (should rarely happen but still)
+  public static class Default extends RobotParameters {
+    @Override
+    protected void _initialize() {
+      //no initialization
+    }
+  }
   
   //CONSTANTS
 
@@ -15,13 +23,17 @@ public class RobotParameters {
   public double robotDiagonalLen; //the length of the diagonal of the robot (imagined as a rectangle).
   public double distancePerTick; //how many centimeters wheel runs per wheel tick
 
-  //call this method after initializing all properties
-  //This method is mandatory
-  public void moreInitialize() {
-    if (robotDiagonalLen != 0.0)
+  public RobotParameters() {
+    _initialize();
+
+    //More initialize
+    if (robotDiagonalLen == 0.0)
       robotDiagonalLen = Math.sqrt(robotWidth*robotWidth + robotLength*robotLength);
-    if (distancePerTick != 0.0)
+    if (distancePerTick == 0.0)
       distancePerTick = (Math.PI * wheelDiameter)/ticksPerRevolution;
   }
+
+  //All properties should be initialized here
+  protected abstract void _initialize();
 
 }

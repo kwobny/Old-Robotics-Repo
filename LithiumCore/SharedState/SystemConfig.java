@@ -14,6 +14,7 @@ public class SystemConfig {
 
   public double totalAngleMeasure = 360; //the number of angle units in a full circle
   public double defaultSectorSize = 90; //The default size of the sector for wait for displacement.
-  public double motor_down_scale = 0.2; //specifies the universal buffer reference speed factor
+  public double motor_down_scale = 0.3; //specifies the universal buffer reference speed factor
+  public double wheelPowerLimit = 1.0; //specifies maximum raw output power (power after calibration, etc.) on the wheel. This is the absolute value of maximum.
 
 }

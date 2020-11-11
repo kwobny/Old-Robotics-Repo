@@ -11,7 +11,7 @@ public class ConstantsContainer {
       config = new SystemConfig();
     }
     if (robotParameters == null) {
-      robotParameters = new RobotParameters();
+      robotParameters = new RobotParameters.Default();
     }
   }
 

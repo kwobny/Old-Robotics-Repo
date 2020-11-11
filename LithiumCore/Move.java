@@ -36,6 +36,11 @@ public class Move extends MoveCore {
   private double ROTATE_CONSTANT;
   public void rotate(double power, boolean use2WheeledSimulation) {
 
+    //check for NaN
+    if (Double.isNaN(power)) {
+      throw new RuntimeException("You cannot supply NaN as power parameter into the rotate function.");
+    }
+
     if (use2WheeledSimulation) {
       power *= ROTATE_CONSTANT;
     }
@@ -48,6 +53,11 @@ public class Move extends MoveCore {
 
   //linear translate
   public void translate(final double rx, final double ry) {
+
+    //check for NaN
+    if (Double.isNaN(rx) || Double.isNaN(ry)) {
+      throw new RuntimeException("You cannot supply NaN into the translate function.");
+    }
 
     //calculating motor powers
     double a = rx + ry;
@@ -96,11 +106,13 @@ public class Move extends MoveCore {
     translateRel(new Vector(rx, ry));
   }
   public void translateRel(final Vector vect) {
+    TRVector = vect;
+    
     //relative translate runner is not in low maint pile
     if (!main.highMaint.has(TRRunner)) {
       main.highMaint.add(TRRunner);
+      TRRunner.callback.run();
     }
-    TRVector = vect;
   }
 
   //stop doing relative translate

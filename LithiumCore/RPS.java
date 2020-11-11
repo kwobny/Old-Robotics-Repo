@@ -109,6 +109,7 @@ public class RPS {
     //syncDisplacement = getPosition(tempArray);
     //syncDistance = getDistance(tempArray);
     vertexAngle = getRadianAngle();
+    angleDispl = 0.0;
 
     RPSLoopNotifiers.run(); //reset loop notifiers
 
@@ -117,8 +118,6 @@ public class RPS {
     lastWheelPos[1] = mhw.rightFront.getCurrentPosition();
     lastWheelPos[2] = mhw.leftRear.getCurrentPosition();
     lastWheelPos[3] = mhw.rightRear.getCurrentPosition();
-
-    angleDispl = 0.0;
   }
 
 
@@ -138,6 +137,7 @@ public class RPS {
         angleNotifier.setHasRun();
       }
     }
+    updatePrimitiveState();
 
     angleDispl = 2 * r / robotParams.robotDiagonalLen;
 
