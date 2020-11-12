@@ -3,22 +3,31 @@ package org.firstinspires.ftc.teamcode.OpModes.LithiumCore;
 import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
 import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SCS_Package.*;
 import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Wait_Package.*;
+import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.Callback;
 import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SharedState.*;
 
 class MoveCore {
-  /*
-  //SETTING VARIABLES
-  protected final double turnThreshold = 1.0; //the amount of rotation in degrees where the robot is considered to have turned.
-  
-  public double motorConversionRate = 0; //the rate of powerOutput/velocity (in centimeters/second)
-  */
 
   //RESOURCE OBJECTS
   protected MadHardware mhw;
-  RunNotifier motorSyncNotifier = new RunNotifier(); //default access
   
   protected SystemConfig config;
   protected RobotParameters robotParams;
+
+  //Only meant to be called by Move class, or any other subclassing entity.
+  void initialize(final MadHardware mhw, final ConstantsContainer constants) {
+    this.mhw = mhw;
+
+    this.config = constants.config;
+    this.robotParams = constants.robotParameters;
+
+    universalBuffer = new MotorBufferClass(config.motor_down_scale);
+
+    if (config.turnOnOPLP) {
+      motorSyncNotifier = new RunNotifier();
+      motorUploadNotifier = new RunNotifier();
+    }
+  }
 
   //START MOTOR COMMANDS
 
@@ -70,7 +79,7 @@ class MoveCore {
     @Override
     public void set(double val) {
       speedFactor = val * refSpeedFactor;
-      motorSyncNotifier.setHasRun();
+      syncMotors();
     }
 
     //wait class so that the motor buffer speed factor can be waited upon (wow, a THIRD ORDER class!!!!)
@@ -123,29 +132,65 @@ class MoveCore {
   //the motor buffer array, used to iterate through individual motors. Does not include universal buffer.
   private MotorBufferClass[] bufferArray = new MotorBufferClass[]{rotateBuffer, translateBuffer, userBuffer};
 
+  //sync motor and upload motor loop notifiers
+  private RunNotifier motorSyncNotifier;
+  private RunNotifier motorUploadNotifier;
+
+  //If OPLP is on:
+  //the sync motors and upload to motors function will run once at the end of each loop, only if the sync motors / upload to motors function has been marked to run.
+
+  //both of these callbacks have default access
+  //loop begin callback is run at beginning of loop before everything else
+  //loop end callback is run at end of loop after everything else
+  //Both are only run/used if OPLP is on
+
+  //loop begin callback
+  Callback notifierResetter = new Callback() {
+    @Override
+    public void run() {
+      motorSyncNotifier.reset();
+      motorUploadNotifier.reset();
+    }
+  };
+  //loop end callback
+  //does the actual sync motors if OPLP is on
+  Callback OPLPEndCallback = new Callback() {
+    @Override
+    public void run() {
+      if (motorSyncNotifier.hasRunYet()) {
+        actuallySyncMotors();
+      }
+      else if (motorUploadNotifier.hasRunYet()) {
+        actuallyUploadToMotors();
+      }
+    }
+  };
+
+  //If OPLP is on, these functions mark the sync motors / upload to motors function to run at the end of the loop.
+  //If it is off, then the functions do the normal behavior.
+
   //This function syncs (updates) the universal buffer values with the buffer values from the individual buffers.
   //It also uploads the change to the motors.
   public void syncMotors() {
-    universalBuffer.leftFront = 0;
-    universalBuffer.leftRear = 0;
-    universalBuffer.rightFront = 0;
-    universalBuffer.rightRear = 0;
-
-    for (MotorBufferClass i : bufferArray) {
-      universalBuffer.leftFront += i.leftFront * i.speedFactor;
-
-      universalBuffer.leftRear += i.leftRear * i.speedFactor;
-
-      universalBuffer.rightFront += i.rightFront * i.speedFactor;
-
-      universalBuffer.rightRear += i.rightRear * i.speedFactor;
+    if (config.turnOnOPLP) {
+      motorSyncNotifier.setHasRun();
     }
-
-    uploadToMotors();
-    
-    //save the distance only if at least one of the changes is above tick threshold.
-    //rpss.saveCurrentPosition();
+    else {
+      actuallySyncMotors();
+    }
   }
+
+  //uploads the motor values from the universal buffer into the actual hardware.
+  //The universal buffer is the ideal wheel power state, and is a virtual robot wheel power state. This function converts the ideal state into the real state using help from the motor cali function.
+  private void uploadToMotors() {
+    if (config.turnOnOPLP) {
+      motorUploadNotifier.setHasRun();
+    }
+    else {
+      actuallyUploadToMotors();
+    }
+  }
+
   //clear motor buffers function
   //This function automatically syncs the motors.
   public void clearMotors() {
@@ -211,9 +256,32 @@ class MoveCore {
     globalPos[3] = mhw.leftRear.getCurrentPosition();
   }
 
-  //uploads the motor values from the universal buffer into the actual hardware.
-  //The universal buffer is the ideal wheel power state, and is a virtual robot wheel power state. This function converts the ideal state into the real state using help from the motor cali function.
-  private void uploadToMotors() {
+
+  //The actual implementations of the sync motors and upload to motors function.
+
+  private void actuallySyncMotors() {
+    universalBuffer.leftFront = 0;
+    universalBuffer.leftRear = 0;
+    universalBuffer.rightFront = 0;
+    universalBuffer.rightRear = 0;
+
+    for (MotorBufferClass i : bufferArray) {
+      universalBuffer.leftFront += i.leftFront * i.speedFactor;
+
+      universalBuffer.leftRear += i.leftRear * i.speedFactor;
+
+      universalBuffer.rightFront += i.rightFront * i.speedFactor;
+
+      universalBuffer.rightRear += i.rightRear * i.speedFactor;
+    }
+
+    actuallyUploadToMotors();
+    
+    //save the distance only if at least one of the changes is above tick threshold.
+    //rpss.saveCurrentPosition();
+  }
+
+  private void actuallyUploadToMotors() {
     double[] powers = new double[4];
 
     powers[0] = universalBuffer.speedFactor * universalBuffer.leftFront * caliPowerFactor[0];

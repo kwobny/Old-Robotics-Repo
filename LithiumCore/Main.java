@@ -67,12 +67,8 @@ public class Main {
     Time.Interval highMaintInterval = time.getInterval(constants.config.highFreqMaintInterval, new Callback() {
       @Override
       public void run() {
-        move.motorSyncNotifier.reset();
         scs._runSCS();
         highMaint.forAll(WaitCore.CCConsumer);
-        if (move.motorSyncNotifier.hasRunYet()) {
-          move.syncMotors();
-        }
       }
     });
 
@@ -85,12 +81,19 @@ public class Main {
 
     //Setup the loop callbacks for the (new) loop notifiers
     if (constants.config.turnOnOPLP) {
-      Callback[] staticLoopCallbacks = new Callback[]{
+      Callback[] beginningLoopCallbacks = new Callback[]{
         time.loop_notifier,
-        rps.RPSLoopNotifiers
+        rps.RPSLoopNotifiers,
+        move.notifierResetter
       };
-      for (Callback i : staticLoopCallbacks)
+      for (Callback i : beginningLoopCallbacks)
         wait.addLoopCallback(i, WaitCore.LCRunBlock.BEGINNING);
+      
+      Callback[] endLoopCallbacks = new Callback[]{
+        move.OPLPEndCallback
+      };
+      for (Callback i : endLoopCallbacks)
+        wait.addLoopCallback(i, WaitCore.LCRunBlock.END);
     }
 
   }
