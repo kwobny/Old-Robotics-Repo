@@ -77,8 +77,8 @@ public class Main {
     });
 
     WaitInterval[] staticIntervals = new WaitInterval[]{
-      lowMaintInterval.calibrate(),
-      highMaintInterval.calibrate()
+      lowMaintInterval.reset(),
+      highMaintInterval.reset()
     };
     for (WaitInterval i : staticIntervals)
       wait.addInterval(i);
