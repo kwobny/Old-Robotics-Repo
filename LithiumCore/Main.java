@@ -51,8 +51,12 @@ public class Main {
 
   //this function is called to start the whole system
   public void initialize() {
+
+    //start the clock
+    time.reset();
+
     //Setup system intervals
-    Time.Interval lowMaintCallback = time.getInterval(constants.config.lowFreqMaintInterval, new Callback() {
+    Time.Interval lowMaintInterval = time.getInterval(constants.config.lowFreqMaintInterval, new Callback() {
       @Override
       public void run() {
         //move._motorCali();
@@ -60,7 +64,7 @@ public class Main {
       }
     });
 
-    Time.Interval highMaintCallback = time.getInterval(constants.config.highFreqMaintInterval, new Callback() {
+    Time.Interval highMaintInterval = time.getInterval(constants.config.highFreqMaintInterval, new Callback() {
       @Override
       public void run() {
         move.motorSyncNotifier.reset();
@@ -73,8 +77,8 @@ public class Main {
     });
 
     WaitInterval[] staticIntervals = new WaitInterval[]{
-      lowMaintCallback.calibrate(),
-      highMaintCallback.calibrate()
+      lowMaintInterval.calibrate(),
+      highMaintInterval.calibrate()
     };
     for (WaitInterval i : staticIntervals)
       wait.addInterval(i);
@@ -89,8 +93,6 @@ public class Main {
         wait.addLoopCallback(i, WaitCore.LCRunBlock.BEGINNING);
     }
 
-    //start the clock
-    time.reset();
   }
 
   public void loopAtBeginning() {
