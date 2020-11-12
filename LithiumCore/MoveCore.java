@@ -26,6 +26,9 @@ class MoveCore {
   //motor buffers make it possible to superimpose two or more different motions together to achieve a sum of the motions
 
   //motor buffer class
+
+  //Positive wheel power values means the wheel pushes its part of the robot forward.
+
   public class MotorBufferClass implements InputSource, OutputSink {
     MotorBufferClass(final double refFactor) { //cannot be instantiated outside of package
       refSpeedFactor = refFactor;
@@ -110,15 +113,15 @@ class MoveCore {
 
   //declaring all individual motor buffers
   public MotorBufferClass rotateBuffer = new MotorBufferClass();
-  public MotorBufferClass linTransBuffer = new MotorBufferClass();
+  public MotorBufferClass translateBuffer = new MotorBufferClass();
   //user controlled buffer
   public UserBuffer userBuffer = new UserBuffer();
 
-  //universal buffer. Is the virtual, ideal robot wheel power state.
+  //universal buffer. Is the virtual, ideal robot wheel power state. Is the superposition of all individual motors.
   public MotorBufferClass universalBuffer;
 
   //the motor buffer array, used to iterate through individual motors. Does not include universal buffer.
-  private MotorBufferClass[] bufferArray = new MotorBufferClass[]{rotateBuffer, linTransBuffer, userBuffer};
+  private MotorBufferClass[] bufferArray = new MotorBufferClass[]{rotateBuffer, translateBuffer, userBuffer};
 
   //This function syncs (updates) the universal buffer values with the buffer values from the individual buffers.
   //It also uploads the change to the motors.

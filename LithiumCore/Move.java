@@ -32,6 +32,7 @@ public class Move extends MoveCore {
 
   //rotate robot
   //power is the power of the left front wheel (or left wheel for two wheel sim)
+  //When you look down from above on the robot, a positive power is clockwise, negative power is counter clockwise.
   //in two wheel sim mode, the robot is abstracted as a machine with two wheels, which are the robot's width distance apart.
   private double ROTATE_CONSTANT;
   public void rotate(double power, boolean use2WheeledSimulation) {
@@ -52,6 +53,10 @@ public class Move extends MoveCore {
   }
 
   //linear translate
+
+  //positive x is in the right direction
+  //positive y is in the forward direction
+
   public void translate(final double rx, final double ry) {
 
     //check for NaN
@@ -64,10 +69,10 @@ public class Move extends MoveCore {
     double b = ry - rx;
 
     //set linear translate buffer
-    linTransBuffer.leftFront = a;
-    linTransBuffer.rightFront = b;
-    linTransBuffer.leftRear = b;
-    linTransBuffer.rightRear = a;
+    translateBuffer.leftFront = a;
+    translateBuffer.rightFront = b;
+    translateBuffer.leftRear = b;
+    translateBuffer.rightRear = a;
   }
   public void translate(final Vector vect) {
     translate(vect.x, vect.y);
