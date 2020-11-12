@@ -87,7 +87,7 @@ public abstract class WaitCoroutine extends SACoroutine {
 
   @Override
   protected final void _start() {
-    waitCore.setTimeout(task);
+    waitCore.scheduleTask(task);
     _start2();
   }
 
