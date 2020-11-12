@@ -2,10 +2,8 @@
   "ExpandedNodes": [
     "",
     "\\new_code",
-    "\\OpModes",
-    "\\OpModes\\LithiumCore",
-    "\\OpModes\\LithiumCore\\AdvancedImplementations"
+    "\\OpModes"
   ],
-  "SelectedNode": "\\OpModes\\LithiumCore\\Main.java",
+  "SelectedNode": "\\OpModes\\Teleop",
   "PreviewInSolutionExplorer": false
 }
