@@ -29,6 +29,14 @@ public class Move extends MoveCore {
 
   //START MOVE COMMANDS
 
+  //clear functions basically remove the corresponding type of movement from the list of superimposed movements.
+
+  public void clearAll() {
+    clearRotate();
+    clearTranslate();
+    clearRT();
+  }
+
   //rotate robot
   //power is the power of the left front wheel (or left wheel for two wheel sim)
   //When you look down from above on the robot, a positive power is clockwise, negative power is counter clockwise.
@@ -49,6 +57,10 @@ public class Move extends MoveCore {
     rotateBuffer.leftRear = power;
     rotateBuffer.rightFront = -power;
     rotateBuffer.rightRear = -power;
+  }
+
+  public void clearRotate() {
+    rotateBuffer.clearBufferValues();
   }
 
   //linear translate
@@ -77,31 +89,20 @@ public class Move extends MoveCore {
     translate(vect.x, vect.y);
   }
 
-  //linear translate, but relative to certain robot angle
-  /*private double robotCapturedAngle = 0;
-  public void captureRobotAngle() {
-    //
+  public void clearTranslate() {
+    translateBuffer.clearBufferValues();
   }
-  public void moveLinTransRel(double rx, double ry) {
-    //calculate how much offset current angle is from robotCapturedAngle
-    //0 is at positive vertical, positive goes clockwise, negative goes counterclockwise
-    //in radians
-    double angleOffset = 0;
 
-    //length = sqrt(rx^2 + ry^2)
-    //resultantAngle = atan2(ry, rx)
-    //newAngle = resultantAngle + angleOffset
-  }
-  */
+  //linear translate, but relative to the starting/origin/reference orientation of the robot.
 
-  private Vector TRVector;
-  private final CancellableCallback TRRunner = new CancellableCallback(new Callback() {
+  private Vector RTVector;
+  private final CancellableCallback RTRunner = new CancellableCallback(new Callback() {
     @Override
     public void run() {
       final double currAngle = rps.getRadianAngle();
-      Vector newVector = TRVector.clone().rotate(currAngle);
+      Vector newVector = RTVector.clone().rotate(currAngle);
       translate(newVector);
-      motorSyncNotifier.setHasRun();
+      syncMotors();
     }
   });
 
@@ -110,20 +111,20 @@ public class Move extends MoveCore {
     translateRel(new Vector(rx, ry));
   }
   public void translateRel(final Vector vect) {
-    TRVector = vect;
+    RTVector = vect;
     
     //relative translate runner is not in low maint pile
-    if (!main.highMaint.has(TRRunner)) {
-      main.highMaint.add(TRRunner);
-      TRRunner.callback.run();
+    if (!main.highMaint.has(RTRunner)) {
+      main.highMaint.add(RTRunner);
+      RTRunner.callback.run();
     }
   }
 
   //stop doing relative translate
-  public void stopTR() {
+  public void clearRT() {
     //test if tr runner is in running pile
-    if (main.highMaint.has(TRRunner)) {
-      main.highMaint.remove(TRRunner);
+    if (main.highMaint.has(RTRunner)) {
+      main.highMaint.remove(RTRunner);
     }
   }
 

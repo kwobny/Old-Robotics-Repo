@@ -60,12 +60,16 @@ class MoveCore {
     public void resetSF() {
       speedFactor = refSpeedFactor;
     }
-    //sets all motors to one double value.
-    void setMotors(final double val) { //default access
+    //sets all buffer values to one double value.
+    void setBufferValues(final double val) { //default access
       leftFront = val;
       leftRear = val;
       rightFront = val;
       rightRear = val;
+    }
+    //set all buffer values to 0
+    void clearBufferValues() { //default access
+      setBufferValues(0.0);
     }
 
     //now, the methods/classes which make this compatible with other parts of the library
@@ -189,15 +193,6 @@ class MoveCore {
     else {
       actuallyUploadToMotors();
     }
-  }
-
-  //clear motor buffers function
-  //This function automatically syncs the motors.
-  public void clearMotors() {
-    for (MotorBufferClass i : bufferArray) {
-      i.setMotors(0.0);
-    }
-    syncMotors();
   }
 
   //END MOTOR COMMANDS
