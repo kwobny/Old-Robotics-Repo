@@ -50,9 +50,12 @@ public class WaitCore {
 
   //These two methods are only used in autonomous like programs (linear execution)
   //Never used in teleop like programs (looping programs)
+
+  //call the start method AFTER you initialize all stuff (loop callbacks, intervals, systems, etc.)
   public void _start() {
     _loopBefore();
   }
+
   public void _end() {
     _loopAfter();
   }
