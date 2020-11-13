@@ -5,7 +5,7 @@ import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.Callback;
 
 //This is the generic/general coroutine class.
 
-public abstract class Coroutine implements WaitCondition, Callback {
+public abstract class Coroutine implements StartedCondition, Callback {
 
   //data members
 
@@ -15,6 +15,12 @@ public abstract class Coroutine implements WaitCondition, Callback {
   public boolean pollCondition() {
     return isDone;
   }
+  @Override
+  public StartedCondition start() {
+    run();
+    return this;
+  }
+
   @Override
   public abstract void run();
 
