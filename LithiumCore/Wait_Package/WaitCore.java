@@ -13,7 +13,7 @@ public class WaitCore {
   }
 
   //--------------------------------------
-  //The four methods below are only meant to be used by library classes, not by user. I mean, user can use these methods, but it is more advised to use copy provided by library.
+  //The four methods below are not meant to be used by the user as part of the actual program. They are maintenence methods, still used by the user, but not in the user's actual programming semantics/algorithms.
   //--------------------------------------
 
   //In teleop:
@@ -58,7 +58,7 @@ public class WaitCore {
   }
 
   //--------------------------------------
-  //The four methods above are only meant to be used by library classes, not by user.
+  //The four methods above are not meant to be used by the user as part of the actual program. They are maintenence methods, still used by the user, but not in the user's actual programming semantics/algorithms.
   //--------------------------------------
 
   //IMPORTANT:
@@ -147,6 +147,9 @@ public class WaitCore {
   public CancellableCallback addLoopCallback(final Callback callback, final LCRunBlock runBlock) {
     return addLoopCallback(new CancellableCallback(callback), runBlock);
   }
+  public CancellableCallback addLoopCallback(final Callback callback) {
+    return addLoopCallback(callback, LCRunBlock.BEGINNING);
+  }
   public CancellableCallback addLoopCallback(final CancellableCallback callback, final LCRunBlock runBlock) {
     switch (runBlock) {
       case BEGINNING:
@@ -157,6 +160,9 @@ public class WaitCore {
         break;
     }
     return callback;
+  }
+  public CancellableCallback addLoopCallback(final CancellableCallback callback) {
+    return addLoopCallback(callback, LCRunBlock.BEGINNING);
   }
   public CancellableCallback removeLoopCallback(final CancellableCallback callback) {
     callback.getCorrPile().remove(callback);
