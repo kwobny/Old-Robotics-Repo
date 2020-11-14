@@ -15,8 +15,33 @@ public class Vector {
     this.x = x;
     this.y = y;
   }
+  //this constructor can be used to obtain a copy of a vector.
+  public Vector(final Vector vect) {
+    this.x = vect.x;
+    this.y = vect.y;
+  }
+
+  //STATIC CONSTRUCTING METHODS
+
+  public static Vector getVector() {
+    return new Vector();
+  }
   public static Vector getVector(final double x, final double y) {
     return new Vector(x, y);
+  }
+
+  //VECTOR COPY METHODS
+  //copies the current vector. Can be used to use an in place utility as out of place.
+  //The static version is called copy, the instance version is called clone.
+
+  //static method
+  public static Vector copy(final Vector vect) {
+    return new Vector(vect);
+  }
+
+  //instance method
+  public Vector clone() {
+    return new Vector(this);
   }
 
   //IN PLACE UTILITIES
@@ -73,9 +98,4 @@ public class Vector {
     return new Vector(x + vect.x, y + vect.y);
   }
 
-  //SPECIAL FUNCTION
-  //copies the current vector. Can be used to use an in place utility as out of place.
-  public Vector clone() {
-    return new Vector(x, y);
-  }
 }
