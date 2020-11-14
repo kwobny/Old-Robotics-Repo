@@ -8,6 +8,13 @@ import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.PileUtils.*;
 
 import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SharedState.*;
 
+//Main class
+//Is a hub for all library subsystems. It is not a parent, and more like a hub with a few preattached and preinitialized systems. You should be able to add your own subsystems to this hub.
+
+//These functions from the Wait Core class must not be used. Instead, the variants in the Main class must be used.
+//start and end -> startAutonomous and endAutonomous
+//loopBefore and loopAfter -> loopAtBeginning and loopAtEnd
+
 public class Main {
 
   // RESOURCE OBJECTS
@@ -99,10 +106,10 @@ public class Main {
   }
 
   public void loopAtBeginning() {
-    wait._loopBefore();
+    wait.loopBefore();
   }
   public void loopAtEnd() {
-    wait._loopAfter();
+    wait.loopAfter();
   }
 
   //Autonomous only functions. USED ONLY IN AUTONOMOUS
@@ -111,12 +118,12 @@ public class Main {
   //start the autonomous
   public void startAutonomous() {
     initialize();
-    wait._start();
+    wait.start();
   }
 
   //end the autonomous
   public void endAutonomous() {
-    wait._end();
+    wait.end();
   }
   
 }

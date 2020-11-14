@@ -22,12 +22,12 @@ public class WaitCore {
   //All teleop code goes in between these two method calls
 
   //loop before: the part of the loop that is run before main/driver thread stuff
-  public void _loopBefore() {
+  public void loopBefore() {
     runBeginningLC();
     runIntervals();
   }
   //loop after: the part of the loop that is run after the main/driver thread stuff
-  public void _loopAfter() {
+  public void loopAfter() {
     runScheduledTasks();
     runEndingLC();
   }
@@ -52,12 +52,12 @@ public class WaitCore {
   //Never used in teleop like programs (looping programs)
 
   //call the start method AFTER you initialize all stuff (loop callbacks, intervals, systems, etc.)
-  public void _start() {
-    _loopBefore();
+  public void start() {
+    loopBefore();
   }
 
-  public void _end() {
-    _loopAfter();
+  public void end() {
+    loopAfter();
   }
 
   //--------------------------------------
@@ -75,9 +75,9 @@ public class WaitCore {
   public void waitFor(WaitCondition waitCondition) {
     do {
       //notice how loop after is before the loop before.
-      _loopAfter();
+      loopAfter();
       //if you wanted to implement a thread.sleep or something for an autonomous program, you would put it right here. Make sure to mirror this in the end program while loop.
-      _loopBefore();
+      loopBefore();
     }
     while (!waitCondition.pollCondition());
   }
@@ -88,8 +88,8 @@ public class WaitCore {
   public void waitFor(WaitTask task) {
     task._markAsAdd();
     do {
-      _loopAfter();
-      _loopBefore();
+      loopAfter();
+      loopBefore();
       task._run();
     }
     while (task._isRunning());
