@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils;
 //Is a class which specifies a direction and provides a bunch of utilities.
 //Can also be used as a point class.
 public class Vector {
+
   public double x;
   public double y;
 
@@ -12,13 +13,16 @@ public class Vector {
     //
   }
   public Vector(final double x, final double y) {
+    if (Double.isNaN(x) || Double.isNaN(y)) {
+      throw new RuntimeException("The x or y that you provided into the vector constructor was NaN. That is invalid.");
+    }
+
     this.x = x;
     this.y = y;
   }
   //this constructor can be used to obtain a copy of a vector.
   public Vector(final Vector vect) {
-    this.x = vect.x;
-    this.y = vect.y;
+    this(vect.x, vect.y);
   }
 
   //STATIC CONSTRUCTING METHODS
