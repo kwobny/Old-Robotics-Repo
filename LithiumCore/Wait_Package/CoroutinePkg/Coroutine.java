@@ -5,26 +5,20 @@ import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.Callback;
 
 //This is the generic/general coroutine class.
 
-public abstract class Coroutine implements StartedCondition, Callback {
+public abstract class Coroutine implements DefaultSC {
 
   //data members
 
   public Callback callback;
+  private boolean isDone;
+
+  @Override
+  public abstract void run();
 
   @Override
   public boolean pollCondition() {
     return isDone;
   }
-  @Override
-  public StartedCondition start() {
-    run();
-    return this;
-  }
-
-  @Override
-  public abstract void run();
-
-  private boolean isDone;
 
   public Coroutine() {
     //

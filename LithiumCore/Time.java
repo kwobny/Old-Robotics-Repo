@@ -69,7 +69,7 @@ public class Time implements InputSource {
   }
 
   //This class IS sort of MUTABLE.
-  public class Interval extends WaitInterval {
+  public class Interval extends IncInterval {
     public double time_interval;
 
     public Interval(final double time_interval, final Callback callback) {

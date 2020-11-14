@@ -1,7 +1,8 @@
 package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Wait_Package;
 
 //This class is a started condition that has to be started once and can only be started once before running.
-public abstract class CheckedSC implements StartedCondition {
+public abstract class CheckedSC extends DefaultSC {
+
   private boolean hasStarted = false;
 
   @Override
@@ -12,14 +13,14 @@ public abstract class CheckedSC implements StartedCondition {
     return _pollCondition();
   }
 
+  //start condition
   @Override
-  public final StartedCondition start() {
+  public void run() {
     if (hasStarted) {
       throw new RuntimeException("You cannot start a checked started condition more than once.");
     }
     hasStarted = true;
     _start();
-    return this;
   }
 
   protected abstract boolean _pollCondition();

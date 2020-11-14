@@ -5,25 +5,19 @@ import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.Callback;
 
 public abstract class WaitInterval extends BoundedElem {
 
-  private WaitCondition cond;
   public Callback callback;
-
   private boolean hasStarted = false;
 
-  protected abstract WaitCondition _incrementCondition();
-  //Can be overrided to implement custom reset behavior
-  protected void _reset() {
-    cond = _incrementCondition();
-  }
+  //Override to implement behavior when the interval first starts
+  protected abstract void _reset();
+  //Override to implement what happens when the interval is polled/run
+  protected abstract void _run();
 
   void run() {
     if (!hasStarted) {
       throw new RuntimeException("You have ran a wait interval before it has been started/calibrated. You cannot do that. To fix, reset the interval at least once (call reset method).");
     }
-    if (cond.pollCondition()) {
-      callback.run();
-      cond = _incrementCondition();
-    }
+    _run();
   }
 
   //Is a reset function. Has to be called once to start, and can be called successive times to reset the interval.
@@ -31,10 +25,6 @@ public abstract class WaitInterval extends BoundedElem {
     hasStarted = true;
     _reset();
     return this;
-  }
-
-  public WaitCondition getCond() {
-    return cond;
   }
 
 }
