@@ -11,6 +11,10 @@ import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SharedState.*;
 //Main class
 //Is a hub for all library subsystems. It is not a parent, and more like a hub with a few preattached and preinitialized systems. You should be able to add your own subsystems to this hub.
 
+//Some vocab:
+//initialize: setup the thing
+//start: start the timer/clock on the system.
+
 //These functions from the Wait Core class must not be used. Instead, the variants in the Main class must be used.
 //start and end -> startAutonomous and endAutonomous
 //loopBefore and loopAfter -> loopAtBeginning and loopAtEnd
@@ -56,8 +60,9 @@ public class Main {
 
   //Functions USED ONLY IN TELEOP
 
-  //this function is called to start the whole system
-  public void initialize() {
+  //this function is called to start the whole system (start the clock metaphorically)
+  //Even though its labeled start tele op, thats just to avoid confusion. Its basically a method which starts all of the subsystems.
+  public void startTeleOp() {
 
     //start the clock
     time.reset();
@@ -117,7 +122,7 @@ public class Main {
   
   //start the autonomous
   public void startAutonomous() {
-    initialize();
+    startTeleOp();
     wait.start();
   }
 
