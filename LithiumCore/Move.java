@@ -15,10 +15,9 @@ public class Move extends MoveCore {
 
   Move() {} //default access constructor, cannot be instantiated outside of package
 
-  @Override
   void initialize(final MadHardware hmw, final Main main, final RPS rps, final ConstantsContainer constants) { //default access
     //initialize move core
-    super.initialize(hmw, constants);
+    initializeCore(hmw, constants);
 
     this.main = main;
     this.rps = rps;

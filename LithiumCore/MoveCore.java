@@ -15,7 +15,7 @@ class MoveCore {
   protected RobotParameters robotParams;
 
   //Only meant to be called by Move class, or any other subclassing entity.
-  void initialize(final MadHardware mhw, final ConstantsContainer constants) {
+  void initializeCore(final MadHardware mhw, final ConstantsContainer constants) {
     this.mhw = mhw;
 
     this.config = constants.config;
