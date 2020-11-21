@@ -6,17 +6,24 @@ public class PropWrapper<T> {
 
   public T prop;
 
-  public final Function.Producer<T> PropGetter = new Function.Producer<T>() {
+  private class Getter implements Function.Producer<T> {
     @Override
     public T get() {
       return prop;
     }
-  };
-  public final Function.Consumer<T> PropSetter = new Function.Consumer<T>() {
+  }
+  private class Setter implements Function.Consumer<T> {
     @Override
     public void apply(final T val) {
       prop = val;
     }
-  };
+  }
+
+  public Function.Producer<T> getGetter() {
+    return new Getter();
+  }
+  public Function.Consumer<T> getSetter() {
+    return new Setter();
+  }
 
 }

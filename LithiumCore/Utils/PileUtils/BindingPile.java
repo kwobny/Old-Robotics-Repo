@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.PileUtils;
 
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.PileUtils.Pile_Interfaces.*;
 import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.Consumer;
 
 import java.util.*;
@@ -11,12 +10,12 @@ import java.util.*;
 //You cannot add the same thing more than twice to the pile.
 //All elements are iterated in the same order that they are added in.
 //You can modify (add to and remove from) the pile while iterating through it.
-//This type of pile can only work with BoundedElem and its subclasses.
+//This type of pile can only work with BoundElement and its subclasses.
 //This pile uses an arraylist, so nothing fancy is going on.
-public class BindingFullPile<T extends BoundedElem> extends SimplePile<T> implements FullPile<T>, DPPile<T> {
+public class BindingPile<T extends BoundElement> extends SimplePile<T> {
 
   @Override
-  public void add(T elem) {
+  public T add(T elem) {
     //check if the element's current pile is not this one
     if (elem.currentPile != null && elem.currentPile != this) {
       throw new RuntimeException("Each bound element can only be assigned to 1 pile.");
@@ -35,31 +34,55 @@ public class BindingFullPile<T extends BoundedElem> extends SimplePile<T> implem
     else {
       super.add(elem);
     }
+    return elem;
   }
 
   @Override
-  public void remove(T elem) {
+  public T remove(T elem) {
     if (!elem.isInPile)
       throw new RuntimeException("You cannot remove a bound element that is already in the pile.");
     elem.isInPile = false;
-
     elem.needsRemoving = true;
-  }
 
-  private boolean isIterating = false;
-  private boolean removeCurrElem = false;
-
-  //used to remove the current element while iterating through the pile.
-  public void markAsRemove() {
-    if (!isIterating) {
-      throw new RuntimeException("You cannot use the mark as remove function when the pile is not being iterated.");
-    }
-    removeCurrElem = true;
+    return elem;
   }
 
   @Override
-  public boolean has(final T elem) {
+  public boolean contains(final T elem) {
     return elem.currentPile == this && elem.isInPile;
+  }
+
+  private ArrayList<BindingPileIterator> iterators = new ArrayList<>();
+
+  private class BindingPileIterator extends SimplePileIterator {
+    void onElementRemove() { //default access
+      //
+    }
+
+    @Override
+    public T next() {
+      if (!hasNext()) {
+        throw new NoSuchElementException("Cannot get next element when iterator is exhausted. For Binding Pile.");
+      }
+      ++index;
+
+      final T elem = elemArr.get(index);
+      if (elem.needsRemoving) {
+        //
+      }
+      else {
+        //
+      }
+
+      elementRemoved = false;
+      return elemArr.get(index);
+    }
+  }
+
+  public Iterator<T> iterator() {
+    final BindingPileIterator iterObj = new BindingPileIterator();
+    iterators.add(iterObj);
+    return iterObj;
   }
 
   @Override
