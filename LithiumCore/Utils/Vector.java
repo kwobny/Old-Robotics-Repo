@@ -44,6 +44,20 @@ public class Vector implements Cloneable {
     return (Vector) super.clone();
   }
 
+  //VECTOR EQUALS
+  public static boolean isEqual(final Vector a, final Vector b) {
+    return a == b
+    ||
+    (StaticUtils.isEqual(a.x, b.x) && StaticUtils.isEqual(a.y, b.y));
+  }
+  @Override
+  public boolean equals(final Object o) {
+    final Vector vect = (Vector) o; //if the object is not a type of vector, it throws a cast exception.
+    return vect == this
+    ||
+    (StaticUtils.isEqual(x, vect.x) && StaticUtils.isEqual(y, vect.y));
+  }
+
   //Functions to set x and y variables.
   //Although you can set and access the x and y variables directly, it is recommended to set them using these methods because they check for NaN.
   public Vector setX(final double value) {
