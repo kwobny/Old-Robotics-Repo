@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils;
 
 //Is a class which specifies a direction and provides a bunch of utilities.
 //Can also be used as a point class.
-public class Vector {
+public class Vector implements Cloneable {
 
   public double x;
   public double y;
@@ -13,12 +13,7 @@ public class Vector {
     //
   }
   public Vector(final double x, final double y) {
-    if (Double.isNaN(x) || Double.isNaN(y)) {
-      throw new RuntimeException("The x or y that you provided into the vector constructor was NaN. That is invalid.");
-    }
-
-    this.x = x;
-    this.y = y;
+    setBoth(x, y);
   }
   //this constructor can be used to obtain a copy of a vector.
   public Vector(final Vector vect) {
@@ -40,12 +35,34 @@ public class Vector {
 
   //static method
   public static Vector copy(final Vector vect) {
-    return new Vector(vect);
+    return vect.clone();
   }
 
   //instance method
+  @Override
   public Vector clone() {
-    return new Vector(this);
+    return (Vector) super.clone();
+  }
+
+  //Functions to set x and y variables.
+  //Although you can set and access the x and y variables directly, it is recommended to set them using these methods because they check for NaN.
+  public Vector setX(final double value) {
+    if (Double.isNaN(value)) {
+      throw new RuntimeException("The x value that you provided into the setX function (or constructor, or setBoth) was NaN. That is invalid.");
+    }
+    this.x = value;
+    return this;
+  }
+  public Vector setY(final double value) {
+    if (Double.isNaN(value)) {
+      throw new RuntimeException("The y value that you provided into the setY function (or constructor, or setBoth) was NaN. That is invalid.");
+    }
+    this.y = value;
+    return this;
+  }
+  public Vector setBoth(final double x, final double y) {
+    setX(x);
+    return setY(y);
   }
 
   //IN PLACE UTILITIES
