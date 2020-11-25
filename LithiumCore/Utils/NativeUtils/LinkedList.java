@@ -12,6 +12,7 @@ public class LinkedList<T> implements Iterable<T> {
     Node<U> prev;
     Node<U> next;
     boolean isRemoved = false;
+
     public Node() {
       //
     }
@@ -81,6 +82,7 @@ public class LinkedList<T> implements Iterable<T> {
     //Is a pointer to the iterator cursor
     //pointer is the node pointed to by the next method. I.e. the pointer variable is the node to to the right/tail direction of the cursor.
     //head corresponds with left most edge of list, null corresponds with right most edge.
+    //if the list's size is 0, then the pointer should be null.
 
     //private int expectedIndex; //only used for next and previous index functions. Is the index of the pointer. Is index of element returned by next function
     //private int expectedModCount; //does not represent reassigning node values.
@@ -157,7 +159,7 @@ public class LinkedList<T> implements Iterable<T> {
         throw new IllegalArgumentException("You cannot supply a negative target index to the set position function. Linked list iterator set position.");
       }
       if (targetIndex > size) {
-        throw new IndexOutOfBoundsException("Linked list iterator set position method (maybe from iterator constructor?). The target index provided was greater than the size of the list.");
+        throw new IndexOutOfBoundsException("Linked list iterator set position method (maybe from iterator constructor?). The target index provided was greater than the size of the list, which was " + size);
       }
       final boolean isNotOnEnd = hasNext() && hasPrevious();
       if (isNotOnEnd && indexIsKnown()) {
@@ -598,6 +600,7 @@ public class LinkedList<T> implements Iterable<T> {
   private Node<T> tail = null; //last node
   private int size = 0;
   private int listModificationCount = 0; //stores the total modifications to the list. Does not include reassigning node values (set operation), only represents changes to the structure of the list itself.
+  //list modification count does not necessarily store the number of individual modifications. Rather, it can store the number of groups of modifications. For example, in the clear method, instead of incrementing the count for every element removed, it just increments the count by one to represent the group operation of clearing the list.
 
   //Terms representing beginning of list:
   //head
@@ -644,7 +647,7 @@ public class LinkedList<T> implements Iterable<T> {
     return size == 0;
   }
 
-  //Finds the first occurance of a given element in the list and returns a cursor which has its next element set to the first occurance.
+  //Finds the first occurance of a given element in the list and returns a cursor which has its next element set to that first occurance.
   //If the element does not exist in the list, the function returns null.
   public CursorPointer cursorOf(final T element) {
     for (Iter it = new Iter(); it.hasNext();) {
@@ -658,6 +661,8 @@ public class LinkedList<T> implements Iterable<T> {
   }
 
   //same as cursor of method except it finds the last occurance of the element in the list.
+  //Long definition: Finds the last occurance of a given element in the list and returns a cursor which has its next element set to that last occurance.
+  //If the element does not exist in the list, the function returns null.
   public CursorPointer lastCursorOf(final T element) {
     for (Iter it = new Iter(size); it.hasPrevious();) {
       final T currentElem = it.previous();
@@ -838,24 +843,99 @@ public class LinkedList<T> implements Iterable<T> {
   //throws an error if the element to be removed does not exist.
   
   public T removeHead() {
-    if (size == 0) {
-      //
+    if (isEmpty()) {
+      throw new IllegalStateException("You cannot remove the head element if the list is empty. Linked list remove head");
     }
+    final T oldElem = head.data;
+
+    head.isRemoved = true;
+    if (size == 1) {
+      head = null;
+      tail = null;
+    }
+    else {
+      head = head.next;
+      head.prev = null;
+    }
+
+    --size;
+    ++listModificationCount;
+
+    return oldElem;
   }
   public T removeTail() {
-    //
+    if (isEmpty()) {
+      throw new IllegalStateException("You cannot remove the tail element if the list is empty. Linked list remove tail");
+    }
+    final T oldElem = tail.data;
+
+    tail.isRemoved = true;
+    if (size == 1) {
+      head = null;
+      tail = null;
+    }
+    else {
+      tail = tail.prev;
+      tail.next = null;
+    }
+
+    --size;
+    ++listModificationCount;
+
+    return oldElem;
   }
 
+  //removes the element at the specified index.
+  //index can be from (inclusive) 0 to (inclusive) size-1.
   public T remove(final int index) {
-    //
+    try {
+      final Iter it = new Iter(index);
+      final T oldElem = it.next();
+      it.remove();
+      return oldElem;
+    }
+    catch (RuntimeException e) {
+      throw new IndexOutOfBoundsException("index was out of bounds. Linked list remove index", e);
+    }
   }
-  public T remove(final T elem) {
-    //
+  
+  //removes the first occurance of the element in the list.
+  //Returns whether or not the element was removed. If the element did not exist, then it returns false. Else, if it did exist, then it returns true.
+  //Returns true if the removal was successful. If the element did not exist, then it returns false.
+  public boolean remove(final T elem) {
+    final CursorPointer cursor = cursorOf(elem);
+    if (cursor == null) {
+      return false;
+    }
+    final Iter it = new Iter(cursor);
+    it.removeNext();
+    return true;
   }
 
-  //remove for: head, tail, and specific index
+  //CLEAR LIST
 
-  //remove(int index)
-  //remove(E elem)
-  //clear
+  //removes all elements from this list.
+  public void clear() {
+    if (isEmpty()) {
+      return;
+    }
+
+    Node<T> mainPtr = head;
+    Node<T> auxPtr = null;
+    while (mainPtr != null) {
+      mainPtr.prev = null;
+      mainPtr.isRemoved = true;
+
+      auxPtr = mainPtr;
+      mainPtr = mainPtr.next;
+
+      auxPtr.next = null;
+    }
+
+    head = null;
+    tail = null;
+    size = 0;
+    ++listModificationCount;
+  }
+
 }
