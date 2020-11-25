@@ -7,7 +7,7 @@ import java.util.*;
 //This is a doubly linked list.
 public class LinkedList<T> implements Iterable<T> {
 
-  private class Node {
+  class Node { //default access
     T data;
     Node prev;
     Node next;
@@ -25,30 +25,119 @@ public class LinkedList<T> implements Iterable<T> {
     }
   }
 
-  //This iterator does not implement some of the required methods from the list iterator interface.
-  public class ElemIterator implements ListIterator<T> {
+  //is a wrapper for an iterator's cursor. Used to save the current position of an iterator.
+  //Cannot be used as an iterator. Just saves one position and thats it.
+  //Is immutable.
+  public class CursorPointer {
+    CursorPointer() { //cannot instantiate class outside of package
+      //
+    }
+
+    //these properties can only be accessed by the linked list and its iterator.
+    //These properties have the same semantics/meanings as explained in the iterator comment documentation.
+    Node pointer;
+    int expectedIndex;
+    int expectedModCount;
+
+    public LinkedList<T> getOwningList() {
+      return LinkedList.this;
+    }
+
+    //look at the list iterator documentation for information on the next 2 functions.
+
+    //returns the index of the element after the cursor (next element)
+    public int nextIndex() {
+      if (indexIsKnown()) {
+        return expectedIndex;
+      }
+      //if index is not known
+      throw new ConcurrentModificationException("You cannot request the next index of a cursor pointer (or maybe iterator) if the list was modified while iterating. This is because the index is not known.");
+    }
+    //returns the index of the element before the cursor (previous element)
+    public int previousIndex() {
+      if (indexIsKnown()) {
+        return expectedIndex-1;
+      }
+      //if index is not known
+      throw new ConcurrentModificationException("You cannot request the previous index of a cursor pointer (or maybe iterator) if the list was modified while iterating. This is because the index is not known.");
+    }
+    
+    //returns if the previous and next indices of the cursor are known, and if user can use the next index and previous index methods.
+    public boolean indexIsKnown() {
+      return expectedModCount == listModificationCount;
+    }
+  }
+
+  //This iterator is obviously mutable (cause its an iterator). Takes an immutable cursor pointer and makes it mutable.
+  public class Iter extends CursorPointer implements ListIterator<T>, Cloneable {
 
     private boolean removedPreviousElement = false;
     private boolean removedNextElement = false;
     private boolean nextCalledLast; //specifies which iterating method (next or previous) was called last. True means next, false means previous.
     private boolean incrementedYet = false; //specifies if the next or previous methods have been called since the last set position command.
 
-    private Node pointer = null;
+    //private Node pointer = null;
     //Is a pointer to the iterator cursor
     //pointer is the node pointed to by the next method. I.e. the pointer variable is the node to to the right/tail direction of the cursor.
     //head corresponds with left most edge of list, null corresponds with right most edge.
 
-    private int expectedIndex; //only used for next and previous index functions. Is the index of the pointer. Is index of element returned by next function
-    private int expectedModCount; //does not represent reassigning node values.
+    //private int expectedIndex; //only used for next and previous index functions. Is the index of the pointer. Is index of element returned by next function
+    //private int expectedModCount; //does not represent reassigning node values.
 
-    ElemIterator(final int expectedModCount) { //default access. Cannot be created outside of package.
-      this(expectedModCount, 0);
+    public Iter() { //default access. Cannot be created outside of package.
+      this(0);
     }
     //"The specified index indicates the first element that would be returned by an initial call to next"
-    ElemIterator(final int expectedModCount, final int index) { //default access
+    public Iter(final int index) { //default access
       setPosition(index);
-      this.expectedModCount = expectedModCount;
     }
+    //Used to get iterator from cursor.
+    public Iter(final CursorPointer cursor) {
+      setPosition(cursor);
+    }
+    
+    //equals function
+    //Tests to see if the current iterator is "equal" to the supplied iterator. Two iterators are equal if their cursors are in the same position in the list, ie their pointers are equal.
+    @Override
+    public boolean equals(final Object o) {
+      final Iter iter = (Iter) o; //if the object provided is not a linked list element iterator, throw a class cast exception.
+      return pointer == iter.pointer;
+    }
+
+    //If the iterators are equal and one iterator does not know its own index, then the other iterator can be used to calibrate the index of the first. This is called synchronizing the iterator.
+    //this function synchronizes indices if one of them is not known. You can only call this function if the two iterators are equal to each other. Call the equals function to determine this.
+    //returns the iterator whose index was synchronized. If none were synchronized, then it returns null.
+    public Iter syncIndices(final Iter iter) {
+      if (pointer != iter.pointer) { //the equals part of the function.
+        throw new IllegalStateException("You cannot synchronize the indices of the current iterator and one provided if they are not on the same node.");
+      }
+      if (this.indexIsKnown()) {
+        if (!iter.indexIsKnown()) {
+          //need to synchronize comparing/argument provided iterator.
+          iter.expectedIndex = this.expectedIndex;
+          iter.expectedModCount = this.expectedModCount;
+
+          return iter;
+        }
+      }
+      else if (iter.indexIsKnown()) {
+        //need to synchronize this/current iterator
+        this.expectedIndex = iter.expectedIndex;
+        this.expectedModCount = iter.expectedModCount;
+
+        return this;
+      }
+
+      return null;
+    }
+
+    //Clone iterator function
+    @Override
+    public Iter clone() {
+      return (Iter) super.clone();
+    }
+
+    //start main iterator functions
 
     @Override
     public boolean hasNext() {
@@ -59,47 +148,94 @@ public class LinkedList<T> implements Iterable<T> {
       return cursorHasPrevious(pointer);
     }
 
-    @Override
-    public int nextIndex() {
-      if (indexIsKnown()) {
-        return expectedIndex;
-      }
-      //if index is not known
-      throw new ConcurrentModificationException("You cannot request the next index if the list was modified while iterating. This is because the index is not known.");
-    }
-    @Override
-    public int previousIndex() {
-      if (indexIsKnown()) {
-        return expectedIndex-1;
-      }
-      //if index is not known
-      throw new ConcurrentModificationException("You cannot request the previous index if the list was modified while iterating. This is because the index is not known.");
-    }
-    
-    //returns if the index of the current element is known, and if user can use the next index and previous index methods.
-    public boolean indexIsKnown() {
-      return expectedModCount == listModificationCount;
-    }
-
     //sets the iterator's position to some index in the list.
     //the index parameter describes the index of the element returned by a subsequent call to next.
-    public void setPosition(final int index) {
-      if (index < 0 || index > size) {
-        throw new IndexOutOfBoundsException("Linked list iterator set position method (maybe from iterator constructor?)");
+    //if the index is out of bounds, the function throws an exception.
+    public void setPosition(final int targetIndex) {
+      if (targetIndex < 0) {
+        throw new IllegalArgumentException("You cannot supply a negative target index to the set position function. Linked list iterator set position.");
       }
-      //index is closer to end of list
-      if (index >= size/2) {
-        pointer = null;
-        previous(size-index);
+      if (targetIndex > size) {
+        throw new IndexOutOfBoundsException("Linked list iterator set position method (maybe from iterator constructor?). The target index provided was greater than the size of the list.");
       }
-      //index is closer to start of list
+      final boolean isNotOnEnd = hasNext() && hasPrevious();
+      if (isNotOnEnd && indexIsKnown()) {
+        
+        if (targetIndex == expectedIndex) {
+          return; //do nothing because the iterator is already on the position requested.
+        }
+        if (targetIndex > expectedIndex) {
+          //target index is toward the tail direction of the iterator
+          if (targetIndex >= size/2 + expectedIndex/2) {
+            //target is closer to tail
+            pointer = null;
+            previous(size-targetIndex);
+          }
+          else {
+            //target is closer to iterator
+            next(targetIndex-expectedIndex);
+          }
+        }
+        else {
+          //target index is towards the head direction of the iterator
+          if (targetIndex < expectedIndex/2) {
+            //target is closer to head
+            pointer = head;
+            next(targetIndex);
+          }
+          else {
+            //target is closer to iterator
+            previous(expectedIndex-targetIndex);
+          }
+        }
+
+      }
       else {
-        pointer = head;
-        next(index);
+        //use old fasioned way
+
+        //index is closer to end of list
+        if (targetIndex >= size/2) {
+          pointer = null;
+          previous(size-targetIndex);
+        }
+        //index is closer to start of list
+        else {
+          pointer = head;
+          next(targetIndex);
+        }
       }
 
-      expectedIndex = index;
+      expectedIndex = targetIndex;
+      expectedModCount = listModificationCount;
+
+      removedPreviousElement = false;
+      removedNextElement = false;
       incrementedYet = false;
+    }
+
+    //this version of the set position command sets the iterator's position to the one specified by the cursor pointer or by another iterator.
+    //You can input an iterator or cursor pointer.
+    public void setPosition(final CursorPointer cursor) {
+      if (cursor.getOwningList() != this.getOwningList()) {
+        throw new IllegalArgumentException("You cannot set the iterator's position to a cursor which is not from the same list as the iterator itself. Linked List iterator set position.");
+      }
+
+      this.pointer = cursor.pointer;
+      this.expectedIndex = cursor.expectedIndex;
+      this.expectedModCount = cursor.expectedModCount;
+
+      removedPreviousElement = false;
+      removedNextElement = false;
+      incrementedYet = false;
+    }
+
+    //returns the current position of the iterator in the form of a cursor pointer.
+    public CursorPointer getCurrentPosition() {
+      final CursorPointer cursor = new CursorPointer();
+      cursor.pointer = this.pointer;
+      cursor.expectedIndex = this.expectedIndex;
+      cursor.expectedModCount = this.expectedModCount;
+      return cursor;
     }
 
     //displaces (either goes forward or behind) the iterator
@@ -135,7 +271,7 @@ public class LinkedList<T> implements Iterable<T> {
     //same as next step method, but goes the other way.
     public T previous(final int steps) {
       if (steps < 0) {
-        throw new IndexOutOfBoundsException("Linked list");
+        throw new IllegalArgumentException("Linked list iterator previous. You cannot supply a negative step to the previous function.");
       }
       if (steps == 0) {
         return null;
@@ -152,7 +288,7 @@ public class LinkedList<T> implements Iterable<T> {
       readjustPosition();
 
       if (!hasNext()) {
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("linked list iterator next");
       }
 
       final T data = pointer.data;
@@ -170,7 +306,7 @@ public class LinkedList<T> implements Iterable<T> {
     //Returns null if step is 0, and the iterator doesn't move.
     public T next(final int steps) {
       if (steps < 0) {
-        throw new IndexOutOfBoundsException("next Linked list");
+        throw new IllegalArgumentException("Linked list iterator next. You cannot supply a negative step to the next function.");
       }
       if (steps == 0) {
         return null;
@@ -461,25 +597,168 @@ public class LinkedList<T> implements Iterable<T> {
   private Node tail = null; //last node
   private int size = 0;
   private int listModificationCount = 0; //stores the total modifications to the list. Does not include reassigning node values (set operation), only represents changes to the structure of the list itself.
+
+  //Terms representing beginning of list:
+  //head
+  //beginning
+  //first
+  //previous
+  //left
+  //index of 0
   
-  public ElemIterator iterator() {
-    return new ElemIterator();
+  //Terms representing end of list
+  //tail
+  //end
+  //last
+  //next
+  //right
+  //index of (size) or (size - 1)
+
+  //First to last in list goes from head to tail. Iterator normally goes from head to tail when used as a normal iterator.
+
+  //some notes about head, tail, and node references:
+  //if list size is 0, head and tail will always be null.
+  //if list size is 1, head and tail will always point to the same element.
+  //head and tail are inclusive of the list. Head is first node and tail is last node.
+  //the head element always has its prev (previous) pointer set to null.
+  //the tail element always has its next pointer set to null.
+
+  @Override
+  public Iter iterator() {
+    return new Iter();
   }
   //see list interface documentation for this method's documentation. Basically, it returns a list iterator with its index set to this index (not exactly, this is just a simplification).
   //"The specified index indicates the first element that would be returned by an initial call to next"
-  public ElemIterator listIterator(final int index) {
-    //
+  public Iter iterator(final int index) {
+    return new Iter(index);
+  }
+  public Iter iterator(final CursorPointer cursor) {
+    return new Iter(cursor);
   }
 
   public int size() {
     return size;
   }
+  public boolean isEmpty() {
+    return size == 0;
+  }
 
-  //Add methods
-  //If you add to the list while iterating, the iterator will obviously skip the added element if it was inserted before the iterator's current position.
+  //Finds a given element in the list and returns a cursor which has its next element set to the provided one.
+  public CursorPointer cursorOf(final T element) {
+    for (Iter it = new Iter(); it.hasNext();) {
+      final T currentElem = it.next();
+      if (element.equals(currentElem)) {
+        return it.previousIndex();
+      }
+    }
+    return -1;
+  }
+
+  //index of method returns the index of the first occurance of an element within the list. If the element does not exist, then it returns -1.
+  public int indexOf(final T element) {
+    for (Iter it = new Iter(); it.hasNext();) {
+      final T currentElem = it.next();
+      if (element.equals(currentElem)) {
+        return it.previousIndex();
+      }
+    }
+    return -1;
+  }
+  //last index of method returns the index of the last occurance of an element. If the element does not exist in the list, then it returns -1.
+  public int lastIndexOf(final T element) {
+    for (Iter it = new Iter(size); it.hasPrevious();) {
+      final T currentElem = it.previous();
+      if (element.equals(currentElem)) {
+        return it.nextIndex();
+      }
+    }
+    return -1;
+  }
+
+  public boolean contains(final T element) {
+    return indexOf(element) != -1;
+  }
+
+  //returns the linked list's elements in order in the form of an array.
+  public T[] toArray() {
+    final T[] retArr = new T[size];
+    final Iter it = new Iter();
+    for (int i = 0; i < retArr.size; ++i) {
+      final T nextElem = it.next();
+      retArr[i] = nextElem;
+    }
+    return retArr;
+  }
+
+  //GET METHODS
+  //all throw an exception if there is no element.
+  
+  public T getHead() {
+    if (size == 0) {
+      throw new IllegalStateException("You cannot request the head node if the size of the list is 0. linked list get head");
+    }
+    return head.data;
+  }
+  public T getTail() {
+    if (size == 0) {
+      throw new IllegalStateException("You cannot request the tail node if the size of the list is 0. linked list get tail");
+    }
+    return tail.data;
+  }
+  //gets the element at a certain index. If the index requested is higher than the list size, the function returns null.
+  public T get(final int index) {
+    try {
+      final Iter it = new Iter(index);
+      return it.next();
+    }
+    catch (RuntimeException e) {
+      throw new RuntimeException("linked list get. Requested index is out of bounds.", e);
+    }
+  }
+
+  //SET METHODS
+  //All return the element that was at the position previously before replacement.
+  //If there is no element/node to set, the function throws an exception.
+
+  public T setHead(final T element) {
+    if (size == 0) {
+      throw new IllegalStateException("You cannot set the head of a linked list if the size of the list is 0. Linked list set head");
+    }
+    final T oldElement = head.data;
+    head.data = element;
+    return oldElement;
+  }
+  public T setTail(final T element) {
+    if (size == 0) {
+      throw new IllegalStateException("You cannot set the tail of a linked list if the size of the list is 0. Linked list set tail");
+    }
+    final T oldElement = tail.data;
+    tail.data = element;
+    return oldElement;
+  }
+  //sets the element at the index of the list.
+  public T set(final int index, final T element) {
+    try {
+      final Iter it = new Iter(index);
+      final T oldElement = it.next();
+      it.set(element);
+      return oldElement;
+    }
+    catch (RuntimeException e) {
+      throw new RuntimeException("The index provided is out of bounds. Linked list set function.", e);
+    }
+  }
+
+  //ITERATOR STRUCTURE MUTATING FUNCTIONS
+  //Structure mutating refers to an operation that changes the structure of the list itself. As such, set operations are excluded from this category.
+
+  //ADD METHODS
+  //All add methods return the added element
+  //If you add to the list while iterating, the iterator will skip the added element if it was inserted in the same position as the iterator, relative to its neighboring elements.
 
   //Add element to head/front of list
-  public T addHead(final T elem) {
+  //Prepend an element to the list. Similar to array unshift operation.
+  public T addFront(final T elem) {
     if (size == 0) {
       head = new Node(elem);
       tail = head;
@@ -495,11 +774,14 @@ public class LinkedList<T> implements Iterable<T> {
     }
 
     ++size;
+    ++listModificationCount;
+
     return elem;
   }
 
   //Add element to tail/back of list
-  public T addTail(final T elem) {
+  //Append an element to the list. Similar to array push operation.
+  public T add(final T elem) {
     if (size == 0) {
       head = new Node(elem);
       tail = head;
@@ -515,43 +797,35 @@ public class LinkedList<T> implements Iterable<T> {
     }
 
     ++size;
+    ++listModificationCount;
+
     return elem;
   }
 
-  //Add element to specific index
-  public T addAtIndex(final T elem, final int index) {
-    //
+  //Add element at specific index
+  //Inserts the element right before the specified index. Inserts in cursor between index-1 and index.
+  //This means that the element that was at the index is now shifted to the right, along with all of the elements after it.
+  //the index can be from (inclusive) 0 to (inclusive) size.
+  public T add(final int index, final T elem) {
+    final Iter it;
+    try {
+      it = new Iter(index);
+    }
+    catch (RuntimeException e) {
+      throw new RuntimeException("The index you provided is out of bounds. Linked list add function.", e);
+    }
+    it.add(elem);
 
-    ++size;
     return elem;
   }
 
-  //If -1, then it does not exist in list.
-  public int getIndexOf() {
-    //
-  }
-  public boolean contains() {
-    //
-  }
+  //REMOVE METHODS
 
-  //add, remove, get, and set for: head, tail, and specific index
-  //contains and index of
+  public T removeHead
 
-  //add(E elem)
-  //add(int index, E elem)
-  //clear
-  //contains
-  //get(int index)
-  //indexOf
-  //isEmpty
-  //iterator()
-  //lastIndexOf
-  //listIterator()
+  //remove for: head, tail, and specific index
+
   //remove(int index)
   //remove(E elem)
-  //set(int index, E element)
-  //size()
-  
-  //subList
-  //toArray
+  //clear
 }
