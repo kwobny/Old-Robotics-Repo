@@ -27,13 +27,14 @@ public class LinkedList<T> implements Iterable<T> {
 
   //is a wrapper for an iterator's cursor. Used to save the current position of an iterator.
   //Cannot be used as an iterator. Just saves one position and thats it.
+  //It is recommended that you always get a cursor pointer from the iterator class' getCursor method.
   //Is immutable.
   public class CursorPointer {
     CursorPointer() { //cannot instantiate class outside of package
       //
     }
 
-    //these properties can only be accessed by the linked list and its iterator.
+    //these properties can only be accessed by the linked list and its iterator (default access).
     //These properties have the same semantics/meanings as explained in the iterator comment documentation.
     Node<T> pointer;
     int expectedIndex;
@@ -229,8 +230,8 @@ public class LinkedList<T> implements Iterable<T> {
       incrementedYet = false;
     }
 
-    //returns the current position of the iterator in the form of a cursor pointer.
-    public CursorPointer getCurrentPosition() {
+    //Returns a copy of the iterator's cursor in the form of a cursor pointer.
+    public CursorPointer getCursor() {
       final CursorPointer cursor = new CursorPointer();
       cursor.pointer = this.pointer;
       cursor.expectedIndex = this.expectedIndex;
@@ -643,15 +644,28 @@ public class LinkedList<T> implements Iterable<T> {
     return size == 0;
   }
 
-  //Finds a given element in the list and returns a cursor which has its next element set to the provided one.
+  //Finds the first occurance of a given element in the list and returns a cursor which has its next element set to the first occurance.
+  //If the element does not exist in the list, the function returns null.
   public CursorPointer cursorOf(final T element) {
     for (Iter it = new Iter(); it.hasNext();) {
       final T currentElem = it.next();
       if (element.equals(currentElem)) {
-        return it.previousIndex();
+        it.previous();
+        return it.getCursor();
       }
     }
-    return -1;
+    return null;
+  }
+
+  //same as cursor of method except it finds the last occurance of the element in the list.
+  public CursorPointer lastCursorOf(final T element) {
+    for (Iter it = new Iter(size); it.hasPrevious();) {
+      final T currentElem = it.previous();
+      if (element.equals(currentElem)) {
+        return it.getCursor();
+      }
+    }
+    return null;
   }
 
   //index of method returns the index of the first occurance of an element within the list. If the element does not exist, then it returns -1.
@@ -694,14 +708,14 @@ public class LinkedList<T> implements Iterable<T> {
   //all throw an exception if there is no element.
   
   public T getHead() {
-    if (size == 0) {
-      throw new IllegalStateException("You cannot request the head node if the size of the list is 0. linked list get head");
+    if (isEmpty()) {
+      throw new IllegalStateException("You cannot request the head node if the list is empty. linked list get head");
     }
     return head.data;
   }
   public T getTail() {
-    if (size == 0) {
-      throw new IllegalStateException("You cannot request the tail node if the size of the list is 0. linked list get tail");
+    if (isEmpty()) {
+      throw new IllegalStateException("You cannot request the tail node if the list is empty. linked list get tail");
     }
     return tail.data;
   }
@@ -721,16 +735,16 @@ public class LinkedList<T> implements Iterable<T> {
   //If there is no element/node to set, the function throws an exception.
 
   public T setHead(final T element) {
-    if (size == 0) {
-      throw new IllegalStateException("You cannot set the head of a linked list if the size of the list is 0. Linked list set head");
+    if (isEmpty()) {
+      throw new IllegalStateException("You cannot set the head of a linked list if the list is empty. Linked list set head");
     }
     final T oldElement = head.data;
     head.data = element;
     return oldElement;
   }
   public T setTail(final T element) {
-    if (size == 0) {
-      throw new IllegalStateException("You cannot set the tail of a linked list if the size of the list is 0. Linked list set tail");
+    if (isEmpty()) {
+      throw new IllegalStateException("You cannot set the tail of a linked list if the list is empty. Linked list set tail");
     }
     final T oldElement = tail.data;
     tail.data = element;
@@ -820,8 +834,24 @@ public class LinkedList<T> implements Iterable<T> {
   }
 
   //REMOVE METHODS
+  //returns the element removed.
+  //throws an error if the element to be removed does not exist.
+  
+  public T removeHead() {
+    if (size == 0) {
+      //
+    }
+  }
+  public T removeTail() {
+    //
+  }
 
-  public T removeHead
+  public T remove(final int index) {
+    //
+  }
+  public T remove(final T elem) {
+    //
+  }
 
   //remove for: head, tail, and specific index
 
