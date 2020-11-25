@@ -7,18 +7,18 @@ import java.util.*;
 //This is a doubly linked list.
 public class LinkedList<T> implements Iterable<T> {
 
-  class Node { //default access
-    T data;
-    Node prev;
-    Node next;
+  private static class Node<U> {
+    U data;
+    Node<U> prev;
+    Node<U> next;
     boolean isRemoved = false;
     public Node() {
       //
     }
-    public Node(final T data) {
+    public Node(final U data) {
       this.data = data;
     }
-    public Node(final T data, final Node prev, final Node next) {
+    public Node(final U data, final Node<U> prev, final Node<U> next) {
       this.data = data;
       this.prev = prev;
       this.next = next;
@@ -35,7 +35,7 @@ public class LinkedList<T> implements Iterable<T> {
 
     //these properties can only be accessed by the linked list and its iterator.
     //These properties have the same semantics/meanings as explained in the iterator comment documentation.
-    Node pointer;
+    Node<T> pointer;
     int expectedIndex;
     int expectedModCount;
 
@@ -348,7 +348,7 @@ public class LinkedList<T> implements Iterable<T> {
       if (steps == 0) {
         return null;
       }
-      Node tempPointer = pointer;
+      Node<T> tempPointer = pointer;
       while (true) {
         if (!cursorHasPrevious(tempPointer)) {
           return null;
@@ -378,7 +378,7 @@ public class LinkedList<T> implements Iterable<T> {
       if (steps == 0) {
         return null;
       }
-      Node tempPointer = pointer;
+      Node<T> tempPointer = pointer;
       while (true) {
         if (!cursorHasNext(tempPointer)) {
           return null;
@@ -402,8 +402,8 @@ public class LinkedList<T> implements Iterable<T> {
       //readjust position
       readjustPosition();
       
-      final Node prevNode = getPreviousPart(pointer); //node returned by the previous method
-      final Node newNode = new Node(elem, prevNode, pointer);
+      final Node<T> prevNode = getPreviousPart(pointer); //node returned by the previous method
+      final Node<T> newNode = new Node<T>(elem, prevNode, pointer);
       if (hasPrevious()) {
         //connect node behind if there is a node behind.
         prevNode.next = newNode;
@@ -465,7 +465,7 @@ public class LinkedList<T> implements Iterable<T> {
       }
 
       //order of these operations is important and purposeful.
-      final Node removeNode = getPreviousPart(pointer);
+      final Node<T> removeNode = getPreviousPart(pointer);
       removeNode.isRemoved = true;
       if (hasNext()) { //reconnect next node if there is one
         pointer.prev = removeNode.prev;
@@ -574,10 +574,10 @@ public class LinkedList<T> implements Iterable<T> {
 
     //These functions expect the cursor / input pointer to represent the same thing in the list as the pointer variable.
     //These functions consider the current state of the cursor with no respect to the current list's state (head, tail, etc).
-    private boolean cursorHasNext(final Node cursor) {
+    private boolean cursorHasNext(final Node<T> cursor) {
       return cursor != null;
     }
-    private boolean cursorHasPrevious(final Node cursor) {
+    private boolean cursorHasPrevious(final Node<T> cursor) {
       return size > 0 && (cursor == null || cursor.prev != null);
     }
     //This function gets the node behind the cursor provided (cursor in the form of a pointer)
@@ -585,7 +585,7 @@ public class LinkedList<T> implements Iterable<T> {
     //Gets the previous part of the cursor.
     //If cursor is the head element (prev property is null), then the function returns null
     //if list size is 0, then it returns null.
-    private Node getPreviousPart(final Node cursor) {
+    private Node<T> getPreviousPart(final Node<T> cursor) {
       return cursor == null ? tail : cursor.prev;
     }
   }
@@ -593,8 +593,8 @@ public class LinkedList<T> implements Iterable<T> {
   //the prev reference in each node points towards the head. Next reference points towards tail.
   //head and tail are never null unless list size is 0. If list size is 1, head and tail point to same reference.
   // head and tail are inclusive of list
-  private Node head = null; //first node
-  private Node tail = null; //last node
+  private Node<T> head = null; //first node
+  private Node<T> tail = null; //last node
   private int size = 0;
   private int listModificationCount = 0; //stores the total modifications to the list. Does not include reassigning node values (set operation), only represents changes to the structure of the list itself.
 
@@ -760,16 +760,16 @@ public class LinkedList<T> implements Iterable<T> {
   //Prepend an element to the list. Similar to array unshift operation.
   public T addFront(final T elem) {
     if (size == 0) {
-      head = new Node(elem);
+      head = new Node<T>(elem);
       tail = head;
     }
     else if (size == 1) {
-      head = new Node(elem);
+      head = new Node<T>(elem);
       head.next = tail;
       tail.prev = head;
     }
     else {
-      head.prev = new Node(elem, null, head);
+      head.prev = new Node<T>(elem, null, head);
       head = head.prev;
     }
 
@@ -783,16 +783,16 @@ public class LinkedList<T> implements Iterable<T> {
   //Append an element to the list. Similar to array push operation.
   public T add(final T elem) {
     if (size == 0) {
-      head = new Node(elem);
+      head = new Node<T>(elem);
       tail = head;
     }
     else if (size == 1) {
-      tail = new Node(elem);
+      tail = new Node<T>(elem);
       head.next = tail;
       tail.prev = head;
     }
     else {
-      tail.next = new Node(elem, tail, null);
+      tail.next = new Node<T>(elem, tail, null);
       tail = tail.next;
     }
 
