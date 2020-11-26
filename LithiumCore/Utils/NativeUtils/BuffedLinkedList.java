@@ -2,10 +2,14 @@ package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.NativeUtils;
 
 import java.util.*;
 
+//Buffed linked list
+//This is a doubly linked list.
+
+//Why is this linked list buffed? Why not just use the implementation provided in the standard libraries? Thats because you can mutate it (add, delete, clear, etc.) while iterating through it!!! Isn't that sick?? No more annoying concurrent modification exceptions. Yay!!!
 //The whole point of making this linked list implementation is so that you can iterate through the list while mutating it.
 //You should be able to mutate the list while iterating through it.
-//This is a doubly linked list.
-public class LinkedList<T> implements Iterable<T> {
+
+public class BuffedLinkedList<T> implements Iterable<T> {
 
   private static class Node<U> {
     U data;
@@ -41,11 +45,12 @@ public class LinkedList<T> implements Iterable<T> {
     int expectedIndex;
     int expectedModCount;
 
-    public LinkedList<T> getOwningList() {
-      return LinkedList.this;
+    public BuffedLinkedList<T> getOwningList() {
+      return BuffedLinkedList.this;
     }
 
     //look at the list iterator documentation for information on the next 2 functions.
+    //You can only request the previous and next index if the owning list was not modified since the iterator was created. If you request one of the indices, then the function throws a concurrent modification exception.
 
     //returns the index of the element after the cursor (next element)
     public int nextIndex() {
@@ -64,7 +69,7 @@ public class LinkedList<T> implements Iterable<T> {
       throw new ConcurrentModificationException("You cannot request the previous index of a cursor pointer (or maybe iterator) if the list was modified while iterating. This is because the index is not known.");
     }
     
-    //returns if the previous and next indices of the cursor are known, and if user can use the next index and previous index methods.
+    //Is used to discern whether or not you can use the previous and next index functions. You can't get either index if the index is not known.
     public boolean indexIsKnown() {
       return expectedModCount == listModificationCount;
     }
@@ -898,7 +903,7 @@ public class LinkedList<T> implements Iterable<T> {
       throw new IndexOutOfBoundsException("index was out of bounds. Linked list remove index", e);
     }
   }
-  
+
   //removes the first occurance of the element in the list.
   //Returns whether or not the element was removed. If the element did not exist, then it returns false. Else, if it did exist, then it returns true.
   //Returns true if the removal was successful. If the element did not exist, then it returns false.
