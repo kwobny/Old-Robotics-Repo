@@ -11,15 +11,15 @@ import java.util.*;
 //All elements are iterated in the same order that they are added in.
 //You can modify (add to and remove from) the pile while iterating through it.
 //This type of pile can only work with BoundElement and its subclasses.
-public class BindingPile<T extends BoundElement> extends SimplePile<T> {
+public class BindingPile<T extends BoundElement<T>> extends SimplePile<T> {
 
   @Override
   public T add(final T elem) {
     //check if the element's current pile is not this one
-    if (elem.currentPile != null && elem.currentPile != this) {
+    if (elem.ownerPile != null && elem.ownerPile != this) {
       throw new RuntimeException("Each bound element can only be assigned to 1 pile.");
     }
-    elem.currentPile = this;
+    elem.ownerPile = this;
 
     //check if the element is already in the pile
     if (elem.isInPile)
@@ -48,40 +48,34 @@ public class BindingPile<T extends BoundElement> extends SimplePile<T> {
 
   @Override
   public boolean contains(final T elem) {
-    return elem.currentPile == this && elem.isInPile;
+    return elem.ownerPile == this && elem.isInPile;
   }
 
-  private ArrayList<BindingPileIterator> iterators = new ArrayList<>();
+  //binding pile iterator
+  protected class BPIterator extends SPIterator {
+    @Override
+    public boolean hasNext() {
+      if (!it.hasNext()) return false;
 
-  private class BindingPileIterator extends SimplePileIterator {
-    void onElementRemove() { //default access
-      //
+      final T nextElement = it.next();
+      if (nextElement.needsRemoving) {
+        it.remove();
+        nextElement.needsRemoving = false;
+      }
     }
-
     @Override
     public T next() {
-      if (!hasNext()) {
-        throw new NoSuchElementException("Cannot get next element when iterator is exhausted. For Binding Pile.");
-      }
-      ++index;
-
-      final T elem = elemArr.get(index);
-      if (elem.needsRemoving) {
-        //
-      }
-      else {
-        //
-      }
-
-      elementRemoved = false;
-      return elemArr.get(index);
+      //
+    }
+    @Override
+    public void remove() {
+      //
     }
   }
 
+  @Override
   public Iterator<T> iterator() {
-    final BindingPileIterator iterObj = new BindingPileIterator();
-    iterators.add(iterObj);
-    return iterObj;
+    return new BPIterator();
   }
 
   @Override

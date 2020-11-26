@@ -6,7 +6,7 @@ package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.PileUtils;
 public interface PileInterface<T> {
 
   //methods to add and remove elements.
-  //They should normally return the current element (this), but technically don't have too.
+  //They should normally return the added/removed element, but technically don't have too.
 
   //Add method is required.
   public T add(T element);

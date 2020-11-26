@@ -63,34 +63,37 @@ public class SimplePile<T> extends AbstractPile<T> {
     return elemList.isEmpty();
   }
 
+  //simple pile iterator
+  protected class SPIterator implements Iterator<T> {
+    protected BuffedLinkedList<T>.Iter it = elemList.iterator();
+
+    @Override
+    public boolean hasNext() {
+      return it.hasNext();
+    }
+    @Override
+    public T next() {
+      try {
+        return it.next();
+      }
+      catch (RuntimeException e) {
+        throw new RuntimeException("You have tried to call the next method when there were no more elements left to iterate through. The size of the pile is " + size() + ". Simple pile iterator next", e);
+      }
+    }
+    @Override
+    public void remove() {
+      try {
+        it.remove();
+      }
+      catch (RuntimeException e) {
+        throw new RuntimeException("Simple pile iterator remove", e);
+      }
+    }
+  }
+
   @Override
   public Iterator<T> iterator() {
-    return new Iterator<T>() {
-      private BuffedLinkedList<T>.Iter it = elemList.iterator();
-
-      @Override
-      public boolean hasNext() {
-        return it.hasNext();
-      }
-      @Override
-      public T next() {
-        try {
-          return it.next();
-        }
-        catch (RuntimeException e) {
-          throw new RuntimeException("You have tried to call the next method when there were no more elements left to iterate through. The size of the pile is " + size() + ". Simple pile iterator next", e);
-        }
-      }
-      @Override
-      public void remove() {
-        try {
-          it.remove();
-        }
-        catch (RuntimeException e) {
-          throw new RuntimeException("Simple pile iterator remove", e);
-        }
-      }
-    };
+    return new SPIterator();
   }
 
   //This variable only applies when iterating with the for each function.
