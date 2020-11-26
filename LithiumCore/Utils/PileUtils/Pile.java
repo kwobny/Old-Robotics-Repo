@@ -11,6 +11,7 @@ public interface Pile<T> extends Iterable<T> {
 
   //returns an iterator to be used to iterate over the pile.
   //Required method
+  @Override
   public Iterator<T> iterator();
 
   //Remove current element method
@@ -31,10 +32,17 @@ public interface Pile<T> extends Iterable<T> {
   //this method does not throw an error, and only removes if the element is present.
   //true means the element was removed. False means the element did not exist in the pile and was not removed.
   public boolean removeIfPresent(T element);
+  //removes all elements in pile.
+  public void clear();
 
   //returns a boolean signifying whether or not the element is in the pile.
   //true means the element is present in the pile, false means the element is not present.
   public boolean contains(T element);
+
+  //returns the number of elements in the pile.
+  public int size();
+  //returns true if the pile is empty. False if the pile is not empty.
+  public boolean isEmpty();
 
 }
 

@@ -440,9 +440,10 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     //Removes the element that was returned by the last call to next or previous. In the case of a unidirectional iterator, it just removes the current element.
     //Removes the element towards the direction of the last call. If next was called last, then it removes the element towards the head direction, and vise versa. This also applies regardless of if you add an element.
     //If an element is added and the last call was next, then the new element is removed. But if the last call was previous, then the element towards the tail direction is removed.
+
     //You cannot use the blank remove method if you haven't called previous or next yet.
 
-    //You can only remove the element once.
+    //You can only remove the previous and next element once per cursor position. This is because you cannot remove a specific element again after it is already removed.
 
     @Override
     public void remove() {
@@ -645,9 +646,11 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     return new Iter(cursor);
   }
 
+  //returns the number of elements in the list.
   public int size() {
     return size;
   }
+  //returns true if the list is empty. False if not empty.
   public boolean isEmpty() {
     return size == 0;
   }
@@ -707,6 +710,8 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     return -1;
   }
 
+  //returns true if the element is in the list.
+  //returns false if the element is not in the list.
   public boolean contains(final T element) {
     return indexOf(element) != -1;
   }
