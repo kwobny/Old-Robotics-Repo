@@ -652,12 +652,20 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     return size == 0;
   }
 
+  //returns true if the elements are, in a sense, "equal".
+  //returns false if the elements are not equal.
+  //o is the original element, e is the element being compared to the original.
+  private static <U> boolean areEqual(final U o, final U e) {
+    //this is the formal definition of equals
+    return o == null ? e == null : o.equals(e);
+  }
+
   //Finds the first occurance of a given element in the list and returns a cursor which has its next element set to that first occurance.
   //If the element does not exist in the list, the function returns null.
   public CursorPointer cursorOf(final T element) {
     for (Iter it = new Iter(); it.hasNext();) {
       final T currentElem = it.next();
-      if (element.equals(currentElem)) {
+      if (areEqual(element, currentElem)) {
         it.previous();
         return it.getCursor();
       }
@@ -671,7 +679,7 @@ public class BuffedLinkedList<T> implements Iterable<T> {
   public CursorPointer lastCursorOf(final T element) {
     for (Iter it = new Iter(size); it.hasPrevious();) {
       final T currentElem = it.previous();
-      if (element.equals(currentElem)) {
+      if (areEqual(element, currentElem)) {
         return it.getCursor();
       }
     }
@@ -682,7 +690,7 @@ public class BuffedLinkedList<T> implements Iterable<T> {
   public int indexOf(final T element) {
     for (Iter it = new Iter(); it.hasNext();) {
       final T currentElem = it.next();
-      if (element.equals(currentElem)) {
+      if (areEqual(element, currentElem)) {
         return it.previousIndex();
       }
     }
@@ -692,7 +700,7 @@ public class BuffedLinkedList<T> implements Iterable<T> {
   public int lastIndexOf(final T element) {
     for (Iter it = new Iter(size); it.hasPrevious();) {
       final T currentElem = it.previous();
-      if (element.equals(currentElem)) {
+      if (areEqual(element, currentElem)) {
         return it.nextIndex();
       }
     }

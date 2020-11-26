@@ -14,17 +14,23 @@ public interface Pile<T> extends Iterable<T> {
   public Iterator<T> iterator();
 
   //Remove current element method
-  //An overloaded remove function which should only be used when ITERATING through the pile via the FOR EACH function. Removes the element which the pile is currently on in its iterating sequence.
+  //An overloaded remove function which should and can only be used when ITERATING through the pile via the FOR EACH function. Removes the element which the pile is currently on in its iterating sequence.
+  //If the element is removed twice, the function throws an exception.
   public void remove();
-  //Another way of iterating through the pile where th pile itself handles iteration
+  //Another way of iterating through the pile where the pile itself handles iteration.
   public void forEach(Function.Consumer<T> consumer);
 
   //methods to add and remove elements.
   //They should normally return the current element (this), but technically don't have too.
 
-  //Add method is required
+  //Add method is required.
   public T add(T element);
+
+  //this method throws an error/exception if the element to be removed is not present.
   public T remove(T element);
+  //this method does not throw an error, and only removes if the element is present.
+  //true means the element was removed. False means the element did not exist in the pile and was not removed.
+  public boolean removeIfPresent(T element);
 
   //returns a boolean signifying whether or not the element is in the pile.
   //true means the element is present in the pile, false means the element is not present.

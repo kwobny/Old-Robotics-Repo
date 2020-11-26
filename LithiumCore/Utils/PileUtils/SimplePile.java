@@ -4,9 +4,7 @@ import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.Function;
 
 import java.util.*;
 
-//A crucial advantage to this type of pile and its subclasses is that the order that you iterate through the pile is the same as the order which you added the elements in.
-//You can add to the pile while iterating, but you can only remove from the pile while iterating if you say true for the can remove while iterating constructor parameter.
-//If you choose to be able to remove while iterating, the pile will need more space which is O(n) where n is the number of active iterators at a time.
+//A crucial advantage to this type of pile and its subclasses is that you iterate through the pile in the same order in which you added the elements in.
 //You can add the same thing to this pile twice using normal add method. If you do not want this, then use the add strict method.
 //Remove and contains methods are innefficient since they require you to loop over the whole pile.
 public class SimplePile<T> extends AbstractPile<T> {
