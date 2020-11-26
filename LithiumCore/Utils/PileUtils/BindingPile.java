@@ -14,7 +14,7 @@ import java.util.*;
 public class BindingPile<T extends BoundElement> extends SimplePile<T> {
 
   @Override
-  public T add(T elem) {
+  public T add(final T elem) {
     //check if the element's current pile is not this one
     if (elem.currentPile != null && elem.currentPile != this) {
       throw new RuntimeException("Each bound element can only be assigned to 1 pile.");

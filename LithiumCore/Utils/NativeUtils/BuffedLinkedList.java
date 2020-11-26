@@ -34,6 +34,7 @@ public class BuffedLinkedList<T> implements Iterable<T> {
   //Cannot be used as an iterator. Just saves one position and thats it.
   //It is recommended that you always get a cursor pointer from the iterator class' getCursor method.
   //Is immutable.
+  //Well, if it is supposed to be immutable, how come the expected index property can change (from the sync indices method)? This is because it is not the index property that is immutable, but the idea of the cursor's position that is immutable. Each object of this class can only point to 1 cursor position during its lifetime, but that cursor's index relative to the start of the list can change because of list modification.
   public class CursorPointer {
     CursorPointer() { //cannot instantiate class outside of package
       //
@@ -73,6 +74,43 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     public boolean indexIsKnown() {
       return expectedModCount == listModificationCount;
     }
+
+    //equals function
+    //Tests to see if the current/original cursor is "equal" to the supplied cursor. Two cursors are equal if they are in the same position in the list, ie their pointers are equal.
+    @Override
+    public boolean equals(final Object o) {
+      //Do reference comparisons first. If references aren't equal, then cast the provided object to a cursor pointer and compare the pointers of the current and provided cursor.
+      //if the object provided is not a linked list cursor, throw a class cast exception.
+      return (this == o) || (this.pointer == ((CursorPointer) o).pointer)
+    }
+
+    //If two cursors are equal and one cursor does not know its own index, then the other cursor can be used to calibrate the index of the first. This is called synchronizing the cursor.
+    //this function synchronizes indices if one of them is not known. You can only call this function if the two cursors are equal to each other. Call the equals function to determine this.
+    //returns the cursor whose index was synchronized. If none were synchronized, then it returns null.
+    public CursorPointer syncIndices(final CursorPointer cursor) {
+      if (this.pointer != cursor.pointer) { //the equals part of the function.
+        throw new IllegalArgumentException("You cannot synchronize the indices of the current cursor and the one provided if they are not on the same node.");
+      }
+      if (this.indexIsKnown()) {
+        if (!cursor.indexIsKnown()) {
+          //need to synchronize comparing/argument provided cursor.
+          cursor.expectedIndex = this.expectedIndex;
+          cursor.expectedModCount = this.expectedModCount;
+
+          return cursor;
+        }
+      }
+      else if (cursor.indexIsKnown()) {
+        //need to synchronize this/current cursor
+        this.expectedIndex = cursor.expectedIndex;
+        this.expectedModCount = cursor.expectedModCount;
+
+        return this;
+      }
+
+      return null;
+    }
+
   }
 
   //This iterator is obviously mutable (cause its an iterator). Takes an immutable cursor pointer and makes it mutable.
@@ -102,41 +140,6 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     //Used to get iterator from cursor.
     public Iter(final CursorPointer cursor) {
       setPosition(cursor);
-    }
-    
-    //equals function
-    //Tests to see if the current iterator is "equal" to the supplied iterator. Two iterators are equal if their cursors are in the same position in the list, ie their pointers are equal.
-    @Override
-    public boolean equals(final Object o) {
-      final Iter iter = (Iter) o; //if the object provided is not a linked list element iterator, throw a class cast exception.
-      return pointer == iter.pointer;
-    }
-
-    //If the iterators are equal and one iterator does not know its own index, then the other iterator can be used to calibrate the index of the first. This is called synchronizing the iterator.
-    //this function synchronizes indices if one of them is not known. You can only call this function if the two iterators are equal to each other. Call the equals function to determine this.
-    //returns the iterator whose index was synchronized. If none were synchronized, then it returns null.
-    public Iter syncIndices(final Iter iter) {
-      if (pointer != iter.pointer) { //the equals part of the function.
-        throw new IllegalStateException("You cannot synchronize the indices of the current iterator and one provided if they are not on the same node.");
-      }
-      if (this.indexIsKnown()) {
-        if (!iter.indexIsKnown()) {
-          //need to synchronize comparing/argument provided iterator.
-          iter.expectedIndex = this.expectedIndex;
-          iter.expectedModCount = this.expectedModCount;
-
-          return iter;
-        }
-      }
-      else if (iter.indexIsKnown()) {
-        //need to synchronize this/current iterator
-        this.expectedIndex = iter.expectedIndex;
-        this.expectedModCount = iter.expectedModCount;
-
-        return this;
-      }
-
-      return null;
     }
 
     //Clone iterator function
