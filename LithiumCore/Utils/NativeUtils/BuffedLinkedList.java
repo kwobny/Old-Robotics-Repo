@@ -540,6 +540,27 @@ public class BuffedLinkedList<T> implements Iterable<T> {
       ++expectedModCount; ++listModificationCount;
     }
 
+    //These functions are used to determine if the remove methods have been called. Are basically getters for the removed next and removed previous variables.
+    //True means yes, the element has been removed. False means the element has not been removed.
+
+    public boolean hasRemoved() {
+      if (!incrementedYet) {
+        throw new IllegalStateException("You cannot use the no parameter has removed function without calling previous or next first. linked list iterator has removed.");
+      }
+      if (nextCalledLast) {
+        return hasRemovedPrevious();
+      }
+      else {
+        return hasRemovedNext();
+      }
+    }
+    public boolean hasRemovedPrevious() {
+      return removedPreviousElement;
+    }
+    public boolean hasRemovedNext() {
+      return removedNextElement;
+    }
+
     //Replaces the value of the node in the direction of the last node returned by previous or next. Add operation does not affect it.
     //You cannot use the blank set function if previous or next has not been called yet, since the function does not know what the last element was.
 
