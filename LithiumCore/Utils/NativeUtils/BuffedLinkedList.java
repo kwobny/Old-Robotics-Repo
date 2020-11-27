@@ -81,7 +81,7 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     public boolean equals(final Object o) {
       //Do reference comparisons first. If references aren't equal, then cast the provided object to a cursor pointer and compare the pointers of the current and provided cursor.
       //if the object provided is not a linked list cursor, throw a class cast exception.
-      return (this == o) || (this.pointer == ((CursorPointer) o).pointer)
+      return (this == o) || (o != null && this.pointer == ((CursorPointer) o).pointer)
     }
 
     //If two cursors are equal and one cursor does not know its own index, then the other cursor can be used to calibrate the index of the first. This is called synchronizing the cursor.
