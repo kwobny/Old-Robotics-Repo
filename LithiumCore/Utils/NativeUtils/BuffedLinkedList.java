@@ -152,10 +152,12 @@ public class BuffedLinkedList<T> implements Iterable<T> {
 
     @Override
     public boolean hasNext() {
+      readjustPosition();
       return cursorHasNext(pointer);
     }
     @Override
     public boolean hasPrevious() {
+      readjustPosition();
       return cursorHasPrevious(pointer);
     }
 
@@ -248,7 +250,7 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     //returns the node on the head side of the cursor
     @Override
     public T previous() {
-      readjustPosition();
+      //readjustPosition(); No need to do this, already done in the has previous function.
 
       if (!hasPrevious()) {
         throw new NoSuchElementException("linked list iterator previous");
@@ -281,7 +283,7 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     //returns the node on the tail side of the cursor.
     @Override
     public T next() {
-      readjustPosition();
+      //readjustPosition(); No need to readjust position, already done in the has next function.
 
       if (!hasNext()) {
         throw new NoSuchElementException("linked list iterator next");
@@ -328,7 +330,7 @@ public class BuffedLinkedList<T> implements Iterable<T> {
 
     //get previous element without mutating iterator
     public T peekBehind() {
-      readjustPosition();
+      //readjustPosition(); No need to do this, already done in the has previous function.
       if (!hasPrevious()) {
         return null;
       }
@@ -360,7 +362,7 @@ public class BuffedLinkedList<T> implements Iterable<T> {
 
     //get next element without mutating iterator
     public T peekAhead() {
-      readjustPosition();
+      //readjustPosition(); No need to do this, already readjusted in the has next function.
       if (!hasNext()) {
         return null;
       }
@@ -435,7 +437,7 @@ public class BuffedLinkedList<T> implements Iterable<T> {
         throw new IllegalStateException("You cannot remove the previous element more than once. Linked list iterator remove previous.");
       }
 
-      readjustPosition();
+      //readjustPosition(); No need to do this, already done in the has previous function.
 
       //make sure there is actually an element to remove.
       if (!hasPrevious()) {
@@ -453,7 +455,7 @@ public class BuffedLinkedList<T> implements Iterable<T> {
         throw new IllegalStateException("You cannot remove the next element more than once. Linked list iterator remove next.");
       }
 
-      readjustPosition();
+      //readjustPosition(); No need to do this, already done in the has next function.
 
       //make sure there is actually an element to remove.
       if (!hasNext()) {
@@ -506,7 +508,7 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     }
 
     public void setPrevious(final T value) {
-      readjustPosition();
+      //readjustPosition(); No need to do this, already done in the has previous function.
       
       if (!hasPrevious()) {
         throw new IllegalStateException("You cannot set the previous element if there is no previous element. Linked list iterator set previous.");
@@ -515,7 +517,7 @@ public class BuffedLinkedList<T> implements Iterable<T> {
       getPreviousPart(pointer).data = value;
     }
     public void setNext(final T value) {
-      readjustPosition();
+      //readjustPosition(); No need to do this, already done in the has next function.
 
       if (!hasNext()) {
         throw new IllegalStateException("You cannot set the next element if there is no next element. Linked list iterator set next.");
@@ -633,6 +635,8 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     }
   }
 
+  //In the link element and unlink node methods, the provided node MUST be from the same list as the one the method is called on.
+
   //inserts the specified element right before the pointer provided. The provided node is set to the next element of the added node.
   //The provided node can range from being head to being null.
   //If the provided node is null, that means insert the element right after tail.
@@ -641,6 +645,8 @@ public class BuffedLinkedList<T> implements Iterable<T> {
 
     final Node<T> prevNode = getPreviousPart(node); //node before the supplied node and the element to be inserted.
     final Node<T> newNode = new Node<T>(elem, prevNode, node);
+    //when prevNode == null, head == node.
+    //when prevNode != null, head != node.
     if (prevNode == null) {
       //set head to the new node if there is no previous element.
       //set head to the new node if the head used to be the next node.
@@ -650,6 +656,8 @@ public class BuffedLinkedList<T> implements Iterable<T> {
       //else just connect the previous node to the inserted element.
       prevNode.next = newNode;
     }
+    //when node == null, tail == prevNode.
+    //when node != null, tail != prevNode.
     if (node == null) {
       //set tail to the new node if there is no next element.
       //set tail to new node if the tail used to be the previous node.
@@ -670,6 +678,8 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     node.isRemoved = true;
     --size;
     
+    //when node.next == null, tail == node.
+    //when node.next != null, tail != node.
     if (node.next == null) {
       //next element is null. That means that the tail is set to the removed element, which is not good. Set the tail to the previous element.
       tail = node.prev;
@@ -678,6 +688,8 @@ public class BuffedLinkedList<T> implements Iterable<T> {
       //else, just reconnect the next element.
       node.next.prev = node.prev;
     }
+    //when node.prev == null, head == node.
+    //when node.prev != null, head != node.
     if (node.prev == null) {
       //previous element is null. That means that the removed element was on the edge, and that head was set to that removed element. Therefore, you need to set head to the next node.
       head = node.next;

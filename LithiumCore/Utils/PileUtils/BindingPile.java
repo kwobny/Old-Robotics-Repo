@@ -12,6 +12,15 @@ import java.util.*;
 //You can modify (add to and remove from) the pile while iterating through it.
 //This type of pile can only work with BoundElement and its subclasses.
 public class BindingPile<T extends BoundElement<T>> extends SimplePile<T> {
+  
+  //This method binds the provided element to the current pile (this).
+  //If the element is already bound to another pile, the method throws an error.
+  public void bindElement(final T element) {
+    if (element.ownerPile != null) {
+      throw new IllegalArgumentException("You cannot bind an element which is already bound. Binding pile bind element.");
+    }
+    element.ownerPile = this;
+  }
 
   @Override
   public T add(final T elem) {
@@ -39,7 +48,7 @@ public class BindingPile<T extends BoundElement<T>> extends SimplePile<T> {
   @Override
   public T remove(T elem) {
     if (!elem.isInPile)
-      throw new RuntimeException("You cannot remove a bound element that is already in the pile.");
+      throw new RuntimeException("You cannot remove a bound element that is not in the pile.");
     elem.isInPile = false;
     elem.needsRemoving = true;
 
