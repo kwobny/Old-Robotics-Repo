@@ -81,7 +81,7 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     public boolean equals(final Object o) {
       //Do reference comparisons first. If references aren't equal, then cast the provided object to a cursor pointer and compare the pointers of the current and provided cursor.
       //if the object provided is not a linked list cursor, throw a class cast exception.
-      return (this == o) || (o != null && this.pointer == ((CursorPointer) o).pointer)
+      return (this == o) || (o != null && this.pointer == ((CursorPointer) o).pointer);
     }
 
     //If two cursors are equal and one cursor does not know its own index, then the other cursor can be used to calibrate the index of the first. This is called synchronizing the cursor.
@@ -163,11 +163,8 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     //the index parameter describes the index of the element returned by a subsequent call to next.
     //if the index is out of bounds, the function throws an exception.
     public void setPosition(final int targetIndex) {
-      if (targetIndex < 0) {
-        throw new IllegalArgumentException("You cannot supply a negative target index to the set position function. Linked list iterator set position.");
-      }
-      if (targetIndex > size) {
-        throw new IndexOutOfBoundsException("Linked list iterator set position method (maybe from iterator constructor?). The target index provided was greater than the size of the list, which was " + size);
+      if (targetIndex < 0 || targetIndex > size) {
+        throw new IndexOutOfBoundsException(String.format("The index you provided was out of bounds. Index: %d, list size: %d. Linked list iterator set position (maybe from the constructor?).", targetIndex, size));
       }
       final boolean isNotOnEnd = hasNext() && hasPrevious();
       if (isNotOnEnd && indexIsKnown()) {
@@ -179,8 +176,7 @@ public class BuffedLinkedList<T> implements Iterable<T> {
           //target index is toward the tail direction of the iterator
           if (targetIndex >= size/2 + expectedIndex/2) {
             //target is closer to tail
-            pointer = null;
-            previous(size-targetIndex);
+            pointer = traverseFromTail(targetIndex);
           }
           else {
             //target is closer to iterator
@@ -191,8 +187,7 @@ public class BuffedLinkedList<T> implements Iterable<T> {
           //target index is towards the head direction of the iterator
           if (targetIndex < expectedIndex/2) {
             //target is closer to head
-            pointer = head;
-            next(targetIndex);
+            pointer = traverseFromHead(targetIndex);
           }
           else {
             //target is closer to iterator
@@ -203,17 +198,7 @@ public class BuffedLinkedList<T> implements Iterable<T> {
       }
       else {
         //use old fasioned way
-
-        //index is closer to end of list
-        if (targetIndex >= size/2) {
-          pointer = null;
-          previous(size-targetIndex);
-        }
-        //index is closer to start of list
-        else {
-          pointer = head;
-          next(targetIndex);
-        }
+        pointer = smartTraverse(targetIndex);
       }
 
       expectedIndex = targetIndex;
@@ -405,34 +390,15 @@ public class BuffedLinkedList<T> implements Iterable<T> {
 
     //DESTRUCTIVE / LIST MUTATING METHODS
 
-    //Adds an element after previous element and before next element.
-    //Adds the element before the implicit cursor.
-    //In the case of a unidirectional iterator, the element is added after the last element returned, and the iterator does not iterate over it.
+    //Adds an element after previous element and before next element, in the same spot as the cursor. However...
+    //It adds the element before the implicit cursor.
+    //In the case of a unidirectional iterator, the element is added after the last element returned, and the iterator does not iterate over the added element.
     @Override
     public void add(final T elem) {
       //readjust position
       readjustPosition();
       
-      final Node<T> prevNode = getPreviousPart(pointer); //node returned by the previous method
-      final Node<T> newNode = new Node<T>(elem, prevNode, pointer);
-      if (hasPrevious()) {
-        //connect node behind if there is a node behind.
-        prevNode.next = newNode;
-      }
-      else {
-        //set head to new node
-        head = newNode;
-      }
-      if (hasNext()) {
-        //connect node ahead if there is one.
-        pointer.prev = newNode;
-      }
-      else {
-        //set tail to new node
-        tail = newNode;
-      }
-
-      ++size;
+      linkElement(pointer, elem);
 
       ++expectedIndex;
       ++expectedModCount; ++listModificationCount;
@@ -471,36 +437,15 @@ public class BuffedLinkedList<T> implements Iterable<T> {
 
       readjustPosition();
 
-      //remove element before the iterator cursor (previous element)
+      //make sure there is actually an element to remove.
       if (!hasPrevious()) {
-        throw new IllegalStateException("cannot remove the previous element when there is none. remove linked list iterator. If being used as iterator: cannot remove the current element because iterator has not been started yet.");
+        throw new IllegalStateException("cannot remove the previous element when there is none. linked list iterator remove previous.");
       }
 
-      //order of these operations is important and purposeful.
-      final Node<T> removeNode = getPreviousPart(pointer);
-      removeNode.isRemoved = true;
-      if (hasNext()) { //reconnect next node if there is one
-        pointer.prev = removeNode.prev;
-      }
-      else {
-        //set tail to node before previous part / node to be removed.
-        tail = removeNode.prev;
-      }
-      if (cursorHasPrevious(removeNode)) { //reconnect node that is previous to the removed node if there is one.
-        getPreviousPart(removeNode).next = pointer;
-      }
-      else {
-        //set head to pointer
-        head = pointer;
-      }
-
-      //no need to readjust iterator's position
+      unlinkNode(getPreviousPart(pointer));
 
       --expectedIndex;
-
-      //finalize some stuff
       removedPreviousElement = true;
-      --size;
       ++expectedModCount; ++listModificationCount;
     }
     public void removeNext() {
@@ -510,33 +455,14 @@ public class BuffedLinkedList<T> implements Iterable<T> {
 
       readjustPosition();
 
-      //remove element after the iterator cursor (next element)
+      //make sure there is actually an element to remove.
       if (!hasNext()) {
-        throw new IllegalStateException("You cannot remove the next element when there is none. Remove link list iterator.");
+        throw new IllegalStateException("You cannot remove the next element when there is none. link list iterator remove next.");
       }
 
-      pointer.isRemoved = true;
-      if (cursorHasNext(pointer.next)) { //reconnect node after next node (removing node) if there is one
-        pointer.next.prev = pointer.prev;
-      }
-      else {
-        //set tail to node before removed node
-        tail = getPreviousPart(pointer);
-      }
-      if (hasPrevious()) { //reconnect previous node if there is one
-        getPreviousPart(pointer).next = pointer.next;
-      }
-      else {
-        //set head to pointer next
-        head = pointer.next;
-      }
+      unlinkNode(pointer);
 
-      //readjust iterator's position to be correct.
-      readjustPosition();
-
-      //finish up stuff
       removedNextElement = true;
-      --size;
       ++expectedModCount; ++listModificationCount;
     }
 
@@ -613,14 +539,7 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     private boolean cursorHasPrevious(final Node<T> cursor) {
       return size > 0 && (cursor == null || cursor.prev != null);
     }
-    //This function gets the node behind the cursor provided (cursor in the form of a pointer)
-    //returns the node that is returned by the "previous" function.
-    //Gets the previous part of the cursor.
-    //If cursor is the head element (prev property is null), then the function returns null
-    //if list size is 0, then it returns null.
-    private Node<T> getPreviousPart(final Node<T> cursor) {
-      return cursor == null ? tail : cursor.prev;
-    }
+
   }
 
   //the prev reference in each node points towards the head. Next reference points towards tail.
@@ -635,17 +554,21 @@ public class BuffedLinkedList<T> implements Iterable<T> {
   //Terms representing beginning of list:
   //head
   //beginning
+  //before
   //first
   //previous
   //left
+  //behind
   //index of 0
   
   //Terms representing end of list
   //tail
   //end
+  //after
   //last
   //next
   //right
+  //ahead
   //index of (size) or (size - 1)
 
   //First to last in list goes from head to tail. Iterator normally goes from head to tail when used as a normal iterator.
@@ -656,6 +579,116 @@ public class BuffedLinkedList<T> implements Iterable<T> {
   //head and tail are inclusive of the list. Head is first node and tail is last node.
   //the head element always has its prev (previous) pointer set to null.
   //the tail element always has its next pointer set to null.
+
+  //PRIVATE UTILITY METHODS
+
+  //returns true if the elements are, in a sense, "equal".
+  //returns false if the elements are not equal.
+  //o is the original element, e is the element being compared to the original.
+  private static <U> boolean areEqual(final U o, final U e) {
+    //this is the formal definition of equals
+    return o == null ? e == null : o.equals(e);
+  }
+
+  //This function gets the node behind the cursor provided (cursor in the form of a pointer).
+  //The pointer provided is the next element of the cursor.
+  //returns the node that is returned by the "previous" function.
+  //Gets the previous part of the cursor.
+  //If cursor is the head element (prev property is null), then the function returns null
+  //if list size is 0, then it returns null.
+  private Node<T> getPreviousPart(final Node<T> cursor) {
+    return cursor == null ? tail : cursor.prev;
+  }
+
+  //All of the following functions are insecure functions which do not check for certain error cases.
+
+  //this function gets the node at the index provided, traversing from the head.
+  //Does not check list size
+  private Node<T> traverseFromHead(int targetIndex) {
+    Node<T> ptr = head;
+    for (; targetIndex > 0; --targetIndex) {
+      ptr = ptr.next;
+    }
+    return ptr;
+  }
+  //this function also gets the node at the index provided, but traverses from the tail.
+  //Also does not check list size
+  private Node<T> traverseFromTail(int targetIndex) {
+    Node<T> ptr = tail;
+    for (; targetIndex < size-1; ++targetIndex) {
+      ptr = ptr.prev;
+    }
+    return ptr;
+  }
+  //This function gets the node at the index and automatically decides which direction to traverse from.
+  private Node<T> smartTraverse(final int targetIndex) {
+    //This does integer division.
+    if (targetIndex >= size/2) {
+      //index is closer to end of list
+      return traverseFromTail(targetIndex);
+    }
+    else {
+      //index is closer to start of list
+      return traverseFromHead(targetIndex);
+    }
+  }
+
+  //inserts the specified element right before the pointer provided. The provided node is set to the next element of the added node.
+  //The provided node can range from being head to being null.
+  //If the provided node is null, that means insert the element right after tail.
+  //automatically handles the head, tail, size, and all properties in the node class.
+  private void linkElement(final Node<T> node, final T element) {
+
+    final Node<T> prevNode = getPreviousPart(node); //node before the supplied node and the element to be inserted.
+    final Node<T> newNode = new Node<T>(elem, prevNode, node);
+    if (prevNode == null) {
+      //set head to the new node if there is no previous element.
+      //set head to the new node if the head used to be the next node.
+      head = newNode;
+    }
+    else {
+      //else just connect the previous node to the inserted element.
+      prevNode.next = newNode;
+    }
+    if (node == null) {
+      //set tail to the new node if there is no next element.
+      //set tail to new node if the tail used to be the previous node.
+      tail = newNode;
+    }
+    else {
+      //else just connect the next node to the inserted element.
+      node.prev = newNode;
+    }
+
+    ++size; //only additionally adjusts this variable.
+  }
+
+  //removes/unlinks the provided node from the linked list.
+  //the node provided cannot be null (obviously)
+  //automatically handles head, tail, size, and all node properties.
+  private void unlinkNode(final Node<T> node) {
+    node.isRemoved = true;
+    --size;
+    
+    if (node.next == null) {
+      //next element is null. That means that the tail is set to the removed element, which is not good. Set the tail to the previous element.
+      tail = node.prev;
+    }
+    else {
+      //else, just reconnect the next element.
+      node.next.prev = node.prev;
+    }
+    if (node.prev == null) {
+      //previous element is null. That means that the removed element was on the edge, and that head was set to that removed element. Therefore, you need to set head to the next node.
+      head = node.next;
+    }
+    else {
+      //else, just reconnect the previous node.
+      node.prev.next = node.next;
+    }
+  }
+
+  //MAIN FUNCTIONS
 
   @Override
   public Iter iterator() {
@@ -679,22 +712,17 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     return size == 0;
   }
 
-  //returns true if the elements are, in a sense, "equal".
-  //returns false if the elements are not equal.
-  //o is the original element, e is the element being compared to the original.
-  private static <U> boolean areEqual(final U o, final U e) {
-    //this is the formal definition of equals
-    return o == null ? e == null : o.equals(e);
-  }
-
   //Finds the first occurance of a given element in the list and returns a cursor which has its next element set to that first occurance.
   //If the element does not exist in the list, the function returns null.
   public CursorPointer cursorOf(final T element) {
-    for (Iter it = new Iter(); it.hasNext();) {
-      final T currentElem = it.next();
-      if (areEqual(element, currentElem)) {
-        it.previous();
-        return it.getCursor();
+    int ind = 0;
+    for (Node<T> ptr = head; ptr != null; ptr = ptr.next, ++ind) {
+      if (areEqual(element, ptr.data)) {
+        final CursorPointer cursor = new CursorPointer();
+        cursor.pointer = ptr;
+        cursor.expectedIndex = ind;
+        cursor.expectedModCount = listModificationCount;
+        return cursor;
       }
     }
     return null;
@@ -704,10 +732,14 @@ public class BuffedLinkedList<T> implements Iterable<T> {
   //Long definition: Finds the last occurance of a given element in the list and returns a cursor which has its next element set to that last occurance.
   //If the element does not exist in the list, the function returns null.
   public CursorPointer lastCursorOf(final T element) {
-    for (Iter it = new Iter(size); it.hasPrevious();) {
-      final T currentElem = it.previous();
-      if (areEqual(element, currentElem)) {
-        return it.getCursor();
+    int ind = size-1;
+    for (Node<T> ptr = tail; ptr != null; ptr = ptr.prev, --ind) {
+      if (areEqual(element, ptr.data)) {
+        final CursorPointer cursor = new CursorPointer();
+        cursor.pointer = ptr;
+        cursor.expectedIndex = ind;
+        cursor.expectedModCount = listModificationCount;
+        return cursor;
       }
     }
     return null;
@@ -715,20 +747,20 @@ public class BuffedLinkedList<T> implements Iterable<T> {
 
   //index of method returns the index of the first occurance of an element within the list. If the element does not exist, then it returns -1.
   public int indexOf(final T element) {
-    for (Iter it = new Iter(); it.hasNext();) {
-      final T currentElem = it.next();
-      if (areEqual(element, currentElem)) {
-        return it.previousIndex();
+    int ind = 0;
+    for (Node<T> ptr = head; ptr != null; ptr = ptr.next, ++ind) {
+      if (areEqual(element, ptr.data)) {
+        return ind;
       }
     }
     return -1;
   }
   //last index of method returns the index of the last occurance of an element. If the element does not exist in the list, then it returns -1.
   public int lastIndexOf(final T element) {
-    for (Iter it = new Iter(size); it.hasPrevious();) {
-      final T currentElem = it.previous();
-      if (areEqual(element, currentElem)) {
-        return it.nextIndex();
+    int ind = size-1;
+    for (Node<T> ptr = tail; ptr != null; ptr = ptr.prev, --ind) {
+      if (areEqual(element, ptr.data)) {
+        return ind;
       }
     }
     return -1;
@@ -743,10 +775,9 @@ public class BuffedLinkedList<T> implements Iterable<T> {
   //returns the linked list's elements in order in the form of an array.
   public T[] toArray() {
     final T[] retArr = new T[size];
-    final Iter it = new Iter();
-    for (int i = 0; i < retArr.size; ++i) {
-      final T nextElem = it.next();
-      retArr[i] = nextElem;
+    int i = 0;
+    for (Node<T> ptr = head; ptr != null; ptr = ptr.next, ++i) {
+      retArr[i] = ptr.data;
     }
     return retArr;
   }
@@ -766,15 +797,12 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     }
     return tail.data;
   }
-  //gets the element at a certain index. If the index requested is higher than the list size, the function returns null.
+  //gets the element at a certain index. If the index requested is out of the bounds of the list, the function throws an error.
   public T get(final int index) {
-    try {
-      final Iter it = new Iter(index);
-      return it.next();
+    if (index < 0 || index >= size) {
+      throw new IndexOutOfBoundsException(String.format("The index you provided was out of bounds. Index: %d, list size: %d. Linked list get at index.", index, size));
     }
-    catch (RuntimeException e) {
-      throw new RuntimeException("linked list get. Requested index is out of bounds.", e);
-    }
+    return smartTraverse(index).data;
   }
 
   //SET METHODS
@@ -798,16 +826,15 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     return oldElement;
   }
   //sets the element at the index of the list.
+  //if the index is out of bounds, the function throws an error.
   public T set(final int index, final T element) {
-    try {
-      final Iter it = new Iter(index);
-      final T oldElement = it.next();
-      it.set(element);
-      return oldElement;
+    if (index < 0 || index >= size) {
+      throw new IndexOutOfBoundsException(String.format("The index you provided was out of bounds. Index: %d, list size: %d. Linked list set at index.", index, size));
     }
-    catch (RuntimeException e) {
-      throw new RuntimeException("The index provided is out of bounds. Linked list set function.", e);
-    }
+    final Node<T> node = smartTraverse(index);
+    final T oldElement = node.data;
+    node.data = element;
+    return oldElement;
   }
 
   //ITERATOR STRUCTURE MUTATING FUNCTIONS
@@ -864,19 +891,18 @@ public class BuffedLinkedList<T> implements Iterable<T> {
   }
 
   //Add element at specific index
-  //Inserts the element right before the specified index. Inserts in cursor between index-1 and index.
+  //Inserts the element right before the specified index. Inserts in cursor between elements at index-1 and index.
+  //The element originally at the specified index would be the new element's next element.
+  //After insertion, the new element's index would be the index provided.
   //This means that the element that was at the index is now shifted to the right, along with all of the elements after it.
   //the index can be from (inclusive) 0 to (inclusive) size.
   public T add(final int index, final T elem) {
-    final Iter it;
-    try {
-      it = new Iter(index);
+    if (index < 0 || index > size) {
+      throw new IndexOutOfBoundsException(String.format("The index you provided was out of bounds. Index: %d, list size: %d. Linked list add at index.", index, size));
     }
-    catch (RuntimeException e) {
-      throw new RuntimeException("The index you provided is out of bounds. Linked list add function.", e);
-    }
-    it.add(elem);
-
+    final Node<T> myPreciousNode = index == size ? null : smartTraverse(index);
+    linkElement(myPreciousNode, elem);
+    ++listModificationCount;
     return elem;
   }
 
@@ -930,28 +956,27 @@ public class BuffedLinkedList<T> implements Iterable<T> {
   //removes the element at the specified index.
   //index can be from (inclusive) 0 to (inclusive) size-1.
   public T remove(final int index) {
-    try {
-      final Iter it = new Iter(index);
-      final T oldElem = it.next();
-      it.remove();
-      return oldElem;
+    if (index < 0 || index >= size) {
+      throw new IndexOutOfBoundsException(String.format("The index you provided was out of bounds. Index: %d, list size: %d. Linked list remove at index.", index, size));
     }
-    catch (RuntimeException e) {
-      throw new IndexOutOfBoundsException("index was out of bounds. Linked list remove index", e);
-    }
+    final Node<T> nodeToRemove = smartTraverse(index);
+    unlinkNode(nodeToRemove);
+    ++listModificationCount;
+    return nodeToRemove.data;
   }
 
   //removes the first occurance of the element in the list.
   //Returns whether or not the element was removed. If the element did not exist, then it returns false. Else, if it did exist, then it returns true.
   //Returns true if the removal was successful. If the element did not exist, then it returns false.
   public boolean remove(final T elem) {
-    final CursorPointer cursor = cursorOf(elem);
-    if (cursor == null) {
-      return false;
+    for (Node<T> ptr = head; ptr != null; ptr = ptr.next) {
+      if (areEqual(elem, ptr.data)) {
+        unlinkNode(ptr);
+        ++listModificationCount;
+        return true;
+      }
     }
-    final Iter it = new Iter(cursor);
-    it.removeNext();
-    return true;
+    return false;
   }
 
   //CLEAR LIST
