@@ -73,6 +73,9 @@ public class MainTeleOp extends OpMode {
             if (!switchButtonPressed) { //check if switch button is not pressed (switched from pressed to not pressed)
                 //switch driving modes
                 usingAdvancedDrive = !usingAdvancedDrive;
+                if (!usingAdvancedDrive) { //stop rotational translate if switching to normal driving mode
+                    robotLib.move.clearRT();
+                }
             }
         }
 
