@@ -11,22 +11,39 @@ import java.util.*;
 
 public class BuffedLinkedList<T> implements Iterable<T> {
 
-  private static class Node<U> {
-    U data;
+  public static class Node<U> {
+    public U data; //only property that is public
     Node<U> prev;
     Node<U> next;
-    boolean isRemoved = false;
+    boolean isInsideList = true; //every node is always in the list when it is created.
 
-    public Node() {
+    Node() {
       //
     }
-    public Node(final U data) {
+    Node(final U data) {
       this.data = data;
     }
-    public Node(final U data, final Node<U> prev, final Node<U> next) {
+    Node(final U data, final Node<U> prev, final Node<U> next) {
       this.data = data;
       this.prev = prev;
       this.next = next;
+    }
+
+    //this function returns whether or not the node is in its owner list, whichever that may be.
+    //each node can only belong to 1 list in its lifetime.
+    //This function returns true if the node is in its owning list.
+    //returns false if the node is not in the list / has been removed.
+    //Each node does not have a reference to its owning list, and so does not know what its owning list is. You can only tell if the node is in A list.
+    public boolean presentInList() {
+      return isInsideList;
+    }
+
+    //these functions return whether or not the node is the head or tail of its list.
+    public boolean isHead() {
+      return isInsideList && prev == null;
+    }
+    public boolean isTail() {
+      return isInsideList && next == null;
     }
   }
 
@@ -48,6 +65,12 @@ public class BuffedLinkedList<T> implements Iterable<T> {
 
     public BuffedLinkedList<T> getOwningList() {
       return BuffedLinkedList.this;
+    }
+
+    //this function returns the pointer variable stored in this cursor. As said in the iterator comment documentation, the pointer points to the element directly on the right / next side of the cursor.
+    //can return null.
+    public Node<T> getPointer() {
+      return pointer;
     }
 
     //look at the list iterator documentation for information on the next 2 functions.
@@ -130,7 +153,7 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     //private int expectedIndex; //only used for next and previous index functions. Is the index of the pointer. Is index of element returned by next function
     //private int expectedModCount; //does not represent reassigning node values.
 
-    public Iter() { //default access. Cannot be created outside of package.
+    public Iter() {
       this(0);
     }
     //"The specified index indicates the first element that would be returned by an initial call to next"
@@ -221,6 +244,22 @@ public class BuffedLinkedList<T> implements Iterable<T> {
       this.pointer = cursor.pointer;
       this.expectedIndex = cursor.expectedIndex;
       this.expectedModCount = cursor.expectedModCount;
+
+      removedPreviousElement = false;
+      removedNextElement = false;
+      incrementedYet = false;
+    }
+
+    //this function sets the iterator/cursor's next element to the node provided.
+    //As such, the node provided can be null.
+    //IMPORTANT: This function assumes that the node provided is from the same list that the iterator came from. Only use this function if you are absolutely sure that the node came from the same list.
+    public void setPositionNode(final Node<T> node) {
+      this.pointer = node;
+      this.expectedIndex = -1;
+      
+      if (expectedModCount == listModificationCount) {
+        --expectedModCount;
+      }
 
       removedPreviousElement = false;
       removedNextElement = false;
@@ -396,15 +435,19 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     //It adds the element before the implicit cursor.
     //In the case of a unidirectional iterator, the element is added after the last element returned, and the iterator does not iterate over the added element.
     @Override
-    public void add(final T elem) {
+    public void add(final T element) {
+      addGetNode(element);
+    }
+
+    //basically the add function except it returns the node added to the list.
+    public Node<T> addGetNode(final T element) {
       //readjust position
       readjustPosition();
-      
-      linkElement(pointer, elem);
 
       ++expectedIndex;
       ++expectedModCount; ++listModificationCount;
 
+      return linkElement(pointer, elem);
     }
 
     //You can remove elements after adding them through iterator, contrary to what list iterator documentation says.
@@ -432,7 +475,9 @@ public class BuffedLinkedList<T> implements Iterable<T> {
       }
     }
 
-    public void removePrevious() {
+    //the 2 remove methods below return the removed element.
+
+    public T removePrevious() {
       if (removedPreviousElement) {
         throw new IllegalStateException("You cannot remove the previous element more than once. Linked list iterator remove previous.");
       }
@@ -444,13 +489,13 @@ public class BuffedLinkedList<T> implements Iterable<T> {
         throw new IllegalStateException("cannot remove the previous element when there is none. linked list iterator remove previous.");
       }
 
-      unlinkNode(getPreviousPart(pointer));
-
       --expectedIndex;
       removedPreviousElement = true;
       ++expectedModCount; ++listModificationCount;
+
+      return unlinkNode(getPreviousPart(pointer)).data;
     }
-    public void removeNext() {
+    public T removeNext() {
       if (removedNextElement) {
         throw new IllegalStateException("You cannot remove the next element more than once. Linked list iterator remove next.");
       }
@@ -462,10 +507,10 @@ public class BuffedLinkedList<T> implements Iterable<T> {
         throw new IllegalStateException("You cannot remove the next element when there is none. link list iterator remove next.");
       }
 
-      unlinkNode(pointer);
-
       removedNextElement = true;
       ++expectedModCount; ++listModificationCount;
+
+      return unlinkNode(pointer).data;
     }
 
     //These functions are used to determine if the remove methods have been called. Are basically getters for the removed next and removed previous variables.
@@ -507,28 +552,35 @@ public class BuffedLinkedList<T> implements Iterable<T> {
       }
     }
 
-    public void setPrevious(final T value) {
+    //the 2 set functions below return the value that was previously at the position before replacement.
+
+    public T setPrevious(final T value) {
       //readjustPosition(); No need to do this, already done in the has previous function.
       
       if (!hasPrevious()) {
         throw new IllegalStateException("You cannot set the previous element if there is no previous element. Linked list iterator set previous.");
       }
 
-      getPreviousPart(pointer).data = value;
+      final Node<T> previousNode = getPreviousPart(pointer);
+      final T oldValue = previousNode.data;
+      previousNode.data = value;
+      return oldValue;
     }
-    public void setNext(final T value) {
+    public T setNext(final T value) {
       //readjustPosition(); No need to do this, already done in the has next function.
 
       if (!hasNext()) {
         throw new IllegalStateException("You cannot set the next element if there is no next element. Linked list iterator set next.");
       }
 
+      final T oldValue = pointer.data;
       pointer.data = value;
+      return oldValue;
     }
 
     //Adjust the iterator's position if it's pointer variable is on a removed/nonexistant element.
     private void readjustPosition() {
-      while (pointer != null && pointer.isRemoved) {
+      while (pointer != null && !pointer.isInsideList) {
         pointer = pointer.next;
       }
     }
@@ -640,8 +692,9 @@ public class BuffedLinkedList<T> implements Iterable<T> {
   //inserts the specified element right before the pointer provided. The provided node is set to the next element of the added node.
   //The provided node can range from being head to being null.
   //If the provided node is null, that means insert the element right after tail.
+  //returns the new node.
   //automatically handles the head, tail, size, and all properties in the node class.
-  private void linkElement(final Node<T> node, final T element) {
+  private Node<T> linkElement(final Node<T> node, final T element) {
 
     final Node<T> prevNode = getPreviousPart(node); //node before the supplied node and the element to be inserted.
     final Node<T> newNode = new Node<T>(elem, prevNode, node);
@@ -669,13 +722,16 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     }
 
     ++size; //only additionally adjusts this variable.
+
+    return newNode;
   }
 
   //removes/unlinks the provided node from the linked list.
   //the node provided cannot be null (obviously)
+  //returns the removed node (basically the node provided)
   //automatically handles head, tail, size, and all node properties.
-  private void unlinkNode(final Node<T> node) {
-    node.isRemoved = true;
+  private Node<T> unlinkNode(final Node<T> node) {
+    node.isInsideList = false;
     --size;
     
     //when node.next == null, tail == node.
@@ -698,6 +754,8 @@ public class BuffedLinkedList<T> implements Iterable<T> {
       //else, just reconnect the previous node.
       node.prev.next = node.next;
     }
+
+    return node;
   }
 
   //MAIN FUNCTIONS
@@ -740,6 +798,21 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     return null;
   }
 
+  //this function returns a cursor with its next element being the node provided.
+  //if the node provided is null, the function returns null.
+  //if the node provided is not in the list (or not from this list), the function returns null.
+  public CursorPointer cursorOfNode(final Node<T> node) {
+    final int index = indexOfNode(node);
+    if (index == -1) {
+      return null;
+    }
+    final CursorPointer retCursor = new CursorPointer();
+    retCursor.pointer = node;
+    retCursor.expectedIndex = index;
+    retCursor.expectedModCount = listModificationCount;
+    return retCursor;
+  }
+
   //same as cursor of method except it finds the last occurance of the element in the list.
   //Long definition: Finds the last occurance of a given element in the list and returns a cursor which has its next element set to that last occurance.
   //If the element does not exist in the list, the function returns null.
@@ -767,6 +840,22 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     }
     return -1;
   }
+  //returns the index of the provided node.
+  //if the node is null, then it returns -1.
+  //if the node is not in the list, the function returns -1.
+  //if the node is not from this list, the function returns -1.
+  public int indexOfNode(final Node<T> node) {
+    if (node == null || !node.isInsideList) {
+      return -1;
+    }
+    int ind = 0;
+    for (Node<T> ptr = head; ptr != null; ptr = ptr.next, ++ind) {
+      if (ptr == node) {
+        return ind;
+      }
+    }
+    return -1;
+  }
   //last index of method returns the index of the last occurance of an element. If the element does not exist in the list, then it returns -1.
   public int lastIndexOf(final T element) {
     int ind = size-1;
@@ -782,6 +871,9 @@ public class BuffedLinkedList<T> implements Iterable<T> {
   //returns false if the element is not in the list.
   public boolean contains(final T element) {
     return indexOf(element) != -1;
+  }
+  public boolean containsNode(final Node<T> node) {
+    return indexOfNode(node) != -1;
   }
 
   //returns the linked list's elements in order in the form of an array.
@@ -811,10 +903,19 @@ public class BuffedLinkedList<T> implements Iterable<T> {
   }
   //gets the element at a certain index. If the index requested is out of the bounds of the list, the function throws an error.
   public T get(final int index) {
-    if (index < 0 || index >= size) {
-      throw new IndexOutOfBoundsException(String.format("The index you provided was out of bounds. Index: %d, list size: %d. Linked list get at index.", index, size));
+    try {
+      return getNode(index).data;
     }
-    return smartTraverse(index).data;
+    catch (IndexOutOfBoundsException e) {
+      throw new IndexOutOfBoundsException("Linked list get at index", e);
+    }
+  }
+
+  public Node<T> getNode(final int index) {
+    if (index < 0 || index >= size) {
+      throw new IndexOutOfBoundsException(String.format("The index you provided was out of bounds. Index: %d, list size: %d. Linked list get node at index.", index, size));
+    }
+    return smartTraverse(index);
   }
 
   //SET METHODS
@@ -853,53 +954,57 @@ public class BuffedLinkedList<T> implements Iterable<T> {
   //Structure mutating refers to an operation that changes the structure of the list itself. As such, set operations are excluded from this category.
 
   //ADD METHODS
-  //All add methods return the added element
+  //All add methods return the new node that corresponds with the added element.
   //If you add to the list while iterating, the iterator will skip the added element if it was inserted in the same position as the iterator, relative to its neighboring elements.
 
   //Add element to head/front of list
   //Prepend an element to the list. Similar to array unshift operation.
-  public T addFront(final T elem) {
+  public Node<T> addFront(final T elem) {
+    final Node<T> newNode = new Node<T>(elem);
     if (size == 0) {
-      head = new Node<T>(elem);
+      head = newNode;
       tail = head;
     }
     else if (size == 1) {
-      head = new Node<T>(elem);
+      head = newNode;
       head.next = tail;
       tail.prev = head;
     }
     else {
-      head.prev = new Node<T>(elem, null, head);
+      head.prev = newNode;
+      newNode.next = head;
       head = head.prev;
     }
 
     ++size;
     ++listModificationCount;
 
-    return elem;
+    return newNode;
   }
 
   //Add element to tail/back of list
   //Append an element to the list. Similar to array push operation.
-  public T add(final T elem) {
+  public Node<T> add(final T elem) {
+    final Node<T> newNode = new Node<T>(elem);
     if (size == 0) {
-      head = new Node<T>(elem);
+      head = newNode;
       tail = head;
     }
     else if (size == 1) {
-      tail = new Node<T>(elem);
+      tail = newNode;
       head.next = tail;
       tail.prev = head;
     }
     else {
-      tail.next = new Node<T>(elem, tail, null);
+      tail.next = newNode;
+      newNode.prev = tail;
       tail = tail.next;
     }
 
     ++size;
     ++listModificationCount;
 
-    return elem;
+    return newNode;
   }
 
   //Add element at specific index
@@ -908,14 +1013,13 @@ public class BuffedLinkedList<T> implements Iterable<T> {
   //After insertion, the new element's index would be the index provided.
   //This means that the element that was at the index is now shifted to the right, along with all of the elements after it.
   //the index can be from (inclusive) 0 to (inclusive) size.
-  public T add(final int index, final T elem) {
+  public Node<T> add(final int index, final T elem) {
     if (index < 0 || index > size) {
       throw new IndexOutOfBoundsException(String.format("The index you provided was out of bounds. Index: %d, list size: %d. Linked list add at index.", index, size));
     }
     final Node<T> myPreciousNode = index == size ? null : smartTraverse(index);
-    linkElement(myPreciousNode, elem);
     ++listModificationCount;
-    return elem;
+    return linkElement(myPreciousNode, elem);
   }
 
   //REMOVE METHODS
@@ -928,7 +1032,7 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     }
     final T oldElem = head.data;
 
-    head.isRemoved = true;
+    head.isInsideList = false;
     if (size == 1) {
       head = null;
       tail = null;
@@ -949,7 +1053,7 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     }
     final T oldElem = tail.data;
 
-    tail.isRemoved = true;
+    tail.isInsideList = false;
     if (size == 1) {
       head = null;
       tail = null;
@@ -971,13 +1075,12 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     if (index < 0 || index >= size) {
       throw new IndexOutOfBoundsException(String.format("The index you provided was out of bounds. Index: %d, list size: %d. Linked list remove at index.", index, size));
     }
-    final Node<T> nodeToRemove = smartTraverse(index);
-    unlinkNode(nodeToRemove);
     ++listModificationCount;
-    return nodeToRemove.data;
+    return unlinkNode(smartTraverse(index)).data;
   }
 
   //removes the first occurance of the element in the list.
+  //the element can be null.
   //Returns whether or not the element was removed. If the element did not exist, then it returns false. Else, if it did exist, then it returns true.
   //Returns true if the removal was successful. If the element did not exist, then it returns false.
   public boolean remove(final T elem) {
@@ -989,6 +1092,36 @@ public class BuffedLinkedList<T> implements Iterable<T> {
       }
     }
     return false;
+  }
+
+  //removes the next element of the cursor provided. Basically removes the node pointed to by the pointer variable in the cursor.
+  //You cannot provide a null argument. If you do, the function raises an implicit error.
+  public T removeCursor(final CursorPointer cursor) {
+    if (cursor.getOwningList() != this) {
+      throw new IllegalArgumentException("You cannot remove a node from a cursor that is not from the same list as the one where this method was called. Linked list remove at cursor.");
+    }
+    if (cursor.pointer == null) {
+      throw new IllegalArgumentException("the cursor you provided is on the right most edge of the list. As such, its next element is null. That cannot happen. Linked list remove at cursor.");
+    }
+    if (!cursor.pointer.isInsideList) {
+      HANDLE THIS!!!
+    }
+    
+    ++listModificationCount;
+    return unlinkNode(cursor.pointer).data;
+  }
+
+  //Removes the node provided from the list.
+  //IMPORTANT: This method assumes that the node comes from the same list as the one the method was called on. Only use this function if you are sure that the node is being removed on the same list that it belongs to.
+  public T removeNode(final Node<T> node) {
+    if (node == null) {
+      throw new IllegalArgumentException("You cannot supply a null argument into the remove node function. linked list remove node.");
+    }
+    if (!node.isInsideList) {
+      throw new IllegalArgumentException("You cannot remove a node that has already been removed from the list. Linked list remove node.");
+    }
+    ++listModificationCount;
+    return unlinkNode(node).data;
   }
 
   //CLEAR LIST
@@ -1003,7 +1136,7 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     Node<T> auxPtr = null;
     while (mainPtr != null) {
       mainPtr.prev = null;
-      mainPtr.isRemoved = true;
+      mainPtr.isInsideList = false;
 
       auxPtr = mainPtr;
       mainPtr = mainPtr.next;
