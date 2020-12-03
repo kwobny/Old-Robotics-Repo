@@ -18,7 +18,7 @@ public class StaticUtils {
       callback.run();
       return null;
     }
-    public CallbackWrapper(final Calback callback) {
+    public CallbackWrapper(final Callback callback) {
       this.callback = callback;
     }
   }

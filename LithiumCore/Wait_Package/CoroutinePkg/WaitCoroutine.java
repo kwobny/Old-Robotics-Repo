@@ -93,7 +93,7 @@ public abstract class WaitCoroutine extends SACoroutine {
 
   @Override
   protected final void _end() {
-    waitCore.removeTimeout(task);
+    waitCore.removeTask(task);
     _end2();
   }
 

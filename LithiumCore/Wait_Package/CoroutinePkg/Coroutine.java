@@ -5,7 +5,7 @@ import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.Callback;
 
 //This is the generic/general coroutine class.
 
-public abstract class Coroutine implements DefaultSC {
+public abstract class Coroutine extends DefaultSC {
 
   //data members
 
