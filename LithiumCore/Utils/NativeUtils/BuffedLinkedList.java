@@ -47,30 +47,81 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     }
   }
 
-  //is a wrapper for an iterator's cursor. Used to save the current position of an iterator.
-  //Cannot be used as an iterator. Just saves one position and thats it.
-  //It is recommended that you always get a cursor pointer from the iterator class' getCursor method.
-  //Is immutable.
-  //Well, if it is supposed to be immutable, how come the expected index property can change (from the sync indices method)? This is because it is not the index property that is immutable, but the idea of the cursor's position that is immutable. Each object of this class can only point to 1 cursor position during its lifetime, but that cursor's index relative to the start of the list can change because of list modification.
-  public class CursorPointer {
-    CursorPointer() { //cannot instantiate class outside of package
+  //this class is a wrapper for a node, and is used to guarantee that a node came from a certain list.
+  //contains a pointer to a list and a node.
+  public class NodeWrapper {
+    NodeWrapper() { //default access
       //
     }
+    NodeWrapper(final Node<T> pointer) {
+      this.pointer = pointer;
+    }
 
-    //these properties can only be accessed by the linked list and its iterator (default access).
-    //These properties have the same semantics/meanings as explained in the iterator comment documentation.
-    Node<T> pointer;
-    int expectedIndex;
-    int expectedModCount;
+    Node<T> pointer; //the node pointed to by the wrapper cannot be changed by a user.
 
     public BuffedLinkedList<T> getOwningList() {
       return BuffedLinkedList.this;
     }
 
-    //this function returns the pointer variable stored in this cursor. As said in the iterator comment documentation, the pointer points to the element directly on the right / next side of the cursor.
     //can return null.
     public Node<T> getPointer() {
       return pointer;
+    }
+
+    //equals function
+    //Two node wrappers are equal if they point to the same node.
+    //provided wrapper can be null.
+    @Override
+    public boolean equals(final Object o) {
+      //if the object provided is not a linked list node wrapper, throw a class cast exception.
+      return equalsWrapper((NodeWrapper) o);
+    }
+    public boolean equalsWrapper(final NodeWrapper wrapper) {
+      return (this == wrapper) || (wrapper != null && this.pointer == wrapper.pointer);
+    }
+  }
+
+  //is a wrapper for an iterator's cursor. Used to save the current position of an iterator.
+  //Cannot be used as an iterator. Just saves one position and thats it.
+  //It is recommended that you always get a cursor pointer from the iterator class' getCursor method.
+  //Is immutable.
+  //Well, if it is supposed to be immutable, how come the inner properties can change? This is because it is not the index property that is immutable, but the idea of the cursor's position that is immutable. Each object of this class can only point to 1 cursor position during its lifetime, but that cursor's index relative to the start of the list can change because of list modification.
+  public class CursorPointer extends NodeWrapper {
+    CursorPointer() { //cannot instantiate class outside of package
+      //
+    }
+    CursorPointer(final Node<T> pointer, final int expectedIndex) {
+      expectedModCount = listModificationCount;
+      this.pointer = pointer;
+      this.expectedIndex = expectedIndex;
+    }
+
+    //these properties can only be accessed by the linked list and its iterator (default access).
+    //These properties have the same semantics/meanings as explained in the iterator comment documentation.
+    //Node<T> pointer; the pointer variable refers to the next element.
+    int expectedIndex;
+    int expectedModCount;
+
+    //this function returns the pointer variable stored in this cursor. As said in the iterator comment documentation, the pointer points to the element directly on the right / next side of the cursor.
+    //can return null.
+    @Override
+    public Node<T> getPointer() {
+      readjustPosition();
+      return pointer;
+    }
+    //returns a bare node wrapper of this cursor, without the extra unnecessary properties. Use this instead of upcasting if you want to preserve space.
+    public NodeWrapper getWrapper() {
+      return new NodeWrapper(getPointer());
+    }
+
+    //two cursors are equal if they are in the same position.
+    //If a cursor and node wrapper are being compared, then the function behaves as if both objects being compared are just node wrappers (check for node wrapper equality). If both are cursors, then it checks for cursor equality.
+    @Override
+    public boolean equals(final Object o) {
+      return o instanceof BuffedLinkedList.CursorPointer ? equalsCursor((CursorPointer) o) : equalsWrapper((NodeWrapper) o);
+    }
+    public boolean equalsCursor(final CursorPointer cursor) {
+      return (this == cursor) || (cursor != null && this.getPointer() == cursor.getPointer());
     }
 
     //look at the list iterator documentation for information on the next 2 functions.
@@ -78,60 +129,60 @@ public class BuffedLinkedList<T> implements Iterable<T> {
 
     //returns the index of the element after the cursor (next element)
     public int nextIndex() {
-      if (indexIsKnown()) {
-        return expectedIndex;
+      if (listWasCommodified()) {
+        //if index is not known
+        throw new ConcurrentModificationException("You cannot request the next index of a cursor pointer (or maybe iterator) if the list was modified while iterating. This is because the index is not known.");
       }
-      //if index is not known
-      throw new ConcurrentModificationException("You cannot request the next index of a cursor pointer (or maybe iterator) if the list was modified while iterating. This is because the index is not known.");
+      return expectedIndex;
     }
     //returns the index of the element before the cursor (previous element)
     public int previousIndex() {
-      if (indexIsKnown()) {
-        return expectedIndex-1;
+      if (listWasCommodified()) {
+        //if index is not known
+        throw new ConcurrentModificationException("You cannot request the previous index of a cursor pointer (or maybe iterator) if the list was modified while iterating. This is because the index is not known.");
       }
-      //if index is not known
-      throw new ConcurrentModificationException("You cannot request the previous index of a cursor pointer (or maybe iterator) if the list was modified while iterating. This is because the index is not known.");
+      return expectedIndex-1;
     }
     
-    //Is used to discern whether or not you can use the previous and next index functions. You can't get either index if the index is not known.
-    public boolean indexIsKnown() {
-      return expectedModCount == listModificationCount;
-    }
-
-    //equals function
-    //Tests to see if the current/original cursor is "equal" to the supplied cursor. Two cursors are equal if they are in the same position in the list, ie their pointers are equal.
-    @Override
-    public boolean equals(final Object o) {
-      //Do reference comparisons first. If references aren't equal, then cast the provided object to a cursor pointer and compare the pointers of the current and provided cursor.
-      //if the object provided is not a linked list cursor, throw a class cast exception.
-      return (this == o) || (o != null && this.pointer == ((CursorPointer) o).pointer);
+    //Is used to discern whether or not you can use the previous and next index functions. You can't get either index if the list was commodified.
+    //this function returns whether or not the owning list was modified while this object existed.
+    //returns true if the list was commodified. Returns false if the list was not modified.
+    public boolean listWasCommodified() {
+      return expectedModCount != listModificationCount;
     }
 
     //If two cursors are equal and one cursor does not know its own index, then the other cursor can be used to calibrate the index of the first. This is called synchronizing the cursor.
     //this function synchronizes indices if one of them is not known. You can only call this function if the two cursors are equal to each other. Call the equals function to determine this.
     //returns the cursor whose index was synchronized. If none were synchronized, then it returns null.
     public CursorPointer syncIndices(final CursorPointer cursor) {
-      if (this.pointer != cursor.pointer) { //the equals part of the function.
+      if (!this.equalsCursor(cursor)) { //the equals part of the function.
         throw new IllegalArgumentException("You cannot synchronize the indices of the current cursor and the one provided if they are not on the same node.");
       }
-      if (this.indexIsKnown()) {
-        if (!cursor.indexIsKnown()) {
-          //need to synchronize comparing/argument provided cursor.
-          cursor.expectedIndex = this.expectedIndex;
-          cursor.expectedModCount = this.expectedModCount;
+      if (this.listWasCommodified()) {
+        if (!cursor.listWasCommodified()) {
+          //need to synchronize this/current cursor
+          this.expectedIndex = cursor.expectedIndex;
+          this.expectedModCount = cursor.expectedModCount;
 
-          return cursor;
+          return this;
         }
       }
-      else if (cursor.indexIsKnown()) {
-        //need to synchronize this/current cursor
-        this.expectedIndex = cursor.expectedIndex;
-        this.expectedModCount = cursor.expectedModCount;
+      else if (cursor.listWasCommodified()) {
+        //need to synchronize comparing/argument provided cursor.
+        cursor.expectedIndex = this.expectedIndex;
+        cursor.expectedModCount = this.expectedModCount;
 
-        return this;
+        return cursor;
       }
 
       return null;
+    }
+
+    //Adjust the cursor's position if it's pointer variable is on a removed/nonexistant element.
+    void readjustPosition() { //default access
+      while (pointer != null && !pointer.isInsideList) {
+        pointer = pointer.next;
+      }
     }
 
   }
@@ -154,7 +205,7 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     //private int expectedModCount; //does not represent reassigning node values.
 
     public Iter() {
-      this(0);
+      setPositionToBeginning();
     }
     //"The specified index indicates the first element that would be returned by an initial call to next"
     public Iter(final int index) { //default access
@@ -192,7 +243,7 @@ public class BuffedLinkedList<T> implements Iterable<T> {
         throw new IndexOutOfBoundsException(String.format("The index you provided was out of bounds. Index: %d, list size: %d. Linked list iterator set position (maybe from the constructor?).", targetIndex, size));
       }
       final boolean isNotOnEnd = hasNext() && hasPrevious();
-      if (isNotOnEnd && indexIsKnown()) {
+      if (isNotOnEnd && !listWasCommodified()) {
         
         if (targetIndex == expectedIndex) {
           return; //do nothing because the iterator is already on the position requested.
@@ -235,8 +286,10 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     }
 
     //this version of the set position command sets the iterator's position to the one specified by the cursor pointer or by another iterator.
+    //the inputted cursor cannot be null.
     //You can input an iterator or cursor pointer.
     public void setPosition(final CursorPointer cursor) {
+      //implicitly throws an error if the cursor is null.
       if (cursor.getOwningList() != this.getOwningList()) {
         throw new IllegalArgumentException("You cannot set the iterator's position to a cursor which is not from the same list as the iterator itself. Linked List iterator set position.");
       }
@@ -252,14 +305,49 @@ public class BuffedLinkedList<T> implements Iterable<T> {
 
     //this function sets the iterator/cursor's next element to the node provided.
     //As such, the node provided can be null.
+    //if the node has been removed from the list, the function throws an error.
     //IMPORTANT: This function assumes that the node provided is from the same list that the iterator came from. Only use this function if you are absolutely sure that the node came from the same list.
     public void setPositionNode(final Node<T> node) {
+      if (node != null && !node.isInsideList) {
+        throw new IllegalArgumentException("You cannot set the position of the iterator to a node that has been removed from the list. Linked list iterator set position node");
+      }
+
       this.pointer = node;
       this.expectedIndex = -1;
       
       if (expectedModCount == listModificationCount) {
         --expectedModCount;
       }
+
+      removedPreviousElement = false;
+      removedNextElement = false;
+      incrementedYet = false;
+    }
+    //sets the iterator's position to a node wrapper. Follow the short stuff of input rules laid out in set position to node comments.
+    //if null is inputted into this function, it throws an exception.
+    //this function is safe, meaning it checks to make sure the provided wrapper is from this list.
+    public void setPositionToWrapper(final NodeWrapper wrapper) {
+      //throws an implicit error if the wrapper provided is null.
+      if (wrapper.getOwningList() != this.getOwningList()) {
+        throw new IllegalArgumentException("You cannot set the iterator's position to a node wrapper that is not from this list. Linked list iterator set position to wrapper.");
+      }
+      setPositionNode(wrapper.pointer);
+    }
+
+    //set the iterator's position to the leftmost/rightmost part of list.
+    public void setPositionToBeginning() {
+      this.pointer = head;
+      this.expectedIndex = 0;
+      this.expectedModCount = listModificationCount;
+
+      removedPreviousElement = false;
+      removedNextElement = false;
+      incrementedYet = false;
+    }
+    public void setPositionToEnd() {
+      this.pointer = null;
+      this.expectedIndex = size;
+      this.expectedModCount = listModificationCount;
 
       removedPreviousElement = false;
       removedNextElement = false;
@@ -440,14 +528,14 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     }
 
     //basically the add function except it returns the node added to the list.
-    public Node<T> addGetNode(final T element) {
+    public NodeWrapper addGetNode(final T element) {
       //readjust position
       readjustPosition();
 
       ++expectedIndex;
       ++expectedModCount; ++listModificationCount;
 
-      return linkElement(pointer, elem);
+      return new NodeWrapper(linkElement(pointer, elem));
     }
 
     //You can remove elements after adding them through iterator, contrary to what list iterator documentation says.
@@ -578,14 +666,8 @@ public class BuffedLinkedList<T> implements Iterable<T> {
       return oldValue;
     }
 
-    //Adjust the iterator's position if it's pointer variable is on a removed/nonexistant element.
-    private void readjustPosition() {
-      while (pointer != null && !pointer.isInsideList) {
-        pointer = pointer.next;
-      }
-    }
-
     //These functions expect the cursor / input pointer to represent the same thing in the list as the pointer variable.
+    //These functions do not readjust the position of the iterator/cursor/whatever
     //These functions consider the current state of the cursor with no respect to the current list's state (head, tail, etc).
     private boolean cursorHasNext(final Node<T> cursor) {
       return cursor != null;
@@ -760,6 +842,11 @@ public class BuffedLinkedList<T> implements Iterable<T> {
 
   //MAIN FUNCTIONS
 
+  //this function returns an integer containing the list modification count. Only to be used to compare if the list's structure was changed since some save point.
+  public int getListModCount() {
+    return listModificationCount;
+  }
+
   @Override
   public Iter iterator() {
     return new Iter();
@@ -799,8 +886,8 @@ public class BuffedLinkedList<T> implements Iterable<T> {
   }
 
   //this function returns a cursor with its next element being the node provided.
-  //if the node provided is null, the function returns null.
-  //if the node provided is not in the list (or not from this list), the function returns null.
+  //if the node provided is null or not from this list, the function returns null.
+  //if the node provided is not in the list, the function throws an error.
   public CursorPointer cursorOfNode(final Node<T> node) {
     final int index = indexOfNode(node);
     if (index == -1) {
@@ -811,6 +898,26 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     retCursor.expectedIndex = index;
     retCursor.expectedModCount = listModificationCount;
     return retCursor;
+  }
+
+  //if the wrapper is null or not from this list, throw an error.
+  public CursorPointer cursorOfWrapper(final NodeWrapper wrapper) {
+    //if the provided wrapper is null, implicitly throw an error.
+    if (wrapper.getOwningList() != this) {
+      throw new IllegalArgumentException("linked list cursor of wrapper");
+    }
+    return cursorOfNode(wrapper.pointer);
+  }
+
+  //get a wrapper of a node if it exists in the list.
+  //If the node is not in the list, return null.
+  public NodeWrapper wrapperOfNode(final Node<T> node) {
+    if (containsNode(node)) {
+      return new NodeWrapper(node);
+    }
+    else {
+      return null;
+    }
   }
 
   //same as cursor of method except it finds the last occurance of the element in the list.
@@ -841,12 +948,14 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     return -1;
   }
   //returns the index of the provided node.
-  //if the node is null, then it returns -1.
-  //if the node is not in the list, the function returns -1.
-  //if the node is not from this list, the function returns -1.
+  //if the node is null or not from this list, then it returns -1.
+  //if the node has already been removed form the list, throw an error.
   public int indexOfNode(final Node<T> node) {
-    if (node == null || !node.isInsideList) {
+    if (node == null) {
       return -1;
+    }
+    if (!node.isInsideList) {
+      throw new IllegalArgumentException("You cannot get the index of a node that has been removed from the list. Linked list index of node.");
     }
     int ind = 0;
     for (Node<T> ptr = head; ptr != null; ptr = ptr.next, ++ind) {
@@ -854,7 +963,17 @@ public class BuffedLinkedList<T> implements Iterable<T> {
         return ind;
       }
     }
+    //node is not from this list.
     return -1;
+  }
+  //if the wrapper is null, not from this list, or the node has already been removed, throw an error.
+  //if the node pointed to by the wrapper is null, return -1.
+  public int indexOfWrapper(final NodeWrapper wrapper) {
+    //if the provided wrapper is null, implicitly throw an error.
+    if (wrapper.getOwningList() != this) {
+      throw new IllegalArgumentException("linked list index of wrapper");
+    }
+    return indexOfNode(wrapper.getPointer());
   }
   //last index of method returns the index of the last occurance of an element. If the element does not exist in the list, then it returns -1.
   public int lastIndexOf(final T element) {
@@ -872,8 +991,19 @@ public class BuffedLinkedList<T> implements Iterable<T> {
   public boolean contains(final T element) {
     return indexOf(element) != -1;
   }
+  //if the node is null, has been removed, or does not belong to this list, return -1.
   public boolean containsNode(final Node<T> node) {
+    if (!node.isInsideList) {
+      return false;
+    }
     return indexOfNode(node) != -1;
+  }
+  //you cannot provide null into these 2 methods below.
+  public boolean wrapperIsFromThis(final NodeWrapper wrapper) {
+    return wrapper.getOwningList() == this;
+  }
+  public boolean containsWrapper(final NodeWrapper wrapper) {
+    return wrapperIsFromThis(wrapper) && wrapper.getPointer() != null && wrapper.getPointer().isInsideList;
   }
 
   //returns the linked list's elements in order in the form of an array.
@@ -903,19 +1033,18 @@ public class BuffedLinkedList<T> implements Iterable<T> {
   }
   //gets the element at a certain index. If the index requested is out of the bounds of the list, the function throws an error.
   public T get(final int index) {
-    try {
-      return getNode(index).data;
+    if (index < 0 || index >= size) {
+      throw new IndexOutOfBoundsException(String.format("The index you provided was out of bounds. Index: %d, list size: %d. Linked list get element at index.", index, size));
     }
-    catch (IndexOutOfBoundsException e) {
-      throw new IndexOutOfBoundsException("Linked list get at index", e);
-    }
+    return smartTraverse(index).data;
   }
 
-  public Node<T> getNode(final int index) {
+  //gets a cursor with its next element being the index provided.
+  public CursorPointer getCursor(final int index) {
     if (index < 0 || index >= size) {
       throw new IndexOutOfBoundsException(String.format("The index you provided was out of bounds. Index: %d, list size: %d. Linked list get node at index.", index, size));
     }
-    return smartTraverse(index);
+    return new CursorPointer(smartTraverse(index), index);
   }
 
   //SET METHODS
@@ -959,7 +1088,7 @@ public class BuffedLinkedList<T> implements Iterable<T> {
 
   //Add element to head/front of list
   //Prepend an element to the list. Similar to array unshift operation.
-  public Node<T> addFront(final T elem) {
+  public NodeWrapper addFront(final T elem) {
     final Node<T> newNode = new Node<T>(elem);
     if (size == 0) {
       head = newNode;
@@ -979,12 +1108,12 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     ++size;
     ++listModificationCount;
 
-    return newNode;
+    return new NodeWrapper(newNode);
   }
 
   //Add element to tail/back of list
   //Append an element to the list. Similar to array push operation.
-  public Node<T> add(final T elem) {
+  public NodeWrapper add(final T elem) {
     final Node<T> newNode = new Node<T>(elem);
     if (size == 0) {
       head = newNode;
@@ -1004,7 +1133,7 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     ++size;
     ++listModificationCount;
 
-    return newNode;
+    return new NodeWrapper(newNode);
   }
 
   //Add element at specific index
@@ -1013,13 +1142,13 @@ public class BuffedLinkedList<T> implements Iterable<T> {
   //After insertion, the new element's index would be the index provided.
   //This means that the element that was at the index is now shifted to the right, along with all of the elements after it.
   //the index can be from (inclusive) 0 to (inclusive) size.
-  public Node<T> add(final int index, final T elem) {
+  public NodeWrapper add(final int index, final T elem) {
     if (index < 0 || index > size) {
       throw new IndexOutOfBoundsException(String.format("The index you provided was out of bounds. Index: %d, list size: %d. Linked list add at index.", index, size));
     }
     final Node<T> myPreciousNode = index == size ? null : smartTraverse(index);
     ++listModificationCount;
-    return linkElement(myPreciousNode, elem);
+    return new NodeWrapper(linkElement(myPreciousNode, elem));
   }
 
   //REMOVE METHODS
@@ -1094,21 +1223,21 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     return false;
   }
 
-  //removes the next element of the cursor provided. Basically removes the node pointed to by the pointer variable in the cursor.
+  //removes the next element of the node wrapper or cursor provided. Basically removes the node pointed to by the pointer variable in the cursor/node wrapper.
+  //if you provide a cursor, it automatically readjusts the cursor's position.
+  //the cursor provided cannot be on the right most edge of the list.
   //You cannot provide a null argument. If you do, the function raises an implicit error.
-  public T removeCursor(final CursorPointer cursor) {
-    if (cursor.getOwningList() != this) {
-      throw new IllegalArgumentException("You cannot remove a node from a cursor that is not from the same list as the one where this method was called. Linked list remove at cursor.");
+  public T removeWrapper(final NodeWrapper wrapper) {
+    //if wrapper provided is null, implicitly raise an error.
+    if (!wrapperIsFromThis(wrapper)) {
+      throw new IllegalArgumentException("You cannot remove a node from a node wrapper that is not from the same list as the one where this method was called. Linked list remove node wrapper.");
     }
-    if (cursor.pointer == null) {
-      throw new IllegalArgumentException("the cursor you provided is on the right most edge of the list. As such, its next element is null. That cannot happen. Linked list remove at cursor.");
+    try {
+      return removeNode(wrapper.getPointer());
     }
-    if (!cursor.pointer.isInsideList) {
-      HANDLE THIS!!!
+    catch (RuntimeException e) {
+      throw new RuntimeException("the node you provided is null/already removed. Or, the cursor you provided is on the right most edge of the list. As such, its next element is null. That cannot happen. Linked list remove node wrapper.", e);
     }
-    
-    ++listModificationCount;
-    return unlinkNode(cursor.pointer).data;
   }
 
   //Removes the node provided from the list.
