@@ -118,7 +118,7 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     //If a cursor and node wrapper are being compared, then the function behaves as if both objects being compared are just node wrappers (check for node wrapper equality). If both are cursors, then it checks for cursor equality.
     @Override
     public boolean equals(final Object o) {
-      return o instanceof BuffedLinkedList.CursorPointer ? equalsCursor((CursorPointer) o) : equalsWrapper((NodeWrapper) o);
+      return o instanceof BuffedLinkedList<?>.CursorPointer ? equalsCursor((CursorPointer) o) : equalsWrapper((NodeWrapper) o);
     }
     public boolean equalsCursor(final CursorPointer cursor) {
       return (this == cursor) || (cursor != null && this.getPointer() == cursor.getPointer());
