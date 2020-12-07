@@ -74,10 +74,10 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     @Override
     public boolean equals(final Object o) {
       //if the object provided is not a linked list node wrapper, throw a class cast exception.
-      return equalsWrapper((NodeWrapper) o);
+      return equals((NodeWrapper) o);
     }
-    public boolean equalsWrapper(final NodeWrapper wrapper) {
-      return (this == wrapper) || (wrapper != null && this.pointer == wrapper.pointer);
+    public boolean equals(final NodeWrapper wrapper) {
+      return (this == wrapper) || (wrapper != null && this.getPointer() == wrapper.getPointer());
     }
   }
 
@@ -114,16 +114,6 @@ public class BuffedLinkedList<T> implements Iterable<T> {
       return new NodeWrapper(getPointer());
     }
 
-    //two cursors are equal if they are in the same position.
-    //If a cursor and node wrapper are being compared, then the function behaves as if both objects being compared are just node wrappers (check for node wrapper equality). If both are cursors, then it checks for cursor equality.
-    @Override
-    public boolean equals(final Object o) {
-      return o instanceof BuffedLinkedList<?>.CursorPointer ? equalsCursor((CursorPointer) o) : equalsWrapper((NodeWrapper) o);
-    }
-    public boolean equalsCursor(final CursorPointer cursor) {
-      return (this == cursor) || (cursor != null && this.getPointer() == cursor.getPointer());
-    }
-
     //look at the list iterator documentation for information on the next 2 functions.
     //You can only request the previous and next index if the owning list was not modified since the iterator was created. If you request one of the indices, then the function throws a concurrent modification exception.
 
@@ -155,7 +145,7 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     //this function synchronizes indices if one of them is not known. You can only call this function if the two cursors are equal to each other. Call the equals function to determine this.
     //returns the cursor whose index was synchronized. If none were synchronized, then it returns null.
     public CursorPointer syncIndices(final CursorPointer cursor) {
-      if (!this.equalsCursor(cursor)) { //the equals part of the function.
+      if (!this.equals(cursor)) { //the equals part of the function.
         throw new IllegalArgumentException("You cannot synchronize the indices of the current cursor and the one provided if they are not on the same node.");
       }
       if (this.listWasCommodified()) {
