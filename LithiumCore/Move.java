@@ -121,7 +121,7 @@ public class Move extends MoveCore {
 
   //stop doing relative translate
   public void clearRT() {
-    //test if tr runner is in running pile
+    //test if rt runner is in running pile
     if (main.highMaint.has(RTRunner)) {
       main.highMaint.remove(RTRunner);
     }

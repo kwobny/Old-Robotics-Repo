@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SharedState.*;
 
 //Main class
 //Is a hub for all library subsystems. It is not a parent, and more like a hub with a few preattached and preinitialized systems. You should be able to add your own subsystems to this hub.
+//You should always start the main system before accessing any of the subsystems. However, there is nothing preventing you from not doing so. It is assumed that the user is aware of this rule.
 
 //Some vocab:
 //initialize: setup the thing

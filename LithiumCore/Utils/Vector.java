@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils;
 
+import java.util.Objects;
+
 //Is a class which specifies a direction and provides a bunch of utilities.
 //Can also be used as a point class.
 public class Vector implements Cloneable {
@@ -45,17 +47,20 @@ public class Vector implements Cloneable {
   }
 
   //VECTOR EQUALS
-  public static boolean isEqual(final Vector a, final Vector b) {
-    return a == b
-    ||
-    (StaticUtils.isEqual(a.x, b.x) && StaticUtils.isEqual(a.y, b.y));
+  public static boolean equals(final Vector a, final Vector b) {
+    return Objects.equals(a, b);
   }
   @Override
   public boolean equals(final Object o) {
-    final Vector vect = (Vector) o; //if the object is not a type of vector, it throws a cast exception.
+    if (o instanceof Vector) {
+      return equals((Vector) o);
+    }
+    return false;
+  }
+  public boolean equals(final Vector vect) {
     return vect == this
     ||
-    (StaticUtils.isEqual(x, vect.x) && StaticUtils.isEqual(y, vect.y));
+    (vect != null && StaticUtils.equals(x, vect.x) && StaticUtils.equals(y, vect.y));
   }
 
   //Functions to set x and y variables.
