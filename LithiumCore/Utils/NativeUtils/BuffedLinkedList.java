@@ -73,8 +73,10 @@ public class BuffedLinkedList<T> implements Iterable<T> {
     //provided wrapper can be null.
     @Override
     public boolean equals(final Object o) {
-      //if the object provided is not a linked list node wrapper, throw a class cast exception.
-      return equals((NodeWrapper) o);
+      if (o instanceof NodeWrapper) {
+        return equals((NodeWrapper) o);
+      }
+      return false;
     }
     public boolean equals(final NodeWrapper wrapper) {
       return (this == wrapper) || (wrapper != null && this.getPointer() == wrapper.getPointer());
@@ -708,14 +710,6 @@ public class BuffedLinkedList<T> implements Iterable<T> {
 
   //PRIVATE UTILITY METHODS
 
-  //returns true if the elements are, in a sense, "equal".
-  //returns false if the elements are not equal.
-  //o is the original element, e is the element being compared to the original.
-  private static <U> boolean areEqual(final U o, final U e) {
-    //this is the formal definition of equals
-    return o == null ? e == null : o.equals(e);
-  }
-
   //This function gets the node behind the cursor provided (cursor in the form of a pointer).
   //The pointer provided is the next element of the cursor.
   //returns the node that is returned by the "previous" function.
@@ -864,7 +858,7 @@ public class BuffedLinkedList<T> implements Iterable<T> {
   public CursorPointer cursorOf(final T element) {
     int ind = 0;
     for (Node<T> ptr = head; ptr != null; ptr = ptr.next, ++ind) {
-      if (areEqual(element, ptr.data)) {
+      if (Objects.equals(element, ptr.data)) {
         final CursorPointer cursor = new CursorPointer();
         cursor.pointer = ptr;
         cursor.expectedIndex = ind;
@@ -916,7 +910,7 @@ public class BuffedLinkedList<T> implements Iterable<T> {
   public CursorPointer lastCursorOf(final T element) {
     int ind = size-1;
     for (Node<T> ptr = tail; ptr != null; ptr = ptr.prev, --ind) {
-      if (areEqual(element, ptr.data)) {
+      if (Objects.equals(element, ptr.data)) {
         final CursorPointer cursor = new CursorPointer();
         cursor.pointer = ptr;
         cursor.expectedIndex = ind;
@@ -931,7 +925,7 @@ public class BuffedLinkedList<T> implements Iterable<T> {
   public int indexOf(final T element) {
     int ind = 0;
     for (Node<T> ptr = head; ptr != null; ptr = ptr.next, ++ind) {
-      if (areEqual(element, ptr.data)) {
+      if (Objects.equals(element, ptr.data)) {
         return ind;
       }
     }
@@ -969,7 +963,7 @@ public class BuffedLinkedList<T> implements Iterable<T> {
   public int lastIndexOf(final T element) {
     int ind = size-1;
     for (Node<T> ptr = tail; ptr != null; ptr = ptr.prev, --ind) {
-      if (areEqual(element, ptr.data)) {
+      if (Objects.equals(element, ptr.data)) {
         return ind;
       }
     }
@@ -1204,7 +1198,7 @@ public class BuffedLinkedList<T> implements Iterable<T> {
   //Returns true if the removal was successful. If the element did not exist, then it returns false.
   public boolean remove(final T elem) {
     for (Node<T> ptr = head; ptr != null; ptr = ptr.next) {
-      if (areEqual(elem, ptr.data)) {
+      if (Objects.equals(elem, ptr.data)) {
         unlinkNode(ptr);
         ++listModificationCount;
         return true;
