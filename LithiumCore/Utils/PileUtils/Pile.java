@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.PileUtils;
 
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.Function;
+import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.functiontypes.Consumer;
 import java.util.Iterator;
 
 //This is the actual, main unit that represents a pile.
@@ -21,7 +21,7 @@ public interface Pile<T> extends PileInterface<T>, Iterable<T> {
   //If the element is removed twice, the function throws an exception.
   public void remove();
   //Another way of iterating through the pile where the pile itself handles iteration.
-  public void forEach(Function.Consumer<T> consumer);
+  public void forEach(Consumer<? super T> consumer);
 
   //removes all elements in pile.
   public void clear();
