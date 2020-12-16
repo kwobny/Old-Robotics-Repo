@@ -6,7 +6,7 @@ import java.util.Iterator;
 //This is the actual, main unit that represents a pile.
 
 //A pile is something that contains a bunch of things (elements). These elements are referred to and accessed by their value, sort of like a set or collection. There does not have to be a specific order to the elements.
-//The difference between this and a set is that piles have way less methods.
+//The difference between this and a set is that piles have way less methods, and the part about duplicate elements below.
 //Ideally, there should be no duplicate elements in a pile, but there can be if it is inefficient to check for duplicates.
 //There can be one null element in a pile (maybe not always, as pointed out above).
 //If an operation is not supported, UnsupportedOperationException is thrown.
