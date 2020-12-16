@@ -7,6 +7,9 @@ public class DefaultPileWrapper<T> implements PileInterface<T> {
   private final Pile<T> wrappedPile;
 
   public DefaultPileWrapper(final Pile<T> wrappedPile) {
+    if (wrappedPile == null) {
+      throw new IllegalArgumentException("The pile you provided into the default pile wrapper constructor was null. This is illegal.");
+    }
     this.wrappedPile = wrappedPile;
   }
   

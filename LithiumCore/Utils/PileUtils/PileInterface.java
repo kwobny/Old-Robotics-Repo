@@ -9,6 +9,7 @@ public interface PileInterface<T> {
   //They should normally return the added/removed element, but technically don't have too.
 
   //Add method is required.
+  //Should throw an error if the element to be added is already in the pile (equals method equality). However, this does not have to be the case for some piles where efficiency is paramount.
   public T add(T element);
 
   //this method throws an error/exception if the element to be removed is not present.
