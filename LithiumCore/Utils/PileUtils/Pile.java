@@ -5,6 +5,12 @@ import java.util.Iterator;
 
 //This is the actual, main unit that represents a pile.
 
+//A pile is a collection where elements can be accessed solely by their value. All collections are basically piles.
+
+//modifying during iteration, duplicate elements, null elements, memory usage/performance, performance of different methods
+//purpose of a pile is to extend the collections concept and to show what methods should be overridden to make a pile/collection.
+//Basically a collection. Can also be defined as a collection where elements are accessed solely by their value.
+
 //A pile is something that contains a bunch of things (elements). These elements are referred to and accessed by their value, sort of like a set or collection. There does not have to be a specific order to the elements.
 //The difference between this and a set is that piles have way less methods, and the part about duplicate elements below.
 //Ideally, there should be no duplicate elements in a pile, but there can be if it is inefficient to check for duplicates.
