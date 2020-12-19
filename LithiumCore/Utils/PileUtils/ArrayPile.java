@@ -5,6 +5,8 @@ import java.util.ArrayList;
 //This is a pile that is run internally using an arraylist.
 //Use for cases where you want to conserve memory on small amounts of objects.
 
+//This is a FIFI (first in first iterated) structure. The first element added gets iterated over first, last element gets iterated over last, etc.
+
 public class ArrayPile<T> extends AbstractPile<T> {
   
   ArrayList<T> internalList = new ArrayList<>(); //default access
