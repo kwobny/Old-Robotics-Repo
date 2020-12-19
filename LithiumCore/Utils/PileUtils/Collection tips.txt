@@ -1,0 +1,69 @@
+A pile is a collection that differs in some way from the collection (arraylist, hashset, etc.) that it derives from. It is a collection in which elements are mainly accessed by value. However, this does not have to be the only way in which elements are accessed.
+
+This text file just shows the optimal way to implement a collection.
+A collection implies that elements can be accessed by their value. This guide is geared more to creating those types of collections (value accessed collections).
+
+Several concerns to be addressed when making piles:
+  modifying the pile during iteration?
+  iterating order of pile
+  how efficient is the memory usage
+  performance of certain methods (add, remove, contains)
+
+  can there be duplicate elements?
+  can there be null elements?
+
+The main concerns when using collections/piles in the whole library is that they should be able to be modified while iterating, and for some, that the iteration order should be in the order the elements were added in.
+
+To make value accessed collections / piles, you should extend either the abstract collection or (more preferably) the abstract collection v2 (ACV2) class and implement the methods below.
+If an operation is not supported, UnsupportedOperationException is thrown. However, it is recommended to provide an innefficient implementation rather than not providing one at all.
+The only concretely required methods are the iterator and size methods. However, it is still recommended that you implement all other methods.
+You can just copy and paste the methods below.
+
+  @Override
+  public boolean add(T element);
+
+  @Override
+  public boolean remove(Object element);
+
+  @Override
+  public boolean contains(Object element);
+
+  //Required method
+  @Override
+  public Iterator<T> iterator();
+
+
+  @Override
+  public void clear();
+
+  //Required method
+  @Override
+  public int size();
+
+  @Override
+  public boolean isEmpty();
+
+
+  //This method is from the foreachable interface. You only have to provide an implementation if you do not extend the ACV2 class or if you want a custom implementation separate from the iterator method.
+  @Override
+  public void forEach(Consumer<? super T> action);
+
+
+
+
+
+Three iterator methods
+You can just copy and paste the methods below:
+
+@Override
+public boolean hasNext() {
+  //
+}
+@Override
+public T next() {
+  //
+}
+@Override
+public void remove() {
+  //
+}
