@@ -5,7 +5,7 @@ import java.util.Objects;
 import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.functiontypes.Consumer;
 
 //This class is an extended version of abstract collection that also provides an implementation for for each able.
-public abstract class AbstractCollectionV2<T> extends AbstractCollection<T> implements Foreachable<T> {
+public abstract class AbstractPile<T> extends AbstractCollection<T> implements Foreachable<T> {
 
   @Override
   public void forEach(Consumer<? super T> action) {
