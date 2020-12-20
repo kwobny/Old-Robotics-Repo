@@ -3,9 +3,10 @@ package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.PileUtils;
 import java.util.AbstractCollection;
 import java.util.Objects;
 import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.functiontypes.Consumer;
+import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.functiontypes.Predicate;
 
 //This class is an extended version of abstract collection that also provides an implementation for for each able.
-public abstract class AbstractPile<T> extends AbstractCollection<T> implements Foreachable<T> {
+public abstract class AbstractPile<T> extends AbstractCollection<T> implements Pile<T> {
 
   @Override
   public void forEach(Consumer<? super T> action) {
@@ -13,6 +14,20 @@ public abstract class AbstractPile<T> extends AbstractCollection<T> implements F
     for (T t : this) {
       action.accept(t);
     }
+  }
+
+  @Override
+  public boolean removeIf(Predicate<? super T> filter) {
+    Objects.requireNonNull(filter);
+    boolean removed = false;
+    final Iterator<T> each = iterator();
+    while (each.hasNext()) {
+      if (filter.test(each.next())) {
+        each.remove();
+        removed = true;
+      }
+    }
+    return removed;
   }
 
 }
