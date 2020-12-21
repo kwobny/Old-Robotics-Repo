@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.PileUtils;
 
 import java.util.AbstractCollection;
 import java.util.Objects;
+import java.util.Iterator;
 import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.functiontypes.Consumer;
 import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.functiontypes.Predicate;
 
