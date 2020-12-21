@@ -8,7 +8,7 @@ import java.util.Objects;
 //This class is immutable.
 public class WriteWrapper<T> {
 
-  private final Collection<T> collection;
+  final Collection<T> collection; // is default access so that dp write wrapper can access.
 
   public WriteWrapper(final Collection<T> collection) {
     this.collection = Objects.requireNonNull(collection, "The collection you provided into the write wrapper constructor was null. This is illegal.");
@@ -20,13 +20,6 @@ public class WriteWrapper<T> {
 
   public boolean remove(Object element) {
     return collection.remove(element);
-  }
-
-  public boolean removeAll(Object element) {
-    if (element instanceof DuplicatesCollection) {
-      return ((DuplicatesCollection) element).removeAll(element);
-    }
-    throw new ClassCastException("Write wrapper remove all method");
   }
 
   public boolean contains(Object element) {
