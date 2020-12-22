@@ -10,6 +10,9 @@ public interface DuplicatesCollection<T> extends Collection<T> {
   //returns false if the collection was unchanged.
 
   boolean removeAll(Object element);
+
+  //adds the element only if it is not already present in the collection.
+  boolean addStrict(T element);
 }
 
 /*
@@ -21,6 +24,12 @@ public boolean removeAll(final Object element) {
   boolean hasRemovedElements = remove(element);
   if (hasRemovedElements) while (remove(element));
   return hasRemovedElements;
+}
+
+@Override
+public boolean addStrict(final T element) {
+  if (contains(element)) return false;
+  return add(element);
 }
 
 */

@@ -8,9 +8,4 @@ public interface Pile<T> extends Collection<T>, Foreachable<T> {
 
   //removes all of the elements that satisfy the given predicate. (predicate return value of true --> satisfied, false --> not satisfied)
   boolean removeIf(Predicate<? super T> filter);
-
-  //adds the provided element according to the boolean.
-  //if present is true, then the function only adds if the element is already in the collection.
-  //if present is false, then the function only adds if the element is not already in the collection.
-  boolean addIf(T element, boolean present);
 }
