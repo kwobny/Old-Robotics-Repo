@@ -6,8 +6,8 @@ public class DpWriteWrapper<T> extends WriteWrapper<T> {
     super(collection);
   }
 
-  public boolean removeAll(final Object element) {
-    return ((DuplicatesCollection) collection).removeAll(element);
+  public boolean removeEvery(final Object element) {
+    return ((DuplicatesCollection) collection).removeEvery(element);
   }
 
   public boolean addStrict(final T element) {
