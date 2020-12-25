@@ -7,11 +7,11 @@ public class DpWriteWrapper<T> extends WriteWrapper<T> {
   }
 
   public boolean removeEvery(final Object element) {
-    return ((DuplicatesCollection) collection).removeEvery(element);
+    return ((DuplicatesCollection<T>) collection).removeEvery(element);
   }
 
   public boolean addStrict(final T element) {
-    return ((DuplicatesCollection) collection).addStrict(element);
+    return ((DuplicatesCollection<T>) collection).addStrict(element);
   }
 
 }
