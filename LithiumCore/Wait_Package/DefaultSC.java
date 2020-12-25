@@ -1,6 +1,6 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Wait_Package;
+package LithiumCore.Wait_Package;
 
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.Callback;
+import LithiumCore.Utils.Callback;
 
 //This class is the default implementation of the started condition interface.
 //You should ideally use this as much as possible.

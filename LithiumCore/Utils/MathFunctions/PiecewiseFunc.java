@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.MathFunctions;
+package LithiumCore.Utils.MathFunctions;
 
 public class PiecewiseFunc implements MathFunction {
 

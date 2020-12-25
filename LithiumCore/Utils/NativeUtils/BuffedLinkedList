@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.NativeUtils;
+package LithiumCore.Utils.NativeUtils;
 
 import java.util.*;
 

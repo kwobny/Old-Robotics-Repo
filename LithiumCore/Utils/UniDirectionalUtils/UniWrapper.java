@@ -1,6 +1,6 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.UniDirectionalUtils;
+package LithiumCore.Utils.UniDirectionalUtils;
 
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.MathFunctions.*;
+import LithiumCore.Utils.MathFunctions.MathFunction;
 
 //This is a conversion wrapper for non-unidirectional functions to become unidirectional.
 //This class is immutable.

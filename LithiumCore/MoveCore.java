@@ -1,10 +1,16 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore;
+package LithiumCore;
 
-import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SCS_Package.*;
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Wait_Package.*;
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.Callback;
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SharedState.*;
+import Other.Backend.MadHardware;
+
+import LithiumCore.Utils.Callback;
+
+import LithiumCore.SCS_Package.InputSource;
+import LithiumCore.SCS_Package.OutputSink;
+import LithiumCore.SCS_Package.ThresholdWait;
+
+import LithiumCore.SharedState.ConstantsContainer;
+import LithiumCore.SharedState.RobotParameters;
+import LithiumCore.SharedState.SystemConfig;
 
 class MoveCore {
 

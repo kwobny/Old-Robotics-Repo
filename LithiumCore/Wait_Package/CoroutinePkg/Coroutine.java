@@ -1,7 +1,8 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Wait_Package.CoroutinePkg;
+package LithiumCore.Wait_Package.CoroutinePkg;
 
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Wait_Package.*;
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.Callback;
+import LithiumCore.Utils.Callback;
+
+import LithiumCore.Wait_Package.DefaultSC;
 
 //This is the generic/general coroutine class.
 

@@ -1,6 +1,6 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.PileUtils;
+package LithiumCore.Utils.PileUtils;
 
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.functiontypes.Consumer;
+import LithiumCore.Utils.functiontypes.Consumer;
 
 //This interface describes the for each method present in java 8.
 

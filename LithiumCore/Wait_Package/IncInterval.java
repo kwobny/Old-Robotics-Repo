@@ -1,7 +1,8 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Wait_Package;
+package LithiumCore.Wait_Package;
 
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.PileUtils.BoundedElem;
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.Callback;
+import LithiumCore.Utils.Callback;
+
+import LithiumCore.Utils.PileUtils.BoundedElem;
 
 //Incrementing interval
 //Is a type of wait interval which works by incrementing a wait condition.

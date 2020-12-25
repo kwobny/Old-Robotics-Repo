@@ -1,8 +1,9 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Wait_Package;
+package LithiumCore.Wait_Package;
 
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.PileUtils.*;
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.Callback;
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.Consumer;
+import LithiumCore.Utils.Callback;
+import LithiumCore.Utils.Consumer;
+
+import LithiumCore.Utils.PileUtils.BindingFullPile;
 
 public class WaitCore {
 

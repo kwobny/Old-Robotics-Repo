@@ -1,10 +1,15 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore;
+package LithiumCore;
 
-import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SCS_Package.*;
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Wait_Package.*;
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.Callback;
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SharedState.*;
+import Other.Backend.MadHardware;
+
+import LithiumCore.Utils.Callback;
+
+import LithiumCore.SCS_Package.InputSource;
+import LithiumCore.Wait_Package.CheckedSC;
+import LithiumCore.Wait_Package.IncInterval;
+import LithiumCore.Wait_Package.WaitCondition;
+
+import LithiumCore.SharedState.ConstantsContainer;
 
 //this class manages everything related to time
 

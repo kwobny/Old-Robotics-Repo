@@ -1,9 +1,9 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.PileUtils;
+package LithiumCore.Utils.PileUtils;
 
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
-import java.util.Objects;
 import java.util.Iterator;
+import java.util.Objects;
 
 //This is a pile that is run internally using an arraylist.
 //Use for cases where you want to conserve memory on small amounts of objects.

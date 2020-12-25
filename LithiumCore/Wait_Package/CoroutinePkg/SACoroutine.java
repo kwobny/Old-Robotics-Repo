@@ -1,6 +1,6 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Wait_Package.CoroutinePkg;
+package LithiumCore.Wait_Package.CoroutinePkg;
 
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.Callback;
+import LithiumCore.Utils.Callback;
 
 //Single active coroutine: is a coroutine which can only have 1 running instance at a time.
 public abstract class SACoroutine extends Coroutine {

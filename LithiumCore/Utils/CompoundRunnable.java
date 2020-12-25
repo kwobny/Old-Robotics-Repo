@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils;
+package LithiumCore.Utils;
 
 //This class doesn't null check the runnable array or each individual runnable. So if either set is null, then you be screwed.
 //This class is MUTABLE.

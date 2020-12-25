@@ -1,7 +1,8 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.PileUtils;
+package LithiumCore.Utils.PileUtils;
 
 import java.util.Collection;
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.functiontypes.Predicate;
+
+import LithiumCore.Utils.functiontypes.Predicate;
 
 public interface Pile<T> extends Collection<T>, Foreachable<T> {
   //the functions that return a boolean return true if the collection was modified. Returns false if the collection was not modified.

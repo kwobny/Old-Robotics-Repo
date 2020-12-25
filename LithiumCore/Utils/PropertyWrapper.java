@@ -1,6 +1,7 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils;
+package LithiumCore.Utils;
 
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.functiontypes.*;
+import LithiumCore.Utils.functiontypes.Consumer;
+import LithiumCore.Utils.functiontypes.Supplier;
 
 public class PropertyWrapper<T> {
 

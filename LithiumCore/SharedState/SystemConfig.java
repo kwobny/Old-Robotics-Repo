@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SharedState;
+package LithiumCore.SharedState;
 
 public class SystemConfig {
 

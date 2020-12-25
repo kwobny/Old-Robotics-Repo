@@ -1,12 +1,15 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore;
+package LithiumCore;
 
-import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SCS_Package.*;
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Wait_Package.*;
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.Callback;
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.PileUtils.*;
+import Other.Backend.MadHardware;
 
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SharedState.*;
+import LithiumCore.Utils.Callback;
+import LithiumCore.Utils.PileUtils.BindingFullPile;
+
+import LithiumCore.SCS_Package.SCS;
+import LithiumCore.Wait_Package.WaitCore;
+import LithiumCore.Wait_Package.WaitInterval;
+
+import LithiumCore.SharedState.ConstantsContainer;
 
 //Main class
 //Is a hub for all library subsystems. It is not a parent, and more like a hub with a few preattached and preinitialized systems. You should be able to add your own subsystems to this hub.

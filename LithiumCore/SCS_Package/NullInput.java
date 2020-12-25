@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SCS_Package;
+package LithiumCore.SCS_Package;
 
 public enum NullInput implements InputSource {
   obj;

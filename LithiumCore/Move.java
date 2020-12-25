@@ -1,11 +1,11 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore;
+package LithiumCore;
 
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.Vector;
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Wait_Package.*;
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.Callback;
-import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
+import Other.Backend.MadHardware;
 
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SharedState.*;
+import LithiumCore.Utils.Callback;
+import LithiumCore.Utils.Vector;
+
+import LithiumCore.SharedState.ConstantsContainer;
 
 public class Move extends MoveCore {
 

@@ -1,6 +1,6 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SCS_Package;
+package LithiumCore.SCS_Package;
 
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.MathFunctions.*;
+import LithiumCore.Utils.MathFunctions.MathFunction;
 
 public class CommonOps {
 

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils;
+package LithiumCore.Utils;
 
 public class StaticUtils {
 

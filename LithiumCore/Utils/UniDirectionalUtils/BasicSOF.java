@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.UniDirectionalUtils;
+package LithiumCore.Utils.UniDirectionalUtils;
 
 //This class is the basic / base sequential operation function.
 //A sequential operation function is basically a compound unidirectional function. It chains together multiple unidirectional functions into one unidirectional function.
