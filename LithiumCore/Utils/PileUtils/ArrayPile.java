@@ -186,8 +186,6 @@ public class ArrayPile<T> extends AbstractPile<T> implements DuplicatesCollectio
       return removeSafeIterator == this;
     }
 
-    //finish overdue homework, check phone, ask people to get on call while doing stuff, send list of books to mom
-
   }
 
   @Override
