@@ -1,10 +1,10 @@
-package LithiumCore.AdvancedStuff;
+package lithiumcore.scsfunction;
 
-import LithiumCore.Utils.UniDirectionalUtils.ContinuousSOF;
-import LithiumCore.Utils.UniDirectionalUtils.UniTrans;
-import LithiumCore.Utils.UniDirectionalUtils.UniWrapper;
+import lithiumcore.utils.unidirectionfunc.ContinuousSOF;
+import lithiumcore.utils.unidirectionfunc.UniTrans;
+import lithiumcore.utils.unidirectionfunc.UniWrapper;
 
-import LithiumCore.SCS_Package.CommonOps;
+import lithiumcore.scs.CommonOps;
 
 //This is a double s curve. It includes two sub s curve sections separated by an arbitrary constant velocity section.
 public class DoubleSCurve extends ContinuousSOF {

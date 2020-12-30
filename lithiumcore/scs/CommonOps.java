@@ -1,6 +1,6 @@
-package LithiumCore.SCS_Package;
+package lithiumcore.scs;
 
-import LithiumCore.Utils.MathFunctions.MathFunction;
+import lithiumcore.utils.mathfunction.MathFunction;
 
 public class CommonOps {
 

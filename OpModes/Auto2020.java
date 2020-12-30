@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.madmachines2020.Backend.MadHardware;
-import org.firstinspires.ftc.teamcode.madmachines2020.LithiumCore.*;
-import org.firstinspires.ftc.teamcode.madmachines2020.LithiumCore.SharedState.*;
+import org.firstinspires.ftc.teamcode.madmachines2020.lithiumcore.*;
+import org.firstinspires.ftc.teamcode.madmachines2020.lithiumcore.sharedstate.*;
 
 @Autonomous(name = "Yeongjin's autonomous \"yay!\"", group = "Autos")   // How opmode is displayed on phones
 public class Auto2020 extends LinearOpMode

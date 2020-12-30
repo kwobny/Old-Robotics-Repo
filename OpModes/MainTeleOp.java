@@ -8,9 +8,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Backend.MadHardware;
 import org.firstinspires.ftc.teamcode.Backend.Notifier;
-import org.firstinspires.ftc.teamcode.LithiumCore.*;
-import org.firstinspires.ftc.teamcode.LithiumCore.SharedState.*;
-import org.firstinspires.ftc.teamcode.LithiumCore.Utils.Vector;
+import org.firstinspires.ftc.teamcode.lithiumcore.*;
+import org.firstinspires.ftc.teamcode.lithiumcore.sharedstate.*;
+import org.firstinspires.ftc.teamcode.lithiumcore.utils.Vector;
 
 @TeleOp(name = "Yeongjin's Teleop \"Yayyyy!\"", group = "TeleOp")
 public class MainTeleOp extends OpMode {

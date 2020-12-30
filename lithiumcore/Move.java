@@ -1,11 +1,11 @@
-package LithiumCore;
+package lithiumcore;
 
 import Other.Backend.MadHardware;
 
-import LithiumCore.Utils.Callback;
-import LithiumCore.Utils.Vector;
+import lithiumcore.utils.Callback;
+import lithiumcore.utils.Vector;
 
-import LithiumCore.SharedState.ConstantsContainer;
+import lithiumcore.sharedstate.ConstantsContainer;
 
 public class Move extends MoveCore {
 

@@ -1,15 +1,15 @@
-package LithiumCore;
+package lithiumcore;
 
 import Other.Backend.MadHardware;
 
-import LithiumCore.Utils.Callback;
-import LithiumCore.Utils.PileUtils.BindingFullPile;
+import lithiumcore.utils.Callback;
+import lithiumcore.utils.pile.BindingFullPile;
 
-import LithiumCore.SCS_Package.SCS;
-import LithiumCore.Wait_Package.WaitCore;
-import LithiumCore.Wait_Package.WaitInterval;
+import lithiumcore.scs.SCS;
+import lithiumcore.executor.WaitCore;
+import lithiumcore.executor.WaitInterval;
 
-import LithiumCore.SharedState.ConstantsContainer;
+import lithiumcore.sharedstate.ConstantsContainer;
 
 //Main class
 //Is a hub for all library subsystems. It is not a parent, and more like a hub with a few preattached and preinitialized systems. You should be able to add your own subsystems to this hub.

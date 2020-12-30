@@ -1,16 +1,16 @@
-package LithiumCore;
+package lithiumcore;
 
 import Other.Backend.MadHardware;
 
-import LithiumCore.Utils.Callback;
+import lithiumcore.utils.Callback;
 
-import LithiumCore.SCS_Package.InputSource;
-import LithiumCore.SCS_Package.OutputSink;
-import LithiumCore.SCS_Package.ThresholdWait;
+import lithiumcore.scs.InputSource;
+import lithiumcore.scs.OutputSink;
+import lithiumcore.scs.ThresholdWait;
 
-import LithiumCore.SharedState.ConstantsContainer;
-import LithiumCore.SharedState.RobotParameters;
-import LithiumCore.SharedState.SystemConfig;
+import lithiumcore.sharedstate.ConstantsContainer;
+import lithiumcore.sharedstate.RobotParameters;
+import lithiumcore.sharedstate.SystemConfig;
 
 class MoveCore {
 

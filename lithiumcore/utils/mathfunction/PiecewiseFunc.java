@@ -1,4 +1,4 @@
-package LithiumCore.Utils.MathFunctions;
+package lithiumcore.utils.mathfunction;
 
 public class PiecewiseFunc implements MathFunction {
 

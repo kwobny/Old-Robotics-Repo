@@ -1,6 +1,6 @@
-package LithiumCore.Utils.UniDirectionalUtils;
+package lithiumcore.utils.unidirectionfunc;
 
-import LithiumCore.Utils.MathFunctions.MathFunction;
+import lithiumcore.utils.mathfunction.MathFunction;
 
 //This function is one where the x value / input converges towards a single location/direction. The function starts at x = 0 and goes towards the end threshold (typically positive but can be negative).
 //These functions require a get end threshold function and a last y value function.

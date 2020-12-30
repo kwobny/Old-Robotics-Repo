@@ -1,8 +1,8 @@
-package LithiumCore.Wait_Package;
+package lithiumcore.executor;
 
-import LithiumCore.Utils.Callback;
+import lithiumcore.utils.Callback;
 
-import LithiumCore.Utils.PileUtils.BoundedElem;
+import lithiumcore.utils.pile.BoundedElem;
 
 public abstract class WaitInterval extends BoundedElem {
 

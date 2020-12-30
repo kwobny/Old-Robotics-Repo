@@ -1,4 +1,4 @@
-package LithiumCore.SharedState;
+package lithiumcore.sharedstate;
 
 public class ConstantsContainer {
 

@@ -1,8 +1,8 @@
-package LithiumCore.Wait_Package.CoroutinePkg;
+package lithiumcore.executor.coroutine;
 
-import LithiumCore.Utils.Callback;
+import lithiumcore.utils.Callback;
 
-import LithiumCore.Wait_Package.DefaultSC;
+import lithiumcore.executor.DefaultSC;
 
 //This is the generic/general coroutine class.
 

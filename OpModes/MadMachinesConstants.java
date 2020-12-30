@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.madmachines2020.OpModes;
 
-import org.firstinspires.ftc.teamcode.madmachines2020.LithiumCore.SharedState.ConstantsContainer;
-import org.firstinspires.ftc.teamcode.madmachines2020.LithiumCore.SharedState.RobotParameters;
+import org.firstinspires.ftc.teamcode.madmachines2020.lithiumcore.sharedstate.ConstantsContainer;
+import org.firstinspires.ftc.teamcode.madmachines2020.lithiumcore.sharedstate.RobotParameters;
 
 public class MadMachinesConstants extends ConstantsContainer {
     public MadMachinesConstants() {

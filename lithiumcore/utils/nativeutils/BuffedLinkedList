@@ -1,4 +1,4 @@
-package LithiumCore.Utils.NativeUtils;
+package lithiumcore.utils.nativeutils;
 
 import java.util.*;
 

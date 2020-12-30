@@ -1,4 +1,4 @@
-package LithiumCore.Wait_Package;
+package lithiumcore.executor;
 
 //This class is a started condition that has to be started once and can only be started once before running.
 public abstract class CheckedSC extends DefaultSC {

@@ -1,10 +1,10 @@
-package LithiumCore.Wait_Package.CoroutinePkg;
+package lithiumcore.executor.coroutine;
 
-import LithiumCore.Utils.Callback;
+import lithiumcore.utils.Callback;
 
-import LithiumCore.Wait_Package.WaitCondition;
-import LithiumCore.Wait_Package.WaitCore;
-import LithiumCore.Wait_Package.WaitTask;
+import lithiumcore.executor.WaitCondition;
+import lithiumcore.executor.WaitCore;
+import lithiumcore.executor.WaitTask;
 
 //This class is a more specific user friendly version of the Coroutine class. Is meant to be used by the user.
 

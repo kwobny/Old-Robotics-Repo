@@ -1,4 +1,4 @@
-package LithiumCore.SCS_Package;
+package lithiumcore.scs;
 
 public enum NullInput implements InputSource {
   obj;

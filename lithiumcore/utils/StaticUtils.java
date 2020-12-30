@@ -1,4 +1,4 @@
-package LithiumCore.Utils;
+package lithiumcore.utils;
 
 public class StaticUtils {
 

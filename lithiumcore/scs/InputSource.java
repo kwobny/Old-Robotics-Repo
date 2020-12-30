@@ -1,4 +1,4 @@
-package LithiumCore.SCS_Package;
+package lithiumcore.scs;
 
 //is the input interface for the SCS
 

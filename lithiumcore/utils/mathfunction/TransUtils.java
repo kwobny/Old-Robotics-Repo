@@ -1,4 +1,4 @@
-package LithiumCore.Utils.MathFunctions;
+package lithiumcore.utils.mathfunction;
 
 //defines utility functions for using transformations
 

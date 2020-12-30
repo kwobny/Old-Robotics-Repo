@@ -1,4 +1,4 @@
-package LithiumCore.Wait_Package;
+package lithiumcore.executor;
 
 //This class is immutable
 public abstract class CompoundCondition implements WaitCondition {

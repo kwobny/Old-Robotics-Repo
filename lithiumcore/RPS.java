@@ -1,12 +1,12 @@
-package LithiumCore;
+package lithiumcore;
 
 import Other.Backend.MadHardware;
 
-import LithiumCore.Utils.CompoundCallback;
+import lithiumcore.utils.CompoundCallback;
 
-import LithiumCore.SharedState.ConstantsContainer;
-import LithiumCore.SharedState.RobotParameters;
-import LithiumCore.SharedState.SystemConfig;
+import lithiumcore.sharedstate.ConstantsContainer;
+import lithiumcore.sharedstate.RobotParameters;
+import lithiumcore.sharedstate.SystemConfig;
 
 public class RPS {
   //NOTES

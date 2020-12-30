@@ -1,6 +1,6 @@
-package LithiumCore.AdvancedStuff;
+package lithiumcore.scsfunction;
 
-import LithiumCore.Utils.UniDirectionalUtils.UniDirectionalFunc;
+import lithiumcore.utils.unidirectionfunc.UniDirectionalFunc;
 
 //There are 2 constants that you can change:
 //L, and k.

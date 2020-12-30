@@ -1,4 +1,4 @@
-package LithiumCore.Wait_Package;
+package lithiumcore.executor;
 
 //What the implementing wait class is recommended to look like
 /*

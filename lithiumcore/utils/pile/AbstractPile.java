@@ -1,11 +1,11 @@
-package LithiumCore.Utils.PileUtils;
+package lithiumcore.utils.pile;
 
 import java.util.AbstractCollection;
 import java.util.Iterator;
 import java.util.Objects;
 
-import LithiumCore.Utils.functiontypes.Consumer;
-import LithiumCore.Utils.functiontypes.Predicate;
+import lithiumcore.utils.functiontypes.Consumer;
+import lithiumcore.utils.functiontypes.Predicate;
 
 //This class is an extended version of abstract collection that also provides an implementation for for each able.
 public abstract class AbstractPile<T> extends AbstractCollection<T> implements Pile<T> {

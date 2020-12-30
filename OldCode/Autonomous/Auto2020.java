@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes.Autonomous;
 
-import org.firstinspires.ftc.teamcode.LithiumCore.*;
-import org.firstinspires.ftc.teamcode.LithiumCore.SharedState.*;
+import org.firstinspires.ftc.teamcode.lithiumcore.*;
+import org.firstinspires.ftc.teamcode.lithiumcore.sharedstate.*;
 
 @Autonomous(name = "Autonomous", group = "Autos")   // How opmode is displayed on phones
 public class Auto extends LinearOpMode

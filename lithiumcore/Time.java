@@ -1,15 +1,15 @@
-package LithiumCore;
+package lithiumcore;
 
 import Other.Backend.MadHardware;
 
-import LithiumCore.Utils.Callback;
+import lithiumcore.utils.Callback;
 
-import LithiumCore.SCS_Package.InputSource;
-import LithiumCore.Wait_Package.CheckedSC;
-import LithiumCore.Wait_Package.IncInterval;
-import LithiumCore.Wait_Package.WaitCondition;
+import lithiumcore.scs.InputSource;
+import lithiumcore.executor.CheckedSC;
+import lithiumcore.executor.IncInterval;
+import lithiumcore.executor.WaitCondition;
 
-import LithiumCore.SharedState.ConstantsContainer;
+import lithiumcore.sharedstate.ConstantsContainer;
 
 //this class manages everything related to time
 

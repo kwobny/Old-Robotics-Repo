@@ -1,9 +1,9 @@
-package LithiumCore.SCS_Package;
+package lithiumcore.scs;
 
-import LithiumCore.Utils.MathFunctions.MathFunction;
-import LithiumCore.Utils.PileUtils.BoundedElem;
+import lithiumcore.utils.mathfunction.MathFunction;
+import lithiumcore.utils.pile.BoundedElem;
 
-import LithiumCore.Wait_Package.WaitTask;
+import lithiumcore.executor.WaitTask;
 
 //Each object of this class contains all the data necessary to represent one SCS operation.
 

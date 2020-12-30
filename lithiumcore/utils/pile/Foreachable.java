@@ -1,6 +1,6 @@
-package LithiumCore.Utils.PileUtils;
+package lithiumcore.utils.pile;
 
-import LithiumCore.Utils.functiontypes.Consumer;
+import lithiumcore.utils.functiontypes.Consumer;
 
 //This interface describes the for each method present in java 8.
 

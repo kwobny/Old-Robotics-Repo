@@ -1,7 +1,7 @@
-package LithiumCore.Utils;
+package lithiumcore.utils;
 
-import LithiumCore.Utils.functiontypes.Consumer;
-import LithiumCore.Utils.functiontypes.Supplier;
+import lithiumcore.utils.functiontypes.Consumer;
+import lithiumcore.utils.functiontypes.Supplier;
 
 public class PropertyWrapper<T> {
 

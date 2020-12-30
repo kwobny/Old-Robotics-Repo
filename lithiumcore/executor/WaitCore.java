@@ -1,9 +1,9 @@
-package LithiumCore.Wait_Package;
+package lithiumcore.executor;
 
-import LithiumCore.Utils.Callback;
-import LithiumCore.Utils.Consumer;
+import lithiumcore.utils.Callback;
+import lithiumcore.utils.Consumer;
 
-import LithiumCore.Utils.PileUtils.BindingFullPile;
+import lithiumcore.utils.pile.BindingFullPile;
 
 public class WaitCore {
 

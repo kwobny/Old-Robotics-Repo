@@ -1,6 +1,6 @@
-package LithiumCore.Utils.UniDirectionalUtils;
+package lithiumcore.utils.unidirectionfunc;
 
-import LithiumCore.Utils.MathFunctions.CommonTrans;
+import lithiumcore.utils.mathfunction.CommonTrans;
 
 /*
 Common pattern:

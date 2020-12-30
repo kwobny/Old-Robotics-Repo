@@ -1,8 +1,8 @@
-package LithiumCore.Utils.PileUtils;
+package lithiumcore.utils.pile;
 
 import java.util.Objects;
 
-import LithiumCore.Utils.functiontypes.Consumer;
+import lithiumcore.utils.functiontypes.Consumer;
 
 //This class provides a default implementation for the foreachable interface when applied to iterables.
 //Should be used when creating a class that extends both iterable and foreachable.

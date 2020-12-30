@@ -1,4 +1,4 @@
-package LithiumCore.Utils.PileUtils;
+package lithiumcore.utils.pile;
 
 import java.util.Collection;
 import java.util.Objects;

@@ -1,6 +1,6 @@
-package LithiumCore.Utils.UniDirectionalUtils;
+package lithiumcore.utils.unidirectionfunc;
 
-import LithiumCore.Utils.MathFunctions.MathFunction;
+import lithiumcore.utils.mathfunction.MathFunction;
 
 //This is a conversion wrapper for non-unidirectional functions to become unidirectional.
 //This class is immutable.
