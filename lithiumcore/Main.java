@@ -1,6 +1,6 @@
 package lithiumcore;
 
-import Other.Backend.MadHardware;
+import other.Backend.MadHardware;
 
 import lithiumcore.utils.Callback;
 import lithiumcore.utils.pile.BindingFullPile;
