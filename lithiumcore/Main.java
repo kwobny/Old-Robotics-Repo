@@ -6,8 +6,8 @@ import lithiumcore.utils.Callback;
 import lithiumcore.utils.pile.BindingFullPile;
 
 import lithiumcore.scs.SCS;
-import lithiumcore.executor.WaitCore;
-import lithiumcore.executor.WaitInterval;
+import lithiumcore.concurrent.AsyncExecutor;
+import lithiumcore.concurrent.WaitInterval;
 
 import lithiumcore.sharedstate.ConstantsContainer;
 
@@ -41,7 +41,7 @@ public class Main {
   public Time time;
 
   public Move move = new Move();
-  public WaitCore wait = new WaitCore();
+  public AsyncExecutor wait = new AsyncExecutor();
 
   public RPS rps = new RPS();
   public SCS scs = new SCS();
@@ -76,7 +76,7 @@ public class Main {
       @Override
       public void run() {
         //move._motorCali();
-        lowMaint.forAll(WaitCore.CCConsumer);
+        lowMaint.forAll(AsyncExecutor.CCConsumer);
       }
     });
 
@@ -84,7 +84,7 @@ public class Main {
       @Override
       public void run() {
         scs._runSCS();
-        highMaint.forAll(WaitCore.CCConsumer);
+        highMaint.forAll(AsyncExecutor.CCConsumer);
       }
     });
 
@@ -103,13 +103,13 @@ public class Main {
         move.notifierResetter
       };
       for (Callback i : beginningLoopCallbacks)
-        wait.addLoopCallback(i, WaitCore.LCRunBlock.BEGINNING);
+        wait.addLoopCallback(i, AsyncExecutor.LCRunBlock.BEGINNING);
       
       Callback[] endLoopCallbacks = new Callback[]{
         move.OPLPEndCallback
       };
       for (Callback i : endLoopCallbacks)
-        wait.addLoopCallback(i, WaitCore.LCRunBlock.END);
+        wait.addLoopCallback(i, AsyncExecutor.LCRunBlock.END);
     }
 
   }

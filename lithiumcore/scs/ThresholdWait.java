@@ -1,6 +1,6 @@
 package lithiumcore.scs;
 
-import lithiumcore.executor.WaitCondition;
+import lithiumcore.concurrent.WaitCondition;
 
 public abstract class ThresholdWait implements WaitCondition {
 

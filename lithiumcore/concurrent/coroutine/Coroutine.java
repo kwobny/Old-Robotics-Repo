@@ -1,8 +1,8 @@
-package lithiumcore.executor.coroutine;
+package lithiumcore.concurrent.coroutine;
 
 import lithiumcore.utils.Callback;
 
-import lithiumcore.executor.DefaultSC;
+import lithiumcore.concurrent.DefaultSC;
 
 //This is the generic/general coroutine class.
 
@@ -81,16 +81,16 @@ public abstract class Coroutine implements Callback {
 
   private boolean isDone;
   private final WaitTask task = new WaitTask();
-  protected WaitCore waitCore;
+  protected AsyncExecutor waitCore;
 
   {
     task.autoEndTask = false;
   }
 
-  public Coroutine(final WaitCore waitCore) {
+  public Coroutine(final AsyncExecutor waitCore) {
     this.waitCore = waitCore;
   }
-  public Coroutine(final WaitCore waitCore, final Callback callback) {
+  public Coroutine(final AsyncExecutor waitCore, final Callback callback) {
     this.waitCore = waitCore;
     this.callback = callback;
   }

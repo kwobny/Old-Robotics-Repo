@@ -1,4 +1,4 @@
-package lithiumcore.executor;
+package lithiumcore.concurrent;
 
 public enum ImmediatePoll implements WaitCondition {
   obj;

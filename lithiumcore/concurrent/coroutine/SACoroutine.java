@@ -1,4 +1,4 @@
-package lithiumcore.executor.coroutine;
+package lithiumcore.concurrent.coroutine;
 
 import lithiumcore.utils.Callback;
 

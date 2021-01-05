@@ -1,4 +1,4 @@
-package lithiumcore.executor;
+package lithiumcore.concurrent;
 
 //This class is a wait condition that needs to be started/initialized. Sort of like pressing go on a stopwatch.
 //You can start it multiple times.

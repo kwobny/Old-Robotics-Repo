@@ -5,9 +5,9 @@ import other.Backend.MadHardware;
 import lithiumcore.utils.Callback;
 
 import lithiumcore.scs.InputSource;
-import lithiumcore.executor.CheckedSC;
-import lithiumcore.executor.IncInterval;
-import lithiumcore.executor.WaitCondition;
+import lithiumcore.concurrent.CheckedSC;
+import lithiumcore.concurrent.IncInterval;
+import lithiumcore.concurrent.WaitCondition;
 
 import lithiumcore.sharedstate.ConstantsContainer;
 

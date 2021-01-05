@@ -1,10 +1,10 @@
-package lithiumcore.executor.coroutine;
+package lithiumcore.concurrent.coroutine;
 
 import lithiumcore.utils.Callback;
 
-import lithiumcore.executor.WaitCondition;
-import lithiumcore.executor.WaitCore;
-import lithiumcore.executor.WaitTask;
+import lithiumcore.concurrent.WaitCondition;
+import lithiumcore.concurrent.AsyncExecutor;
+import lithiumcore.concurrent.WaitTask;
 
 //This class is a more specific user friendly version of the Coroutine class. Is meant to be used by the user.
 
@@ -18,16 +18,16 @@ public abstract class WaitCoroutine extends Coroutine implements Callback {
   }
 
   private final WaitTask task = new WaitTask();
-  protected WaitCore waitCore;
+  protected AsyncExecutor waitCore;
 
   {
     task.autoEndTask = false;
   }
 
-  public WaitCoroutine(final WaitCore waitCore) {
+  public WaitCoroutine(final AsyncExecutor waitCore) {
     this.waitCore = waitCore;
   }
-  public WaitCoroutine(final WaitCore waitCore, final Callback callback) {
+  public WaitCoroutine(final AsyncExecutor waitCore, final Callback callback) {
     super(callback);
     this.waitCore = waitCore;
   }
@@ -74,16 +74,16 @@ public abstract class WaitCoroutine extends SACoroutine {
   }
 
   private final WaitTask task = new WaitTask();
-  protected WaitCore waitCore;
+  protected AsyncExecutor waitCore;
 
   {
     task.autoEndTask = false;
   }
 
-  public WaitCoroutine(final WaitCore waitCore) {
+  public WaitCoroutine(final AsyncExecutor waitCore) {
     this.waitCore = waitCore;
   }
-  public WaitCoroutine(final WaitCore waitCore, final Callback callback) {
+  public WaitCoroutine(final AsyncExecutor waitCore, final Callback callback) {
     super(callback);
     this.waitCore = waitCore;
   }
@@ -123,7 +123,7 @@ Example implementation:
 
 public class Example extends WaitCoroutine {
 
-  public Example(final WaitCore core) {
+  public Example(final AsyncExecutor core) {
     super(core);
   }
 

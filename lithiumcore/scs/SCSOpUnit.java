@@ -3,7 +3,7 @@ package lithiumcore.scs;
 import lithiumcore.utils.mathfunction.MathFunction;
 import lithiumcore.utils.pile.BoundedElem;
 
-import lithiumcore.executor.WaitTask;
+import lithiumcore.concurrent.WaitTask;
 
 //Each object of this class contains all the data necessary to represent one SCS operation.
 

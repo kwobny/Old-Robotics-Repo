@@ -1,15 +1,15 @@
-package lithiumcore.executor;
+package lithiumcore.concurrent;
 
 import lithiumcore.utils.Callback;
 import lithiumcore.utils.Consumer;
 
 import lithiumcore.utils.pile.BindingFullPile;
 
-public class WaitCore {
+public class AsyncExecutor {
 
   //RESOURCE OBJECTS
 
-  public WaitCore() { //cannot be instantiated outside of package
+  public AsyncExecutor() { //cannot be instantiated outside of package
     //
   }
 
