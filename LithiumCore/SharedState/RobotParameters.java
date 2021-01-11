@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SharedState;
+package org.firstinspires.ftc.teamcode.LithiumCore.SharedState;
 
 public abstract class RobotParameters {
 

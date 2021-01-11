@@ -1,6 +1,6 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.AdvancedStuff;
+package org.firstinspires.ftc.teamcode.LithiumCore.AdvancedStuff;
 
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.MathFunctions.*;
+import org.firstinspires.ftc.teamcode.LithiumCore.Utils.MathFunctions.*;
 
 //This class is immutable
 //This class can be extended. Only subclasses have access to a bare constructor. This is so that the subclass can set function properties in somewhere other than the first line. The subclass has to call setParams sometime.

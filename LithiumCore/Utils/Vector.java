@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils;
+package org.firstinspires.ftc.teamcode.LithiumCore.Utils;
 
 //Is a class which specifies a direction and provides a bunch of utilities.
 //Can also be used as a point class.

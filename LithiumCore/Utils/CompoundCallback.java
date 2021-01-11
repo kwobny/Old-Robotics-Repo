@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils;
+package org.firstinspires.ftc.teamcode.LithiumCore.Utils;
 
 //This class doesn't null check the callback array or each individual callback. So if either set is null, then you be screwed.
 //This class is MUTABLE.

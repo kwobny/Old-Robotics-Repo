@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils;
+package org.firstinspires.ftc.teamcode.LithiumCore.Utils;
 
 //this interface only works for reference types
 public interface Consumer<T> {

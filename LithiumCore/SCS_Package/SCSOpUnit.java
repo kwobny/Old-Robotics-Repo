@@ -1,8 +1,8 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SCS_Package;
+package org.firstinspires.ftc.teamcode.LithiumCore.SCS_Package;
 
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.MathFunctions.*;
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.PileUtils.BoundedElem;
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Wait_Package.*;
+import org.firstinspires.ftc.teamcode.LithiumCore.Utils.MathFunctions.*;
+import org.firstinspires.ftc.teamcode.LithiumCore.Utils.PileUtils.BoundedElem;
+import org.firstinspires.ftc.teamcode.LithiumCore.Wait_Package.*;
 
 
 //Each object of this class contains all the data necessary to represent one SCS operation.

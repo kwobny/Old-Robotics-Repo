@@ -1,7 +1,7 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Wait_Package;
+package org.firstinspires.ftc.teamcode.LithiumCore.Wait_Package;
 
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.PileUtils.BoundedElem;
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.Callback;
+import org.firstinspires.ftc.teamcode.LithiumCore.Utils.PileUtils.BoundedElem;
+import org.firstinspires.ftc.teamcode.LithiumCore.Utils.Callback;
 
 //is a class that contains all the information necessary to complete one wait with callbacks.
 //implements the command pattern

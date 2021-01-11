@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Wait_Package;
+package org.firstinspires.ftc.teamcode.LithiumCore.Wait_Package;
 
 //This class is a started condition that has to be started once and can only be started once before running.
 public abstract class CheckedSC extends DefaultSC {

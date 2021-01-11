@@ -1,6 +1,6 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils;
+package org.firstinspires.ftc.teamcode.LithiumCore.Utils;
 
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.*;
+import org.firstinspires.ftc.teamcode.LithiumCore.Utils.*;
 
 public class PropWrapper<T> {
 

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SCS_Package;
+package org.firstinspires.ftc.teamcode.LithiumCore.SCS_Package;
 
 //output interface for SCS
 

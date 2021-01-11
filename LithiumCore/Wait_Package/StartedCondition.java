@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Wait_Package;
+package org.firstinspires.ftc.teamcode.LithiumCore.Wait_Package;
 
 //This class is a wait condition that needs to be started/initialized. Sort of like pressing go on a stopwatch.
 //You can start it multiple times.

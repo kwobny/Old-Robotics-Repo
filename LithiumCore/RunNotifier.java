@@ -1,6 +1,6 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore;
+package org.firstinspires.ftc.teamcode.LithiumCore;
 
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.Callback;
+import org.firstinspires.ftc.teamcode.LithiumCore.Utils.Callback;
 
 //Is the class that helps implement the OPLP (Once Per Loop Processing) functionality
 //Is a class that can be used to notify a user when there is a new loop (used every time loop method is called for waits)

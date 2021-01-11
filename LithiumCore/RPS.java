@@ -1,10 +1,10 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore;
+package org.firstinspires.ftc.teamcode.LithiumCore;
 
-import org.firstinspires.ftc.teamcode.Other.Backend.MadHardware;
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SCS_Package.*;
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Wait_Package.*;
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.*;
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SharedState.*;
+import org.firstinspires.ftc.teamcode.Backend.MadHardware;
+import org.firstinspires.ftc.teamcode.LithiumCore.SCS_Package.*;
+import org.firstinspires.ftc.teamcode.LithiumCore.Wait_Package.*;
+import org.firstinspires.ftc.teamcode.LithiumCore.Utils.*;
+import org.firstinspires.ftc.teamcode.LithiumCore.SharedState.*;
 
 public class RPS {
   //NOTES

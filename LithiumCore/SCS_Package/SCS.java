@@ -1,10 +1,10 @@
 //Speed (/speedfactor) Control System
 
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SCS_Package;
+package org.firstinspires.ftc.teamcode.LithiumCore.SCS_Package;
 
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.PileUtils.*;
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.Callback;
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.Consumer;
+import org.firstinspires.ftc.teamcode.LithiumCore.Utils.PileUtils.*;
+import org.firstinspires.ftc.teamcode.LithiumCore.Utils.Callback;
+import org.firstinspires.ftc.teamcode.LithiumCore.Utils.Consumer;
 
 //Every acceleration or automatic change in an output (motor buffer speedfactors mainly) is called an operation
 

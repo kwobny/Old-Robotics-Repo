@@ -1,11 +1,11 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Wait_Package.CoroutinePkg;
+package org.firstinspires.ftc.teamcode.LithiumCore.Wait_Package.CoroutinePkg;
 
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Wait_Package.*;
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.Callback;
+import org.firstinspires.ftc.teamcode.LithiumCore.Wait_Package.*;
+import org.firstinspires.ftc.teamcode.LithiumCore.Utils.Callback;
 
 //This is the generic/general coroutine class.
 
-public abstract class Coroutine implements DefaultSC {
+public abstract class Coroutine extends DefaultSC {
 
   //data members
 

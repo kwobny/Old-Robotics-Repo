@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils;
+package org.firstinspires.ftc.teamcode.LithiumCore.Utils;
 
 public class StaticUtils {
 	//an is equal function for doubles
@@ -15,7 +15,7 @@ public class StaticUtils {
       callback.run();
       return null;
     }
-    public CallbackWrapper(final Calback callback) {
+    public CallbackWrapper(final Callback callback) {
       this.callback = callback;
     }
   }

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Wait_Package;
+package org.firstinspires.ftc.teamcode.LithiumCore.Wait_Package;
 
 //What the implementing wait class is recommended to look like
 /*

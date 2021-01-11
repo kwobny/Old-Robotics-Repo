@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.MathFunctions;
+package org.firstinspires.ftc.teamcode.LithiumCore.Utils.MathFunctions;
 
 public class CommonTrans {
 

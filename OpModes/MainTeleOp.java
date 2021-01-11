@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.Backend.MadHardware;
 import org.firstinspires.ftc.teamcode.Backend.Notifier;
 import org.firstinspires.ftc.teamcode.LithiumCore.*;
 import org.firstinspires.ftc.teamcode.LithiumCore.SharedState.*;
+import org.firstinspires.ftc.teamcode.LithiumCore.Utils.BooleanConsumer;
 import org.firstinspires.ftc.teamcode.LithiumCore.Utils.Vector;
 
 @TeleOp(name = "Yeongjin's Teleop \"Yayyyy!\"", group = "TeleOp")
@@ -19,20 +20,13 @@ public class MainTeleOp extends OpMode {
     Notifier noto = new Notifier(telemetry);
     //ElapsedTime runtime = new ElapsedTime();
 
-    final double maxDrivePower = 1.0;
-    final double maxMotorPower = 1.0;
-
     final Main robotLib = new Main(mhw, new MadMachinesConstants());
 
     @Override
     public void init() {
         noto.cMessage("Initialization starting.");
         mhw.initHardware(hardwareMap);
-        if (maxDrivePower > maxMotorPower) {
-            noto.message("ERROR: MAX DRIVE POWER EXCEEDS MAX MOTOR POWER");
-        }
         noto.message("Initialization complete.");
-
     }
 
     @Override
@@ -46,6 +40,15 @@ public class MainTeleOp extends OpMode {
     }
 
     private boolean usingAdvancedDrive = false;
+    private ToggleListener switchButtonListener = new ToggleListener(new BooleanConsumer() {
+        @Override
+        public void accept(final boolean value) {
+            usingAdvancedDrive = !usingAdvancedDrive;
+            if (value) {
+                //
+            }
+        }
+    });
     private boolean switchButtonPressed = false;
 
     //The main driving code should never directly interface with controllers
@@ -53,16 +56,27 @@ public class MainTeleOp extends OpMode {
     public void loop() {
         //noto.cMessage("Main teleop loop running.");
         // loop method code
+        //gamepad1 is the main driver, gamepad2 is auxiliary driver.
 
         robotLib.loopAtBeginning();
 
+        // The "b" button is the "slow down" button.
+        // If it is pressed, the translation is slowed down by a factor of
+        // 0.5.
+        if (gamepad1.b) {
+            robotLib.move.translateBuffer.set(0.25);
+        }
+        else {
+            robotLib.move.translateBuffer.set(1.0);
+        }
+
         if (usingAdvancedDrive) {
             robotLib.move.translateRel(getTranslateDirection(gamepad1));
-            handleRotate(gamepad2, false);
+            handleRotate(gamepad2);
         }
         else {
             robotLib.move.translate(getTranslateDirection(gamepad1));
-            handleRotate(gamepad1, getTranslateY(gamepad1) < 0.0);
+            handleRotate(gamepad1);
         }
         robotLib.move.syncMotors();
 
@@ -73,7 +87,19 @@ public class MainTeleOp extends OpMode {
             if (!switchButtonPressed) { //check if switch button is not pressed (switched from pressed to not pressed)
                 //switch driving modes
                 usingAdvancedDrive = !usingAdvancedDrive;
+                if (!usingAdvancedDrive) { //stop rotational translate if switching to normal driving mode
+                    robotLib.move.clearRT();
+                }
             }
+        }
+
+        //If the y button on gamepad 2 (auxiliary and turning controller) is pressed, then run the launcher.
+        //Else, power down the launcher.
+        if (gamepad2.y) {
+            mhw.setLauncherPower(0.3);
+        }
+        else {
+            mhw.setLauncherPower(0.0);
         }
 
         robotLib.loopAtEnd();
@@ -84,15 +110,6 @@ public class MainTeleOp extends OpMode {
     //get user's wishes based off of controller
     //The main driving code should never directly interface with controllers
 
-    //gets whether or not the user wants the robot to rotate clockwise,
-    //based on the gamepad controller provided.
-    private boolean getRotateClockwise(final Gamepad gamepad) {
-        return gamepad.right_trigger > 0.01;
-    }
-    //same but for counterclockwise
-    private boolean getRotateCounterclockwise(final Gamepad gamepad) {
-        return gamepad.left_trigger > 0.01;
-    }
     //returns the direction the user wants the robot to translate.
     //positive x -> right
     //positive y -> forward
@@ -111,8 +128,8 @@ public class MainTeleOp extends OpMode {
     //Rotate the robot based on the gamepad control that is given.
     //Handles rotating the robot
     //Invert parameter specifies whether to rotate counterclockwise when normally in clockwise rotation, etc.
-    private void handleRotate(final Gamepad gamepad, final boolean invert) {
-        if (getRotateClockwise(gamepad)) {
+    private void handleRotate(final Gamepad gamepad) {
+        /*if (getRotateClockwise(gamepad)) {
             robotLib.move.rotate(invert ? -1.0 : 1.0, false);
         }
         else if (getRotateCounterclockwise(gamepad)) {
@@ -121,7 +138,8 @@ public class MainTeleOp extends OpMode {
         //no rotation
         else {
             robotLib.move.rotate(0.0, false);
-        }
+        }*/
+        robotLib.move.rotate(gamepad.right_stick_x, false);
     }
 
 }

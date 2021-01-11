@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.madmachines2020.Backend;
+package org.firstinspires.ftc.teamcode.Backend;
 
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -6,7 +6,19 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.CRServo;
 import org.firstinspires.ftc.robotcontroller.external.samples.*;
 
+class DcMotorConfig {
+    public String name;
+    public DcMotorSimple.Direction direction;
+    public DcMotor.RunMode runMode;
+    public DcMotor.ZeroPowerBehavior zpb; //zero power behavior
+}
+
 public class MadHardware {
+
+    // Constructor
+    public MadHardware() {
+        // Currently a default constructor
+    }
 
     // Declare hardware map
     HardwareMap hwMap;
@@ -18,14 +30,27 @@ public class MadHardware {
     public SensorREV2mDistance exampleSensor;
     */
 
+    private DcMotor[] dcMotors;
+
     public DcMotor leftFront;
     public DcMotor leftRear;
     public DcMotor rightFront;
     public DcMotor rightRear;
 
-    // Constructor
-    public MadHardware() {
-        // Currently a default constructor
+    //public DcMotor conveyorMotor;
+    //public DcMotor bottomConveyorPart;
+    //public DcMotor leftFlywheel;
+    //public DcMotor rightFlywheel;
+
+    //positive power launches the rings.
+    //0 power stops the launcher wheels.
+    //negative power, idk what that does. Spits the ring out from collection side i guess.
+    public void setLauncherPower(final double power) {
+        /*for (int i = 0; i < 4; ++i) {
+            dcMotors[i].setPower(power);
+        }
+
+         */
     }
 
     /**
@@ -34,17 +59,26 @@ public class MadHardware {
      * @return successMessage
      */
     public String initHardware(HardwareMap hwMap) {
+        this.hwMap = hwMap;
 
         // Initialize physical hardware devices
+        leftFront = initWheel("leftFront", DcMotorSimple.Direction.REVERSE);
+        leftRear = initWheel("leftRear", DcMotorSimple.Direction.REVERSE);
+        rightFront = initWheel("rightFront", DcMotorSimple.Direction.FORWARD);
+        rightRear = initWheel("rightRear", DcMotorSimple.Direction.FORWARD);
+
+        //conveyorMotor = initLaunchMotor("conveyor motor", DcMotorSimple.Direction.FORWARD);
+        //bottomConveyorPart = initLaunchMotor("bottom conveyor part", DcMotorSimple.Direction.FORWARD);
+        //leftFlywheel = initLaunchMotor("left flywheel", DcMotorSimple.Direction.FORWARD);
+        //rightFlywheel = initLaunchMotor("right flywheel", DcMotorSimple.Direction.REVERSE);
+
+        dcMotors = new DcMotor[]{leftFront, leftRear, rightFront, rightRear};
+
         /*
         exampleMotor = hwMap.get(DcMotor.class, "exampleMotor");
         exampleServo = hwMap.get(CRServo.class, "exampleServo");
         exampleSensor = hwMap.get(SensorREV2mDistance.class, "exampleSensor");
         */
-        leftFront = hwMap.get(DcMotor.class, "leftFront");
-        leftRear = hwMap.get(DcMotor.class, "leftRear");
-        rightFront = hwMap.get(DcMotor.class, "rightFront");
-        rightRear = hwMap.get(DcMotor.class, "rightRear");
 
         // Set default states of physical hardware devices
         /*
@@ -53,22 +87,6 @@ public class MadHardware {
         exampleMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         exampleServo.setDirection(DcMotorSimple.Direction.FORWARD);
         */
-
-        leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        leftRear.setDirection(DcMotorSimple.Direction.FORWARD);
-        leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         stopMovement();
 
@@ -81,15 +99,44 @@ public class MadHardware {
      */
     public String stopMovement() {
 
+        for (DcMotor i : dcMotors) {
+            i.setPower(0.0);
+        }
         /*
         exampleMotor.setPower(0);
         exampleServo.setPower(0);
         */
-        leftFront.setPower(0.0);
-        leftRear.setPower(0.0);
-        rightFront.setPower(0.0);
-        rightRear.setPower(0.0);
 
         return "finished stopping movement";
+    }
+
+    private DcMotor initializeMotor(final String name, final DcMotorSimple.Direction direction,
+                                    final DcMotor.RunMode runMode, final DcMotor.ZeroPowerBehavior zpb) {
+        final DcMotor motor = hwMap.get(DcMotor.class, name);
+        motor.setDirection(direction);
+        motor.setMode(runMode);
+        motor.setZeroPowerBehavior(zpb);
+
+        return motor;
+    }
+    private DcMotor initializeMotor(final DcMotorConfig motorConfig) {
+        return initializeMotor(
+                motorConfig.name, motorConfig.direction,
+                motorConfig.runMode, motorConfig.zpb
+        );
+    }
+
+    //these method names start with init, not initialize.
+    private DcMotor initWheel(final String name, final DcMotorSimple.Direction direction) {
+        return initializeMotor(
+                name, direction,
+                DcMotor.RunMode.RUN_USING_ENCODER, DcMotor.ZeroPowerBehavior.BRAKE
+        );
+    }
+    private DcMotor initLaunchMotor(final String name, final DcMotorSimple.Direction direction) {
+        return initializeMotor(
+                name, direction,
+                DcMotor.RunMode.RUN_WITHOUT_ENCODER, DcMotor.ZeroPowerBehavior.FLOAT
+        );
     }
 }

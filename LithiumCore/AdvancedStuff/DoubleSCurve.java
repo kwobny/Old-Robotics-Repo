@@ -1,7 +1,7 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.AdvancedStuff;
+package org.firstinspires.ftc.teamcode.LithiumCore.AdvancedStuff;
 
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.UniDirectionalUtils.*;
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.SCS_Package.CommonOps;
+import org.firstinspires.ftc.teamcode.LithiumCore.Utils.UniDirectionalUtils.*;
+import org.firstinspires.ftc.teamcode.LithiumCore.SCS_Package.CommonOps;
 
 //This is a double s curve. It includes two sub s curve sections separated by an arbitrary constant velocity section.
 public class DoubleSCurve extends ContinuousSOF {

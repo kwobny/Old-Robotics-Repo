@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.UniDirectionalUtils;
+package org.firstinspires.ftc.teamcode.LithiumCore.Utils.UniDirectionalUtils;
 
 //is a sequential operation function where y 0 on each graph is level with the last point on the previous graph.
 //The funcs array cannot have null elements, cannot have a length of 0, and cannot be null.

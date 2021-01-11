@@ -1,6 +1,6 @@
-package org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.UniDirectionalUtils;
+package org.firstinspires.ftc.teamcode.LithiumCore.Utils.UniDirectionalUtils;
 
-import org.firstinspires.ftc.teamcode.OpModes.LithiumCore.Utils.MathFunctions.*;
+import org.firstinspires.ftc.teamcode.LithiumCore.Utils.MathFunctions.*;
 
 //This class is a sequential operation function which is optimized for a nested seq op func structure.
 //this class is an immutable class, except when extended.

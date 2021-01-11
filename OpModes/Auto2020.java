@@ -1,11 +1,11 @@
-package org.firstinspires.ftc.teamcode.madmachines2020.OpModes;
+package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.madmachines2020.Backend.MadHardware;
-import org.firstinspires.ftc.teamcode.madmachines2020.LithiumCore.*;
-import org.firstinspires.ftc.teamcode.madmachines2020.LithiumCore.SharedState.*;
+import org.firstinspires.ftc.teamcode.Backend.MadHardware;
+import org.firstinspires.ftc.teamcode.LithiumCore.*;
+import org.firstinspires.ftc.teamcode.LithiumCore.SharedState.*;
 
 @Autonomous(name = "Yeongjin's autonomous \"yay!\"", group = "Autos")   // How opmode is displayed on phones
 public class Auto2020 extends LinearOpMode
@@ -35,7 +35,7 @@ public class Auto2020 extends LinearOpMode
         robotLib.move.translate(0, 1);
         robotLib.move.syncMotors();
 
-        robotLib.wait.waitFor(robotLib.time.getWait(2).start());
+        robotLib.wait.waitFor(robotLib.time.getWait(3.14159265).start());
 
         robotLib.move.clearAll();
         robotLib.move.syncMotors();
