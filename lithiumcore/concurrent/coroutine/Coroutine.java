@@ -1,7 +1,5 @@
 package lithiumcore.concurrent.coroutine;
 
-import lithiumcore.utils.Callback;
-
 import lithiumcore.concurrent.DefaultSC;
 
 //This is the generic/general coroutine class.
@@ -10,7 +8,7 @@ public abstract class Coroutine extends DefaultSC {
 
   //data members
 
-  public Callback callback;
+  public Runnable callback;
   private boolean isDone;
 
   @Override
@@ -24,7 +22,7 @@ public abstract class Coroutine extends DefaultSC {
   public Coroutine() {
     //
   }
-  public Coroutine(final Callback callback) {
+  public Coroutine(final Runnable callback) {
     this.callback = callback;
   }
 
@@ -41,7 +39,7 @@ public abstract class Coroutine extends DefaultSC {
     }
   }
   //Version that can be used to provide as callback instance
-  protected final Callback endCallback = new Callback() {
+  protected final Runnable endCallback = new Runnable() {
     @Override
     public void run() {
       endCoroutine();
@@ -64,18 +62,18 @@ public class Example extends Coroutine {
 //Old version
 
 /*
-public abstract class Coroutine implements Callback {
+public abstract class Coroutine implements Runnable {
 
   //data members
 
-  public Callback callback;
+  public Runnable callback;
   public final WaitCondition condition = new WaitCondition() {
     @Override
     public boolean pollCondition() {
       return isDone;
     }
   };
-  public final void setRunWhile(final Callback runWhileCallback) {
+  public final void setRunWhile(final Runnable runWhileCallback) {
     task.runWhile = runWhileCallback;
   }
 
@@ -90,7 +88,7 @@ public abstract class Coroutine implements Callback {
   public Coroutine(final AsyncExecutor waitCore) {
     this.waitCore = waitCore;
   }
-  public Coroutine(final AsyncExecutor waitCore, final Callback callback) {
+  public Coroutine(final AsyncExecutor waitCore, final Runnable callback) {
     this.waitCore = waitCore;
     this.callback = callback;
   }
@@ -105,7 +103,7 @@ public abstract class Coroutine implements Callback {
     waitCore.setTimeout(task);
   }
 
-  protected final Callback endCallback = new Callback() {
+  protected final Runnable endCallback = new Runnable() {
     @Override
     public void run() {
       isDone = true;
@@ -121,10 +119,10 @@ public abstract class Coroutine implements Callback {
   protected final void setCondition(final WaitCondition condition) {
     task.condition = condition;
   }
-  protected final void setCallback(final Callback callback) {
+  protected final void setCallback(final Runnable callback) {
     task.callback = callback;
   }
-  protected final void setNext(final WaitCondition condition, final Callback callback) {
+  protected final void setNext(final WaitCondition condition, final Runnable callback) {
     task.condition = condition;
     task.callback = callback;
   }

@@ -2,7 +2,6 @@ package lithiumcore;
 
 import other.Backend.MadHardware;
 
-import lithiumcore.utils.Callback;
 import lithiumcore.utils.pile.BindingFullPile;
 
 import lithiumcore.scs.SCS;
@@ -72,7 +71,7 @@ public class Main {
     time.reset();
 
     //Setup system intervals
-    Time.Interval lowMaintInterval = time.getInterval(constants.config.lowFreqMaintInterval, new Callback() {
+    Time.Interval lowMaintInterval = time.getInterval(constants.config.lowFreqMaintInterval, new Runnable() {
       @Override
       public void run() {
         //move._motorCali();
@@ -80,7 +79,7 @@ public class Main {
       }
     });
 
-    Time.Interval highMaintInterval = time.getInterval(constants.config.highFreqMaintInterval, new Callback() {
+    Time.Interval highMaintInterval = time.getInterval(constants.config.highFreqMaintInterval, new Runnable() {
       @Override
       public void run() {
         scs._runSCS();
@@ -97,18 +96,18 @@ public class Main {
 
     //Setup the loop callbacks for the (new) loop notifiers
     if (constants.config.turnOnOPLP) {
-      Callback[] beginningLoopCallbacks = new Callback[]{
+      Runnable[] beginningLoopCallbacks = new Runnable[]{
         time.loop_notifier,
         rps.RPSLoopNotifiers,
         move.notifierResetter
       };
-      for (Callback i : beginningLoopCallbacks)
+      for (Runnable i : beginningLoopCallbacks)
         wait.addLoopCallback(i, AsyncExecutor.LCRunBlock.BEGINNING);
       
-      Callback[] endLoopCallbacks = new Callback[]{
+      Runnable[] endLoopCallbacks = new Runnable[]{
         move.OPLPEndCallback
       };
-      for (Callback i : endLoopCallbacks)
+      for (Runnable i : endLoopCallbacks)
         wait.addLoopCallback(i, AsyncExecutor.LCRunBlock.END);
     }
 

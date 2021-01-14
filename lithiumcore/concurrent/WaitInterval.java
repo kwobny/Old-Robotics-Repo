@@ -1,12 +1,10 @@
 package lithiumcore.concurrent;
 
-import lithiumcore.utils.Callback;
-
 import lithiumcore.utils.pile.BoundedElem;
 
 public abstract class WaitInterval extends BoundedElem {
 
-  public Callback callback;
+  public Runnable callback;
   private boolean hasStarted = false;
 
   //Override to implement behavior when the interval first starts
@@ -20,6 +18,7 @@ public abstract class WaitInterval extends BoundedElem {
     }
     _run();
   }
+
 
   //Is a reset function. Has to be called once to start, and can be called successive times to reset the interval.
   public final WaitInterval reset() {

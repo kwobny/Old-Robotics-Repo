@@ -1,6 +1,5 @@
 package lithiumcore.concurrent;
 
-import lithiumcore.utils.Callback;
 import lithiumcore.utils.Consumer;
 
 import lithiumcore.utils.pile.BindingFullPile;
@@ -82,7 +81,7 @@ public class AsyncExecutor {
     }
     while (!waitCondition.pollCondition());
   }
-  public void waitFor(WaitCondition condition, Callback callback, Callback runWhile) {
+  public void waitFor(WaitCondition condition, Runnable callback, Runnable runWhile) {
     final WaitTask task = new WaitTask(condition, callback, runWhile);
     waitFor(task);
   }
@@ -101,11 +100,11 @@ public class AsyncExecutor {
   //allows things to execute once condition met, does not pause code execution
   private final BindingFullPile<WaitTask> taskPile = new BindingFullPile<>();
   
-  public WaitTask scheduleTask(WaitCondition addCondition, Callback callback, Callback runWhile) {
+  public WaitTask scheduleTask(WaitCondition addCondition, Runnable callback, Runnable runWhile) {
     final WaitTask retTask = new WaitTask(addCondition, callback, runWhile);
     return scheduleTask(retTask);
   }
-  public WaitTask scheduleTask(WaitCondition addCondition, Callback callback) {
+  public WaitTask scheduleTask(WaitCondition addCondition, Runnable callback) {
     return scheduleTask(addCondition, callback, null);
   }
   public WaitTask scheduleTask(final WaitTask task) {
@@ -148,10 +147,10 @@ public class AsyncExecutor {
   private final BindingFullPile<CancellableCallback> loopCallbackBegin = new BindingFullPile<>();
   private final BindingFullPile<CancellableCallback> loopCallbackEnd = new BindingFullPile<>();
 
-  public CancellableCallback addLoopCallback(final Callback callback, final LCRunBlock runBlock) {
+  public CancellableCallback addLoopCallback(final Runnable callback, final LCRunBlock runBlock) {
     return addLoopCallback(new CancellableCallback(callback), runBlock);
   }
-  public CancellableCallback addLoopCallback(final Callback callback) {
+  public CancellableCallback addLoopCallback(final Runnable callback) {
     return addLoopCallback(callback, LCRunBlock.BEGINNING);
   }
   public CancellableCallback addLoopCallback(final CancellableCallback callback, final LCRunBlock runBlock) {
@@ -172,7 +171,7 @@ public class AsyncExecutor {
     callback.getCorrPile().remove(callback);
     return callback;
   }
-  //Loop Callback is running
+  //Loop Runnable is running
   //returns true if the supplied callback is currently running
   public boolean LCIsRunning(final CancellableCallback callback) {
     BindingFullPile<CancellableCallback> pile = callback.getCorrPile();

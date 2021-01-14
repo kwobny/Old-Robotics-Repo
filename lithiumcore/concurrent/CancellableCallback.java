@@ -1,15 +1,13 @@
 package lithiumcore.concurrent;
 
-import lithiumcore.utils.Callback;
-
 import lithiumcore.utils.pile.BindingFullPile;
 import lithiumcore.utils.pile.BoundedElem;
 
 public class CancellableCallback extends BoundedElem {
   
-  public Callback callback;
+  public Runnable callback;
 
-  public CancellableCallback(final Callback callback) {
+  public CancellableCallback(final Runnable callback) {
     this.callback = callback;
   }
 

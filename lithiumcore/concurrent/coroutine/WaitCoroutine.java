@@ -1,7 +1,5 @@
 package lithiumcore.concurrent.coroutine;
 
-import lithiumcore.utils.Callback;
-
 import lithiumcore.concurrent.WaitCondition;
 import lithiumcore.concurrent.AsyncExecutor;
 import lithiumcore.concurrent.WaitTask;
@@ -9,11 +7,11 @@ import lithiumcore.concurrent.WaitTask;
 //This class is a more specific user friendly version of the Coroutine class. Is meant to be used by the user.
 
 /*
-public abstract class WaitCoroutine extends Coroutine implements Callback {
+public abstract class WaitCoroutine extends Coroutine implements Runnable {
 
   //data members
 
-  public final void setRunWhile(final Callback runWhileCallback) {
+  public final void setRunWhile(final Runnable runWhileCallback) {
     task.runWhile = runWhileCallback;
   }
 
@@ -27,7 +25,7 @@ public abstract class WaitCoroutine extends Coroutine implements Callback {
   public WaitCoroutine(final AsyncExecutor waitCore) {
     this.waitCore = waitCore;
   }
-  public WaitCoroutine(final AsyncExecutor waitCore, final Callback callback) {
+  public WaitCoroutine(final AsyncExecutor waitCore, final Runnable callback) {
     super(callback);
     this.waitCore = waitCore;
   }
@@ -38,7 +36,7 @@ public abstract class WaitCoroutine extends Coroutine implements Callback {
     waitCore.setTimeout(task);
   }
   
-  protected final Callback endCallback = new Callback() {
+  protected final Runnable endCallback = new Runnable() {
     @Override
     public void run() {
       waitCore.removeTimeout(task);
@@ -50,10 +48,10 @@ public abstract class WaitCoroutine extends Coroutine implements Callback {
   protected final void setCondition(final WaitCondition condition) {
     task.condition = condition;
   }
-  protected final void setCallback(final Callback callback) {
+  protected final void setCallback(final Runnable callback) {
     task.callback = callback;
   }
-  protected final void setNext(final WaitCondition condition, final Callback callback) {
+  protected final void setNext(final WaitCondition condition, final Runnable callback) {
     task.condition = condition;
     task.callback = callback;
   }
@@ -69,7 +67,7 @@ public abstract class WaitCoroutine extends SACoroutine {
 
   //data members
 
-  public final void setRunWhile(final Callback runWhileCallback) {
+  public final void setRunWhile(final Runnable runWhileCallback) {
     task.runWhile = runWhileCallback;
   }
 
@@ -83,7 +81,7 @@ public abstract class WaitCoroutine extends SACoroutine {
   public WaitCoroutine(final AsyncExecutor waitCore) {
     this.waitCore = waitCore;
   }
-  public WaitCoroutine(final AsyncExecutor waitCore, final Callback callback) {
+  public WaitCoroutine(final AsyncExecutor waitCore, final Runnable callback) {
     super(callback);
     this.waitCore = waitCore;
   }
@@ -103,10 +101,10 @@ public abstract class WaitCoroutine extends SACoroutine {
   protected final void setCondition(final WaitCondition condition) {
     task.condition = condition;
   }
-  protected final void setCallback(final Callback callback) {
+  protected final void setCallback(final Runnable callback) {
     task.callback = callback;
   }
-  protected final void setNext(final WaitCondition condition, final Callback callback) {
+  protected final void setNext(final WaitCondition condition, final Runnable callback) {
     task.condition = condition;
     task.callback = callback;
   }
@@ -136,7 +134,7 @@ public class Example extends WaitCoroutine {
   //some intermediate callbacks
 
   //last callback before end
-  private final Callback secondToLast = new Callback() {
+  private final Runnable secondToLast = new Runnable() {
     @Override
     public void run() {
       //do some stuff

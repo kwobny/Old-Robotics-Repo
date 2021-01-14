@@ -1,7 +1,5 @@
 package lithiumcore.concurrent;
 
-import lithiumcore.utils.Callback;
-
 import lithiumcore.utils.pile.BoundedElem;
 
 //is a class that contains all the information necessary to complete one wait with callbacks.
@@ -9,8 +7,8 @@ import lithiumcore.utils.pile.BoundedElem;
 
 public class WaitTask extends BoundedElem {
   public WaitCondition condition;
-  public Callback callback;
-  public Callback runWhile; //this is basically an optional callback that continuously runs in the main loop while the wait is ongoing.
+  public Runnable callback;
+  public Runnable runWhile; //this is basically an optional callback that continuously runs in the main loop while the wait is ongoing.
   //It is run after the wait condition is tested, so if the wait is determined to be over, then this does not run.
 
   public boolean autoEndTask = true;
@@ -50,18 +48,18 @@ public class WaitTask extends BoundedElem {
     return _isActive2;
   }
 
-  public void setTask(final WaitCondition cond, final Callback callback) {
+  public void setTask(final WaitCondition cond, final Runnable callback) {
     setCondition(cond);
     setCallback(callback);
   }
   public void setCondition(final WaitCondition cond) {
     condition = cond;
   }
-  public void setCallback(final Callback callback) {
+  public void setCallback(final Runnable callback) {
     this.callback = callback;
   }
 
-  public WaitTask(final WaitCondition condition, final Callback callback, final Callback runWhile) {
+  public WaitTask(final WaitCondition condition, final Runnable callback, final Runnable runWhile) {
     this.condition = condition;
     this.callback = callback;
     this.runWhile = runWhile;

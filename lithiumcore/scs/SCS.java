@@ -1,6 +1,5 @@
 package lithiumcore.scs;
 
-import lithiumcore.utils.Callback;
 import lithiumcore.utils.Consumer;
 
 import lithiumcore.utils.pile.BindingFullPile;
@@ -72,7 +71,7 @@ public class SCS {
     op.run(); //run the operation one last time when it ends
   }
 
-  public class AddOpCallback implements Callback {
+  public class AddOpCallback implements Runnable {
     private SCSOpUnit operation;
 
     public AddOpCallback(SCSOpUnit operation) {
@@ -85,7 +84,7 @@ public class SCS {
     }
   }
 
-  public class RemoveOpCallback implements Callback {
+  public class RemoveOpCallback implements Runnable {
     private SCSOpUnit operation;
 
     public RemoveOpCallback(SCSOpUnit operation) {

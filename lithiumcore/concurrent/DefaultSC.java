@@ -1,12 +1,10 @@
 package lithiumcore.concurrent;
 
-import lithiumcore.utils.Callback;
-
 //This class is the default implementation of the started condition interface.
 //You should ideally use this as much as possible.
 //It is also a callback, which means that when it is run, it starts the wait.
 
-public abstract class DefaultSC implements StartedCondition, Callback {
+public abstract class DefaultSC implements StartedCondition, Runnable {
   
   @Override
   public StartedCondition start() {

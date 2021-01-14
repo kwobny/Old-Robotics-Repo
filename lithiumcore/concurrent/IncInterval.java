@@ -1,7 +1,5 @@
 package lithiumcore.concurrent;
 
-import lithiumcore.utils.Callback;
-
 import lithiumcore.utils.pile.BoundedElem;
 
 //Incrementing interval

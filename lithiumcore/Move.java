@@ -2,7 +2,6 @@ package lithiumcore;
 
 import other.Backend.MadHardware;
 
-import lithiumcore.utils.Callback;
 import lithiumcore.utils.Vector;
 
 import lithiumcore.sharedstate.ConstantsContainer;
@@ -95,7 +94,7 @@ public class Move extends MoveCore {
   //linear translate, but relative to the starting/origin/reference orientation of the robot.
 
   private Vector RTVector;
-  private final CancellableCallback RTRunner = new CancellableCallback(new Callback() {
+  private final CancellableCallback RTRunner = new CancellableCallback(new Runnable() {
     @Override
     public void run() {
       final double currAngle = rps.getRadianAngle();

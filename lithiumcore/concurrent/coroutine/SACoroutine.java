@@ -1,7 +1,5 @@
 package lithiumcore.concurrent.coroutine;
 
-import lithiumcore.utils.Callback;
-
 //Single active coroutine: is a coroutine which can only have 1 running instance at a time.
 public abstract class SACoroutine extends Coroutine {
 
@@ -10,7 +8,7 @@ public abstract class SACoroutine extends Coroutine {
   public SACoroutine() {
     //
   }
-  public SACoroutine(final Callback callback) {
+  public SACoroutine(final Runnable callback) {
     super(callback);
   }
   

@@ -2,8 +2,6 @@ package lithiumcore;
 
 import other.Backend.MadHardware;
 
-import lithiumcore.utils.Callback;
-
 import lithiumcore.scs.InputSource;
 import lithiumcore.scs.OutputSink;
 import lithiumcore.scs.ThresholdWait;
@@ -155,7 +153,7 @@ class MoveCore {
   //Both are only run/used if OPLP is on
 
   //loop begin callback
-  Callback notifierResetter = new Callback() {
+  Runnable notifierResetter = new Runnable() {
     @Override
     public void run() {
       motorSyncNotifier.reset();
@@ -164,7 +162,7 @@ class MoveCore {
   };
   //loop end callback
   //does the actual sync motors if OPLP is on
-  Callback OPLPEndCallback = new Callback() {
+  Runnable OPLPEndCallback = new Runnable() {
     @Override
     public void run() {
       if (motorSyncNotifier.hasRunYet()) {

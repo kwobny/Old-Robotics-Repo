@@ -2,8 +2,6 @@ package lithiumcore;
 
 import other.Backend.MadHardware;
 
-import lithiumcore.utils.Callback;
-
 import lithiumcore.scs.InputSource;
 import lithiumcore.concurrent.CheckedSC;
 import lithiumcore.concurrent.IncInterval;
@@ -77,7 +75,7 @@ public class Time implements InputSource {
   public class Interval extends IncInterval {
     public double time_interval;
 
-    public Interval(final double time_interval, final Callback callback) {
+    public Interval(final double time_interval, final Runnable callback) {
       this.time_interval = time_interval;
       this.callback = callback;
     }
@@ -100,7 +98,7 @@ public class Time implements InputSource {
     return new Wait(delay);
   }
 
-  public Interval getInterval(final double time_interval, final Callback callback) {
+  public Interval getInterval(final double time_interval, final Runnable callback) {
     return new Interval(time_interval, callback);
   }
 
