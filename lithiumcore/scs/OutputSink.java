@@ -1,4 +1,4 @@
-package lithiumcore.scs;
+package org.firstinspires.ftc.teamcode.lithiumcore.scs;
 
 //output interface for SCS
 

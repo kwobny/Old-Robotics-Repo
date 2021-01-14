@@ -1,10 +1,10 @@
-package lithiumcore;
+package org.firstinspires.ftc.teamcode.lithiumcore;
 
 import other.Backend.MadHardware;
 
-import lithiumcore.utils.Vector;
+import org.firstinspires.ftc.teamcode.lithiumcore.utils.Vector;
 
-import lithiumcore.sharedstate.ConstantsContainer;
+import org.firstinspires.ftc.teamcode.lithiumcore.sharedstate.ConstantsContainer;
 
 public class Move extends MoveCore {
 

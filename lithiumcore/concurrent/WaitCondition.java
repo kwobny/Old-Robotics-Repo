@@ -1,4 +1,4 @@
-package lithiumcore.concurrent;
+package org.firstinspires.ftc.teamcode.lithiumcore.concurrent;
 
 public interface WaitCondition {
 

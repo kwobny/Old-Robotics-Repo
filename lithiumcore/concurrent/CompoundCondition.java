@@ -1,4 +1,4 @@
-package lithiumcore.concurrent;
+package org.firstinspires.ftc.teamcode.lithiumcore.concurrent;
 
 //This class is immutable
 public abstract class CompoundCondition implements WaitCondition {

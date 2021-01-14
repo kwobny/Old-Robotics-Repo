@@ -1,13 +1,13 @@
-package lithiumcore;
+package org.firstinspires.ftc.teamcode.lithiumcore;
 
 import other.Backend.MadHardware;
 
-import lithiumcore.scs.InputSource;
-import lithiumcore.concurrent.CheckedSC;
-import lithiumcore.concurrent.IncInterval;
-import lithiumcore.concurrent.WaitCondition;
+import org.firstinspires.ftc.teamcode.lithiumcore.scs.InputSource;
+import org.firstinspires.ftc.teamcode.lithiumcore.concurrent.CheckedSC;
+import org.firstinspires.ftc.teamcode.lithiumcore.concurrent.IncInterval;
+import org.firstinspires.ftc.teamcode.lithiumcore.concurrent.WaitCondition;
 
-import lithiumcore.sharedstate.ConstantsContainer;
+import org.firstinspires.ftc.teamcode.lithiumcore.sharedstate.ConstantsContainer;
 
 //this class manages everything related to time
 

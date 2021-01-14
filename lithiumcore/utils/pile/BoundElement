@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.lithiumcore.utils.pile;
+package org.firstinspires.ftc.teamcode.OpModes.org.firstinspires.ftc.teamcode.lithiumcore.utils.pile;
 
 //This class is the element which is stored in a binding full pile.
 //Each element can only belong to 1 pile.

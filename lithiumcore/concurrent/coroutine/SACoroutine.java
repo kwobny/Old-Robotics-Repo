@@ -1,4 +1,4 @@
-package lithiumcore.concurrent.coroutine;
+package org.firstinspires.ftc.teamcode.lithiumcore.concurrent.coroutine;
 
 //Single active coroutine: is a coroutine which can only have 1 running instance at a time.
 public abstract class SACoroutine extends Coroutine {

@@ -1,7 +1,7 @@
-package lithiumcore.concurrent;
+package org.firstinspires.ftc.teamcode.lithiumcore.concurrent;
 
-import lithiumcore.utils.pile.BindingFullPile;
-import lithiumcore.utils.pile.BoundedElem;
+import org.firstinspires.ftc.teamcode.lithiumcore.utils.pile.BindingFullPile;
+import org.firstinspires.ftc.teamcode.lithiumcore.utils.pile.BoundedElem;
 
 public class CancellableCallback extends BoundedElem {
   

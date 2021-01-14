@@ -1,9 +1,9 @@
-package lithiumcore.scs;
+package org.firstinspires.ftc.teamcode.lithiumcore.scs;
 
-import lithiumcore.utils.mathfunction.MathFunction;
-import lithiumcore.utils.pile.BoundedElem;
+import org.firstinspires.ftc.teamcode.lithiumcore.utils.mathfunction.MathFunction;
+import org.firstinspires.ftc.teamcode.lithiumcore.utils.pile.BoundedElem;
 
-import lithiumcore.concurrent.WaitTask;
+import org.firstinspires.ftc.teamcode.lithiumcore.concurrent.WaitTask;
 
 //Each object of this class contains all the data necessary to represent one SCS operation.
 

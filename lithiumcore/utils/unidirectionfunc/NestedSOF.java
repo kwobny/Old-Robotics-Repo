@@ -1,4 +1,4 @@
-package lithiumcore.utils.unidirectionfunc;
+package org.firstinspires.ftc.teamcode.lithiumcore.utils.unidirectionfunc;
 
 //This class is a sequential operation function which is optimized for a nested seq op func structure.
 //this class is an immutable class, except when extended.

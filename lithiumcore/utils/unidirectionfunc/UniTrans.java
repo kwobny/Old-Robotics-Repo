@@ -1,6 +1,6 @@
-package lithiumcore.utils.unidirectionfunc;
+package org.firstinspires.ftc.teamcode.lithiumcore.utils.unidirectionfunc;
 
-import lithiumcore.utils.mathfunction.CommonTrans;
+import org.firstinspires.ftc.teamcode.lithiumcore.utils.mathfunction.CommonTrans;
 
 /*
 Common pattern:

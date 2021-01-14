@@ -1,6 +1,6 @@
-package lithiumcore.scs;
+package org.firstinspires.ftc.teamcode.lithiumcore.scs;
 
-import lithiumcore.concurrent.WaitCondition;
+import org.firstinspires.ftc.teamcode.lithiumcore.concurrent.WaitCondition;
 
 public abstract class ThresholdWait implements WaitCondition {
 

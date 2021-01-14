@@ -1,6 +1,6 @@
-package org.firstinspires.ftc.teamcode.OpModes.lithiumcore.utils.pile;
+package org.firstinspires.ftc.teamcode.OpModes.org.firstinspires.ftc.teamcode.lithiumcore.utils.pile;
 
-import org.firstinspires.ftc.teamcode.OpModes.lithiumcore.utils.Consumer;
+import org.firstinspires.ftc.teamcode.OpModes.org.firstinspires.ftc.teamcode.lithiumcore.utils.Consumer;
 
 import java.util.*;
 

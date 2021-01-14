@@ -1,14 +1,14 @@
-package lithiumcore;
+package org.firstinspires.ftc.teamcode.lithiumcore;
 
 import other.Backend.MadHardware;
 
-import lithiumcore.utils.pile.BindingFullPile;
+import org.firstinspires.ftc.teamcode.lithiumcore.utils.pile.BindingFullPile;
 
-import lithiumcore.scs.SCS;
-import lithiumcore.concurrent.AsyncExecutor;
-import lithiumcore.concurrent.WaitInterval;
+import org.firstinspires.ftc.teamcode.lithiumcore.scs.SCS;
+import org.firstinspires.ftc.teamcode.lithiumcore.concurrent.AsyncExecutor;
+import org.firstinspires.ftc.teamcode.lithiumcore.concurrent.WaitInterval;
 
-import lithiumcore.sharedstate.ConstantsContainer;
+import org.firstinspires.ftc.teamcode.lithiumcore.sharedstate.ConstantsContainer;
 
 //Main class
 //Is a hub for all library subsystems. It is not a parent, and more like a hub with a few preattached and preinitialized systems. You should be able to add your own subsystems to this hub.

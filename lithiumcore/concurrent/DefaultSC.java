@@ -1,4 +1,4 @@
-package lithiumcore.concurrent;
+package org.firstinspires.ftc.teamcode.lithiumcore.concurrent;
 
 //This class is the default implementation of the started condition interface.
 //You should ideally use this as much as possible.

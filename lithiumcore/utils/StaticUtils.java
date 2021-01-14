@@ -1,4 +1,4 @@
-package lithiumcore.utils;
+package org.firstinspires.ftc.teamcode.lithiumcore.utils;
 
 public class StaticUtils {
 

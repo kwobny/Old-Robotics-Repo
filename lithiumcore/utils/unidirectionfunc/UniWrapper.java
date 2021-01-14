@@ -1,6 +1,6 @@
-package lithiumcore.utils.unidirectionfunc;
+package org.firstinspires.ftc.teamcode.lithiumcore.utils.unidirectionfunc;
 
-import lithiumcore.utils.mathfunction.MathFunction;
+import org.firstinspires.ftc.teamcode.lithiumcore.utils.mathfunction.MathFunction;
 
 //This is a conversion wrapper for non-unidirectional functions to become unidirectional.
 //This class is immutable.

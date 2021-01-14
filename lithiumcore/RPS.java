@@ -1,12 +1,12 @@
-package lithiumcore;
+package org.firstinspires.ftc.teamcode.lithiumcore;
 
 import other.Backend.MadHardware;
 
-import lithiumcore.utils.CompoundCallback;
+import org.firstinspires.ftc.teamcode.lithiumcore.utils.CompoundCallback;
 
-import lithiumcore.sharedstate.ConstantsContainer;
-import lithiumcore.sharedstate.RobotParameters;
-import lithiumcore.sharedstate.SystemConfig;
+import org.firstinspires.ftc.teamcode.lithiumcore.sharedstate.ConstantsContainer;
+import org.firstinspires.ftc.teamcode.lithiumcore.sharedstate.RobotParameters;
+import org.firstinspires.ftc.teamcode.lithiumcore.sharedstate.SystemConfig;
 
 public class RPS {
   //NOTES

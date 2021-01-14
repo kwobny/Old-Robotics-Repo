@@ -1,6 +1,6 @@
-package lithiumcore.concurrent;
+package org.firstinspires.ftc.teamcode.lithiumcore.concurrent;
 
-import lithiumcore.utils.pile.BoundedElem;
+import org.firstinspires.ftc.teamcode.lithiumcore.utils.pile.BoundedElem;
 
 //is a class that contains all the information necessary to complete one wait with callbacks.
 //implements the command pattern

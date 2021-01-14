@@ -1,6 +1,6 @@
-package lithiumcore.scsfunction;
+package org.firstinspires.ftc.teamcode.lithiumcore.scsfunction;
 
-import lithiumcore.utils.mathfunction.MathFunction;
+import org.firstinspires.ftc.teamcode.lithiumcore.utils.mathfunction.MathFunction;
 
 //This class is immutable
 //This class can be extended. Only subclasses have access to a bare constructor. This is so that the subclass can set function properties in somewhere other than the first line. The subclass has to call setParams sometime.

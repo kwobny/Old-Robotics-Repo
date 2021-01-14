@@ -1,6 +1,6 @@
-package lithiumcore.utils.pile;
+package org.firstinspires.ftc.teamcode.lithiumcore.utils.pile;
 
-import lithiumcore.utils.functiontypes.Consumer;
+import org.firstinspires.ftc.teamcode.lithiumcore.utils.functiontypes.Consumer;
 
 //This interface describes the for each method present in java 8.
 

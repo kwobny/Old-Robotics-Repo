@@ -1,6 +1,6 @@
-package lithiumcore.concurrent.coroutine;
+package org.firstinspires.ftc.teamcode.lithiumcore.concurrent.coroutine;
 
-import lithiumcore.concurrent.DefaultSC;
+import org.firstinspires.ftc.teamcode.lithiumcore.concurrent.DefaultSC;
 
 //This is the generic/general coroutine class.
 

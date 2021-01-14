@@ -1,8 +1,8 @@
-package lithiumcore.scs;
+package org.firstinspires.ftc.teamcode.lithiumcore.scs;
 
-import lithiumcore.utils.Consumer;
+import org.firstinspires.ftc.teamcode.lithiumcore.utils.Consumer;
 
-import lithiumcore.utils.pile.BindingFullPile;
+import org.firstinspires.ftc.teamcode.lithiumcore.utils.pile.BindingFullPile;
 
 //Speed (/speedfactor) Control System
 

@@ -1,8 +1,8 @@
-package lithiumcore.concurrent.coroutine;
+package org.firstinspires.ftc.teamcode.lithiumcore.concurrent.coroutine;
 
-import lithiumcore.concurrent.WaitCondition;
-import lithiumcore.concurrent.AsyncExecutor;
-import lithiumcore.concurrent.WaitTask;
+import org.firstinspires.ftc.teamcode.lithiumcore.concurrent.WaitCondition;
+import org.firstinspires.ftc.teamcode.lithiumcore.concurrent.AsyncExecutor;
+import org.firstinspires.ftc.teamcode.lithiumcore.concurrent.WaitTask;
 
 //This class is a more specific user friendly version of the Coroutine class. Is meant to be used by the user.
 

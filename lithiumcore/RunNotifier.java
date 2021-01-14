@@ -1,4 +1,4 @@
-package lithiumcore;
+package org.firstinspires.ftc.teamcode.lithiumcore;
 
 //Is the class that helps implement the OPLP (Once Per Loop Processing) functionality
 //Is a class that can be used to notify a user when there is a new loop (used every time loop method is called for waits)

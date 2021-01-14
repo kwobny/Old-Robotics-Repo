@@ -1,6 +1,6 @@
-package lithiumcore.scsfunction;
+package org.firstinspires.ftc.teamcode.lithiumcore.scsfunction;
 
-import lithiumcore.utils.unidirectionfunc.UniDirectionalFunc;
+import org.firstinspires.ftc.teamcode.lithiumcore.utils.unidirectionfunc.UniDirectionalFunc;
 
 //There are 2 constants that you can change:
 //L, and k.

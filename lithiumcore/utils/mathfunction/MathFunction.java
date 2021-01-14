@@ -1,4 +1,4 @@
-package lithiumcore.utils.mathfunction;
+package org.firstinspires.ftc.teamcode.lithiumcore.utils.mathfunction;
 
 //This abstract class is the one which represents a mathematical function (linear, quadratic, sine, etc.) that takes a numerical input and returns a numerical output
 
