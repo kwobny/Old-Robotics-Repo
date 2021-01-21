@@ -38,7 +38,7 @@ public class MadHardware {
     public DcMotor rightRear;
 
     //public DcMotor conveyorMotor;
-    //public DcMotor bottomConveyorPart;
+    public DcMotor bottomConveyorPart;
     //public DcMotor leftFlywheel;
     //public DcMotor rightFlywheel;
 
@@ -46,11 +46,7 @@ public class MadHardware {
     //0 power stops the launcher wheels.
     //negative power, idk what that does. Spits the ring out from collection side i guess.
     public void setLauncherPower(final double power) {
-        /*for (int i = 0; i < 4; ++i) {
-            dcMotors[i].setPower(power);
-        }
-
-         */
+        bottomConveyorPart.setPower(power);
     }
 
     /**
@@ -68,11 +64,14 @@ public class MadHardware {
         rightRear = initWheel("rightRear", DcMotorSimple.Direction.FORWARD);
 
         //conveyorMotor = initLaunchMotor("conveyor motor", DcMotorSimple.Direction.FORWARD);
-        //bottomConveyorPart = initLaunchMotor("bottom conveyor part", DcMotorSimple.Direction.FORWARD);
+        bottomConveyorPart = initLaunchMotor("bottom conveyor part", DcMotorSimple.Direction.FORWARD);
         //leftFlywheel = initLaunchMotor("left flywheel", DcMotorSimple.Direction.FORWARD);
         //rightFlywheel = initLaunchMotor("right flywheel", DcMotorSimple.Direction.REVERSE);
 
-        dcMotors = new DcMotor[]{leftFront, leftRear, rightFront, rightRear};
+        dcMotors = new DcMotor[]{
+                leftFront, leftRear, rightFront, rightRear,
+                bottomConveyorPart
+        };
 
         /*
         exampleMotor = hwMap.get(DcMotor.class, "exampleMotor");

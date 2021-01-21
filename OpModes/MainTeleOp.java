@@ -70,6 +70,15 @@ public class MainTeleOp extends OpMode {
             robotLib.move.translateBuffer.set(1.0);
         }
 
+        // The " " button is the launch rings button.
+        // If it is pressed, the rings are launched.
+        if (gamepad1.x) {
+            mhw.setLauncherPower(0.2);
+        }
+        else {
+            mhw.setLauncherPower(0);
+        }
+
         if (usingAdvancedDrive) {
             robotLib.move.translateRel(getTranslateDirection(gamepad1));
             handleRotate(gamepad2);
