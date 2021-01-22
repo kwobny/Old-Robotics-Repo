@@ -70,13 +70,18 @@ public class MainTeleOp extends OpMode {
             robotLib.move.translateBuffer.set(1.0);
         }
 
-        // The " " button is the launch rings button.
-        // If it is pressed, the rings are launched.
-        if (gamepad1.x) {
-            mhw.setLauncherPower(0.2);
+        // For now, right trigger makes the rings go up the ramp,
+        // left trigger makes the rings go down the ramp.
+        // right trigger (intake) has higher precedence than left trigger (spit out).
+
+        if (gamepad1.right_trigger > 0.1) {
+            mhw.setLauncherPower(0.5);
+        }
+        else if (gamepad1.left_trigger > 0.1) {
+            mhw.setLauncherPower(-0.5);
         }
         else {
-            mhw.setLauncherPower(0);
+            mhw.setLauncherPower(0.0);
         }
 
         if (usingAdvancedDrive) {
