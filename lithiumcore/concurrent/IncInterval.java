@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.lithiumcore.concurrent;
 
-import org.firstinspires.ftc.teamcode.lithiumcore.utils.pile.BoundedElem;
-
 //Incrementing interval
 //Is a type of wait interval which works by incrementing a wait condition.
 

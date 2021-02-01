@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.lithiumcore.concurrent;
 
-import org.firstinspires.ftc.teamcode.lithiumcore.utils.pile.BoundedElem;
-
-public abstract class WaitInterval extends BoundedElem {
+public abstract class WaitInterval {
 
   public Runnable callback;
   private boolean hasStarted = false;

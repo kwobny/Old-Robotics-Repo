@@ -1,11 +1,9 @@
 package org.firstinspires.ftc.teamcode.lithiumcore.concurrent;
 
-import org.firstinspires.ftc.teamcode.lithiumcore.utils.pile.BoundedElem;
-
 //is a class that contains all the information necessary to complete one wait with callbacks.
 //implements the command pattern
 
-public class WaitTask extends BoundedElem {
+public class WaitTask {
   public WaitCondition condition;
   public Runnable callback;
   public Runnable runWhile; //this is basically an optional callback that continuously runs in the main loop while the wait is ongoing.
