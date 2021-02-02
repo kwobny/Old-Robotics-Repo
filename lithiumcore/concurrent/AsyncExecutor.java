@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.lithiumcore.concurrent;
 
-import org.firstinspires.ftc.teamcode.lithiumcore.utils.Consumer;
+import org.firstinspires.ftc.teamcode.lithiumcore.utils.functiontypes.Consumer;
 
 import org.firstinspires.ftc.teamcode.lithiumcore.utils.pile.ArrayPile;
 
@@ -119,19 +119,15 @@ public class AsyncExecutor {
     taskPile.remove(task);
   }
 
-  private final Consumer<WaitTask> waitTaskConsumer = new Consumer<WaitTask>() {
-    @Override
-    public void run(final WaitTask op) {
-      if (!op._isRunning()) {
-        taskPile.markAsRemove();
-        return;
-      }
-      op._run();
-    }
-  };
-
   private void runScheduledTasks() {
-    taskPile.forAll(waitTaskConsumer);
+    for (final Iterator<WaitTask> iter = taskPile.iterator(); iter.hasNext();) {
+        final WaitTask task = iter.next();
+        if (!task._isRunning()) {
+            iter.remove();
+            continue;
+        }
+        task._run();
+    }
   }
 
   //Loop Callbacks
@@ -144,16 +140,13 @@ public class AsyncExecutor {
     BEGINNING, END
   }
 
-  private final ArrayPile<CancellableCallback> loopCallbackBegin = new ArrayPile<>();
-  private final ArrayPile<CancellableCallback> loopCallbackEnd = new ArrayPile<>();
+  private final ArrayPile<Runnable> loopCallbackBegin = new ArrayPile<>();
+  private final ArrayPile<Runnable> loopCallbackEnd = new ArrayPile<>();
 
-  public CancellableCallback addLoopCallback(final Runnable callback, final LCRunBlock runBlock) {
-    return addLoopCallback(new CancellableCallback(callback), runBlock);
+  public void addLoopCallback(final Runnable callback) {
+    addLoopCallback(callback, LCRunBlock.BEGINNING);
   }
-  public CancellableCallback addLoopCallback(final Runnable callback) {
-    return addLoopCallback(callback, LCRunBlock.BEGINNING);
-  }
-  public CancellableCallback addLoopCallback(final CancellableCallback callback, final LCRunBlock runBlock) {
+  public void addLoopCallback(final Runnable callback, final LCRunBlock runBlock) {
     switch (runBlock) {
       case BEGINNING:
         loopCallbackBegin.add(callback);
@@ -162,14 +155,9 @@ public class AsyncExecutor {
         loopCallbackEnd.add(callback);
         break;
     }
-    return callback;
   }
-  public CancellableCallback addLoopCallback(final CancellableCallback callback) {
-    return addLoopCallback(callback, LCRunBlock.BEGINNING);
-  }
-  public CancellableCallback removeLoopCallback(final CancellableCallback callback) {
-    callback.getCorrPile().remove(callback);
-    return callback;
+  public void removeLoopCallback(final Runnable callback) {
+    if ()
   }
   //Loop Runnable is running
   //returns true if the supplied callback is currently running
