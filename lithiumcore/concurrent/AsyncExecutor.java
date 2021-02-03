@@ -156,14 +156,15 @@ public class AsyncExecutor {
         break;
     }
   }
-  public void removeLoopCallback(final Runnable callback) {
-    if ()
+
+  // Returns true if a callback was removed.
+  public boolean removeLoopCallback(final Runnable callback) {
+    return loopCallbackBegin.remove(callback) || loopCallbackEnd.remove(callback);
   }
   //Loop Runnable is running
   //returns true if the supplied callback is currently running
-  public boolean LCIsRunning(final CancellableCallback callback) {
-    ArrayPile<CancellableCallback> pile = callback.getCorrPile();
-    return pile != null && pile.has(callback);
+  public boolean LCIsRunning(final Runnable callback) {
+    return loopCallbackBegin.contains(callback) || loopCallbackEnd.contains(callback);
   }
 
   //cancellable callback consumer
@@ -176,10 +177,15 @@ public class AsyncExecutor {
 
   //run beginning and end loop callbacks
   private void runBeginningLC() {
-    loopCallbackBegin.forAll(CCConsumer);
+    for (Runnable callback : loopCallbackBegin) {
+        callback.run();
+    }
   }
   private void runEndingLC() {
     loopCallbackEnd.forAll(CCConsumer);
+    for (Runnable callback : loopCallbackEnd) {
+        callback.run();
+    }
   }
 
 
