@@ -84,6 +84,20 @@ public class Vector implements Cloneable {
     return setY(y);
   }
 
+    //NON-DESTRUCTIVE UTILITIES
+    // Utilities that don't modify the vector
+
+    // Methods that return the length of the/a vector, given a vector or the x and y component of the vector.
+    public double length() {
+        return length(x, y);
+    }
+    public static double length(Vector vect) {
+        return vect.length();
+    }
+    public static double length(double x, double y) {
+        return Math.sqrt(x*x + y*y);
+    }
+
   //IN PLACE UTILITIES
 
   //scales the vector by a certain factor
