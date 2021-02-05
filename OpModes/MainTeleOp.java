@@ -53,6 +53,13 @@ public class MainTeleOp extends OpMode {
         }
     });
 
+    private ToggleListener slowDownListener = new ToggleListener(new BooleanConsumer() {
+        @Override
+        public void accept(final boolean value) {
+            if (!value)
+        }
+    });
+
     //The main driving code should never directly interface with controllers
     @Override
     public void loop() {

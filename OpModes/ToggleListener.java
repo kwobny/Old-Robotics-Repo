@@ -10,6 +10,8 @@ public class ToggleListener {
     private boolean lastValue = false; //default last value is false.
 
     // You can override this in subclasses
+    // You never call this method directly from a user.
+    // The on toggle method calls the callback by default.
     protected void onToggle(final boolean value) {
         callback.accept(value);
     }
@@ -21,8 +23,8 @@ public class ToggleListener {
         this.callback = callback;
     }
 
-    // The callback is run when a value that is opposite from the latest value is run.
-    // The callback is provided the value inputted into the set function.
+    // The on toggle method is run when a value that is opposite from the latest value is inputted.
+    // The on toggle method is provided the value inputted into the set function (latest value).
     public void set(final boolean value) {
         if (value != lastValue) {
             lastValue = value;
