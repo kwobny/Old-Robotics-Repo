@@ -1,0 +1,6 @@
+# Prefix any file or folder name with the key below to ignore it
+# and prevent it from being pushed to the remote repository.
+~*
+/.vs/
+*.class
+
