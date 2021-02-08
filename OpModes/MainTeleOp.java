@@ -40,25 +40,58 @@ public class MainTeleOp extends OpMode {
     }
 
     private boolean usingAdvancedDrive = false;
-    private ToggleListener switchDrivingListener = new ToggleListener(new BooleanConsumer() {
+    private ButtonListener switchDrivingListener = new ButtonListener(new BooleanConsumer() {
         @Override
         public void accept(final boolean value) {
-            if (!value) { // Check if switch button is not pressed (switched from pressed to not pressed).
-                usingAdvancedDrive = !usingAdvancedDrive; // Switch driving modes.
-                if (!usingAdvancedDrive) {
-                    // Stop rotational translate if switching to normal driving mode.
-                    robotLib.move.clearRT();
-                }
+            usingAdvancedDrive = !usingAdvancedDrive; // Switch driving modes.
+            if (!usingAdvancedDrive) {
+                // Stop rotational translate if switching to normal driving mode.
+                robotLib.move.clearRT();
             }
         }
     });
 
-    private ToggleListener slowDownListener = new ToggleListener(new BooleanConsumer() {
+    private boolean isSlowedDown = false; // This is because the translational speed buffer is already at 1.0.
+    private ButtonListener slowDownListener = new ButtonListener(new BooleanConsumer() {
         @Override
         public void accept(final boolean value) {
-            if (!value)
+            isSlowedDown = !isSlowedDown;
+            if (isSlowedDown) {
+                robotLib.move.translateBuffer.set(0.25);
+            }
+            else {
+                robotLib.move.translateBuffer.set(1.0);
+            }
         }
     });
+
+    // private ToggleListener intakeTrigger = new ToggleListener(new BooleanConsumer() {
+    //     @Override
+    //     public void accept(boolean value) {
+    //         if (value) {
+    //             if (gamepad1.right_trigger > 0.1) {
+    //                 mhw.setLauncherPower(0.5);
+    //             }
+    //             else if (gamepad1.left_trigger > 0.1) {
+    //                 mhw.setLauncherPower(-0.5);
+    //             }
+    //             else {
+    //                 mhw.setLauncherPower(0.0);
+    //             }
+    //             mhw.setLauncherPower(0.5);
+    //         }
+    //         else {
+    //             mhw.setLauncherPower(-0.5);
+    //         }
+    //     }
+    // });
+    // private ToggleListener outtakeTrigger = new ToggleListener(new BooleanConsumer() {
+    //     @Override
+    //     public void accept(boolean value) {
+    //         //increase intake and outtake power
+            
+    //     }
+    // });
 
     //The main driving code should never directly interface with controllers
     @Override
@@ -70,14 +103,9 @@ public class MainTeleOp extends OpMode {
         robotLib.loopAtBeginning();
 
         // The "b" button is the "slow down" button.
-        // If it is pressed, the translation is slowed down by a factor of
+        // If it is toggled, the translation is slowed down by a factor of
         // 0.5.
-        if (gamepad1.b) {
-            robotLib.move.translateBuffer.set(0.25);
-        }
-        else {
-            robotLib.move.translateBuffer.set(1.0);
-        }
+        slowDownListener.set(gamepad1.b);
 
         // Check to see if you should switch the driving mode.
         // Switch driving mode when y button is toggled on gamepad 1
@@ -87,11 +115,13 @@ public class MainTeleOp extends OpMode {
         // left trigger makes the rings go down the ramp.
         // right trigger (intake) has higher precedence than left trigger (spit out).
 
+        final double launcherPower = 0.75;
+
         if (gamepad1.right_trigger > 0.1) {
-            mhw.setLauncherPower(0.5);
+            mhw.setLauncherPower(launcherPower);
         }
         else if (gamepad1.left_trigger > 0.1) {
-            mhw.setLauncherPower(-0.5);
+            mhw.setLauncherPower(-launcherPower);
         }
         else {
             mhw.setLauncherPower(0.0);
