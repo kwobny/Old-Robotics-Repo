@@ -49,7 +49,7 @@ public class Auto2020 extends LinearOpMode
     // Power can be positive or negative,
     // distance is always positive.
     private void driveForward(double power, double distance) {
-        final int distanceInTicks = Math.round(distance/constants.robotParameters.distancePerTick);
+        final double distanceInTicks = distance/constants.robotParameters.distancePerTick;
         // Left front, right front, left rear, right rear
         final int[] initialPositions = {
             mhw.leftFront.getCurrentPosition(),
@@ -58,23 +58,23 @@ public class Auto2020 extends LinearOpMode
             mhw.rightRear.getCurrentPosition()
         };
 
-        robotLib.translate(0.0, power);
-        robotLib.syncMotors();
+        robotLib.move.translate(0.0, power);
+        robotLib.move.syncMotors();
 
         robotLib.wait.waitFor(new WaitCondition() {
             @Override
             public boolean pollCondition() {
-                final double leftFrontDelta = mhw.leftFront.getCurrentPosition() - initialPositions[0];
-                final double rightFrontDelta = mhw.rightFront.getCurrentPosition() - initialPositions[1];
-                final double leftRearDelta = mhw.leftRear.getCurrentPosition() - initialPositions[2];
-                final double rightRearDelta = mhw.rightRear.getCurrentPosition() - initialPositions[3];
+                final int leftFrontDelta = mhw.leftFront.getCurrentPosition() - initialPositions[0];
+                final int rightFrontDelta = mhw.rightFront.getCurrentPosition() - initialPositions[1];
+                final int leftRearDelta = mhw.leftRear.getCurrentPosition() - initialPositions[2];
+                final int rightRearDelta = mhw.rightRear.getCurrentPosition() - initialPositions[3];
 
                 final double averageTicksTraveled
                 = Math.abs(
-                    leftFrontDelta/4
-                    + rightFrontDelta/4
-                    + leftRearDelta/4
-                    + rightRearDelta/4
+                    leftFrontDelta/4.0
+                    + rightFrontDelta/4.0
+                    + leftRearDelta/4.0
+                    + rightRearDelta/4.0
                 );
 
                 return averageTicksTraveled >= distanceInTicks;
