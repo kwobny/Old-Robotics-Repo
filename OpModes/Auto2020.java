@@ -34,7 +34,7 @@ public class Auto2020 extends LinearOpMode
         robotLib.startAutonomous();
 
         // Input distance in centimeters.
-        driveForward(1.0, distance);
+        driveForward(1.0, 210.0);
 
         robotLib.move.clearAll();
         robotLib.move.syncMotors();
