@@ -10,5 +10,5 @@ ___
 A file that is supposed to be independent of history rewrites that is not in a repo level branch is:
 README.md in remote head branch (currently master).
 This file should always be in remote head regardless of history resets, and should move when remote head moves.
-There is no special branch reserved for these kinds of files because there is only one instance of this type of file as of now.
+There is no special branch reserved for these kinds of files because there is only one instance of this type of file as of now (README.md).
 All potential future instances of this type should be considered if they can be in the repository level branch and given a reference from the readme in master branch.
