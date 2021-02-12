@@ -12,3 +12,6 @@ README.md in remote head branch (currently master).
 This file should always be in remote head regardless of history resets, and should move when remote head moves.
 There is no special branch reserved for these kinds of files because there is only one instance of this type of file as of now (README.md).
 All potential future instances of this type should be considered if they can be in the repository level branch and given a reference from the readme in master branch.
+
+The .replit file is sort of like a global file except it is not required (although probably recommended) in projects and it can contain different content across projects.
+It is one of the only files (only as of now) that can be in the jurisdiction of multiple projects but have different content in every project.
