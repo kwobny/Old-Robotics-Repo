@@ -1,0 +1,8 @@
+Custom git log pretty format
+for concise and easy log reading
+Shows short commit hash and full body
+
+format:%C(yellow)%h%Creset%n%B%n
+
+Experimental:
+format:%h%n%B%n%C(yellow)---------------------------------------%Creset
