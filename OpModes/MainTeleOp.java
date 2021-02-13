@@ -40,8 +40,11 @@ public class MainTeleOp extends OpMode {
 
     private boolean usingAdvancedDrive = false;
     private boolean isSlowedDown = false; // This is false because the translational speed buffer is already at 1.0.
-    private ButtonListener slowDownListener = new ButtonListener();
-    private ButtonListener switchDrivingListener = new ButtonListener();
+    private final ButtonListener slowDownListener = new ButtonListener();
+    private final ButtonListener switchDrivingListener = new ButtonListener();
+
+    private final ToggleListener intakeListener = new ToggleListener();
+    private final ToggleListener outtakeListener = new ToggleListener();
 
     //The main driving code should never directly interface with controllers
     @Override
@@ -79,16 +82,37 @@ public class MainTeleOp extends OpMode {
         // left trigger makes the rings go down the ramp.
         // right trigger (intake) has higher precedence than left trigger (spit out).
 
-        final double launcherPower = 0.75;
+        final double launcherPower = 0.75; // The power value for intake
+        final boolean intakeButtonPressed = gamepad2.right_trigger > 0.1;
+        final boolean outtakeButtonPressed = gamepad2.left_trigger > 0.1;
 
-        if (gamepad2.right_trigger > 0.1) {
+        if (intakeButtonPressed) {
             mhw.setLauncherPower(launcherPower);
         }
-        else if (gamepad2.left_trigger > 0.1) {
+        else if (outtakeButtonPressed) {
             mhw.setLauncherPower(-launcherPower);
         }
         else {
             mhw.setLauncherPower(0.0);
+        }
+        
+        if (intakeListener.set(intakeButtonPressed)) {
+            if (intakeButtonPressed) {
+                // When intake button is held down
+                mhw.setLauncherPower(launcherPower);
+            }
+            else {
+                // When intake button has been released
+                if (outtakeButtonPressed) {
+                    mhw.setLauncherPower(-launcherPower);
+                }
+                else {
+                    mhw.setLauncherPower(0.0);
+                }
+            }
+        }
+        if (outtakeListener.set(outtakeButtonPressed) && !intakeButtonPressed) {
+            //
         }
 
         if (usingAdvancedDrive) {
