@@ -10,7 +10,6 @@ import org.firstinspires.ftc.teamcode.Backend.MadHardware;
 import org.firstinspires.ftc.teamcode.Backend.Notifier;
 import org.firstinspires.ftc.teamcode.LithiumCore.*;
 import org.firstinspires.ftc.teamcode.LithiumCore.SharedState.*;
-import org.firstinspires.ftc.teamcode.LithiumCore.Utils.BooleanConsumer;
 import org.firstinspires.ftc.teamcode.LithiumCore.Utils.Vector;
 
 @TeleOp(name = "Yeongjin's Teleop \"Yayyyy!\"", group = "TeleOp")
@@ -40,58 +39,9 @@ public class MainTeleOp extends OpMode {
     }
 
     private boolean usingAdvancedDrive = false;
-    private ButtonListener switchDrivingListener = new ButtonListener(new BooleanConsumer() {
-        @Override
-        public void accept(final boolean value) {
-            usingAdvancedDrive = !usingAdvancedDrive; // Switch driving modes.
-            if (!usingAdvancedDrive) {
-                // Stop rotational translate if switching to normal driving mode.
-                robotLib.move.clearRT();
-            }
-        }
-    });
-
-    private boolean isSlowedDown = false; // This is because the translational speed buffer is already at 1.0.
-    private ButtonListener slowDownListener = new ButtonListener(new BooleanConsumer() {
-        @Override
-        public void accept(final boolean value) {
-            isSlowedDown = !isSlowedDown;
-            if (isSlowedDown) {
-                robotLib.move.translateBuffer.set(0.25);
-            }
-            else {
-                robotLib.move.translateBuffer.set(1.0);
-            }
-        }
-    });
-
-    // private ToggleListener intakeTrigger = new ToggleListener(new BooleanConsumer() {
-    //     @Override
-    //     public void accept(boolean value) {
-    //         if (value) {
-    //             if (gamepad1.right_trigger > 0.1) {
-    //                 mhw.setLauncherPower(0.5);
-    //             }
-    //             else if (gamepad1.left_trigger > 0.1) {
-    //                 mhw.setLauncherPower(-0.5);
-    //             }
-    //             else {
-    //                 mhw.setLauncherPower(0.0);
-    //             }
-    //             mhw.setLauncherPower(0.5);
-    //         }
-    //         else {
-    //             mhw.setLauncherPower(-0.5);
-    //         }
-    //     }
-    // });
-    // private ToggleListener outtakeTrigger = new ToggleListener(new BooleanConsumer() {
-    //     @Override
-    //     public void accept(boolean value) {
-    //         //increase intake and outtake power
-            
-    //     }
-    // });
+    private boolean isSlowedDown = false; // This is false because the translational speed buffer is already at 1.0.
+    private ButtonListener slowDownListener = new ButtonListener();
+    private ButtonListener switchDrivingListener = new ButtonListener();
 
     //The main driving code should never directly interface with controllers
     @Override
@@ -105,11 +55,25 @@ public class MainTeleOp extends OpMode {
         // The "b" button is the "slow down" button.
         // If it is toggled, the translation is slowed down by a factor of
         // 0.5.
-        slowDownListener.set(gamepad1.b);
+        if (slowDownListener.set(gamepad1.b)) {
+            usingAdvancedDrive = !usingAdvancedDrive; // Switch driving modes.
+            if (!usingAdvancedDrive) {
+                // Stop rotational translate if switching to normal driving mode.
+                robotLib.move.clearRT();
+            }
+        }
 
         // Check to see if you should switch the driving mode.
         // Switch driving mode when y button is toggled on gamepad 1
-        switchDrivingListener.set(gamepad1.y);
+        if (switchDrivingListener.set(gamepad1.y)) {
+            isSlowedDown = !isSlowedDown;
+            if (isSlowedDown) {
+                robotLib.move.translateBuffer.set(0.25);
+            }
+            else {
+                robotLib.move.translateBuffer.set(1.0);
+            }
+        }
 
         // For now, right trigger makes the rings go up the ramp,
         // left trigger makes the rings go down the ramp.
