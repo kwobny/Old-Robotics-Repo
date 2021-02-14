@@ -43,9 +43,6 @@ public class MainTeleOp extends OpMode {
     private final ButtonListener slowDownListener = new ButtonListener();
     private final ButtonListener switchDrivingListener = new ButtonListener();
 
-    private final ToggleListener intakeListener = new ToggleListener();
-    private final ToggleListener outtakeListener = new ToggleListener();
-
     //The main driving code should never directly interface with controllers
     @Override
     public void loop() {
@@ -93,27 +90,7 @@ public class MainTeleOp extends OpMode {
             mhw.setLauncherPower(-launcherPower);
         }
         else {
-            mhw.setLauncherPower(0.0);
-        }
-        
-        if (intakeListener.set(intakeButtonPressed)) {
-            if (intakeButtonPressed) {
-                // When intake button is held down
-                mhw.setLauncherPower(launcherPower);
-            }
-            else {
-                // When intake button has been released
-                if (outtakeButtonPressed) {
-                    mhw.setLauncherPower(-launcherPower);
-                }
-                else {
-                    mhw.setLauncherPower(0.0);
-                }
-            }
-        }
-        if (outtakeListener.set(outtakeButtonPressed) && !intakeButtonPressed) {
-            //
-        }
+            mhw.setLauncherPower(0.0);        }
 
         if (usingAdvancedDrive) {
             robotLib.move.translateRel(getTranslateDirection(gamepad1));
