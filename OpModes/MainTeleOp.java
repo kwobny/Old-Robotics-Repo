@@ -90,7 +90,8 @@ public class MainTeleOp extends OpMode {
             mhw.setLauncherPower(-launcherPower);
         }
         else {
-            mhw.setLauncherPower(0.0);        }
+            mhw.setLauncherPower(0.0);
+        }
 
         if (usingAdvancedDrive) {
             robotLib.move.translateRel(getTranslateDirection(gamepad1));
