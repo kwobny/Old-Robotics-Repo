@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Backend.MadHardware;
+import org.firstinspires.ftc.teamcode.Backend.Notifier;
 import org.firstinspires.ftc.teamcode.LithiumCore.*;
 import org.firstinspires.ftc.teamcode.LithiumCore.SharedState.*;
 import org.firstinspires.ftc.teamcode.LithiumCore.Utils.Vector;
@@ -17,6 +18,8 @@ public class Auto2020 extends LinearOpMode
     private static final MadHardware mhw = new MadHardware();
     private static final MadMachinesConstants constants = new MadMachinesConstants();
     private static final Main robotLib = new Main(mhw, constants);
+
+    private final Notifier noto = new Notifier(telemetry);
 
     // This method is run once when the "INIT" button is pressed on the phone.
     @Override
@@ -33,8 +36,13 @@ public class Auto2020 extends LinearOpMode
 
         robotLib.startAutonomous();
 
+        noto.message("start drive forward");
         // Input distance in centimeters.
-        driveForward(1.0, 210.0);
+//        driveForward(1.0, 210.0);
+        robotLib.move.translate(0, 1);
+        robotLib.move.syncMotors();
+        robotLib.wait.waitFor(robotLib.time.getWait(2).start());
+        noto.message("end drive forward");
 
         robotLib.move.clearAll();
         robotLib.move.syncMotors();
