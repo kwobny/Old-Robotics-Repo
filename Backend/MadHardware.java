@@ -49,6 +49,8 @@ public class MadHardware {
         bottomConveyorPart.setPower(power);
     }
 
+    public CRServo tempServo;
+
     /**
      * Initialize all hardware devices & set their default states.
      * @param hwMap
@@ -87,6 +89,9 @@ public class MadHardware {
         exampleServo.setDirection(DcMotorSimple.Direction.FORWARD);
         */
 
+        tempServo = hwMap.get(CRServo.class, "tempServo");
+        tempServo.setDirection(DcMotorSimple.Direction.FORWARD);
+
         stopMovement();
 
         return "finished hardware initialization";
@@ -105,6 +110,7 @@ public class MadHardware {
         exampleMotor.setPower(0);
         exampleServo.setPower(0);
         */
+        tempServo.setPower(0);
 
         return "finished stopping movement";
     }
