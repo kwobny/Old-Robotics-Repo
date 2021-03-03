@@ -56,22 +56,22 @@ public class MainTeleOp extends OpMode {
         // If it is toggled, the translation is slowed down by a factor of
         // 0.5.
         if (slowDownListener.set(gamepad1.b)) {
-            usingAdvancedDrive = !usingAdvancedDrive; // Switch driving modes.
-            if (!usingAdvancedDrive) {
-                // Stop rotational translate if switching to normal driving mode.
-                robotLib.move.clearRT();
-            }
-        }
-
-        // Check to see if you should switch the driving mode.
-        // Switch driving mode when y button is toggled on gamepad 1
-        if (switchDrivingListener.set(gamepad1.y)) {
             isSlowedDown = !isSlowedDown;
             if (isSlowedDown) {
                 robotLib.move.translateBuffer.set(0.25);
             }
             else {
                 robotLib.move.translateBuffer.set(1.0);
+            }
+        }
+
+        // Check to see if you should switch the driving mode.
+        // Switch driving mode when y button is toggled on gamepad 1
+        if (switchDrivingListener.set(gamepad1.y)) {
+            usingAdvancedDrive = !usingAdvancedDrive; // Switch driving modes.
+            if (!usingAdvancedDrive) {
+                // Stop rotational translate if switching to normal driving mode.
+                robotLib.move.clearRT();
             }
         }
 
