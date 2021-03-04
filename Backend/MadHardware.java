@@ -3,8 +3,6 @@ package org.firstinspires.ftc.teamcode.Backend;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.CRServo;
-import org.firstinspires.ftc.robotcontroller.external.samples.*;
 
 class DcMotorConfig {
     public String name;
@@ -52,74 +50,32 @@ public class MadHardware {
     /**
      * Initialize all hardware devices & set their default states.
      * @param hwMap
-     * @return successMessage
+     * @return void
      */
-    public String initHardware(HardwareMap hwMap) {
-        this.hwMap = hwMap;
+    public void initHardware(HardwareMap hwMap) {
 
-        // Initialize physical hardware devices
-        leftFront = initWheel("leftFront", DcMotorSimple.Direction.REVERSE);
-        leftRear = initWheel("leftRear", DcMotorSimple.Direction.REVERSE);
-        rightFront = initWheel("rightFront", DcMotorSimple.Direction.FORWARD);
-        rightRear = initWheel("rightRear", DcMotorSimple.Direction.FORWARD);
-
-        //conveyorMotor = initLaunchMotor("conveyor motor", DcMotorSimple.Direction.FORWARD);
-        bottomConveyorPart = initLaunchMotor("bottom conveyor part", DcMotorSimple.Direction.FORWARD);
-        //leftFlywheel = initLaunchMotor("left flywheel", DcMotorSimple.Direction.FORWARD);
-        //rightFlywheel = initLaunchMotor("right flywheel", DcMotorSimple.Direction.REVERSE);
-
-        dcMotors = new DcMotor[]{
-                leftFront, leftRear, rightFront, rightRear,
-                bottomConveyorPart
-        };
-
-        /*
-        exampleMotor = hwMap.get(DcMotor.class, "exampleMotor");
-        exampleServo = hwMap.get(CRServo.class, "exampleServo");
-        exampleSensor = hwMap.get(SensorREV2mDistance.class, "exampleSensor");
-        */
-
-        // Set default states of physical hardware devices
-        /*
-        exampleMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        exampleMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        exampleMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        exampleServo.setDirection(DcMotorSimple.Direction.FORWARD);
-        */
-
-        stopMovement();
-
-        return "finished hardware initialization";
     }
 
     /**
      * Set all motors and servos to zero power.
-     * @return successMessage
+     * @return void
      */
-    public String stopMovement() {
+    public void stopMovement() {
 
-        for (DcMotor i : dcMotors) {
-            i.setPower(0.0);
-        }
-        /*
-        exampleMotor.setPower(0);
-        exampleServo.setPower(0);
-        */
-
-        return "finished stopping movement";
     }
 
-    private DcMotor initializeMotor(final String name, final DcMotorSimple.Direction direction,
-                                    final DcMotor.RunMode runMode, final DcMotor.ZeroPowerBehavior zpb) {
+    private DcMotor getDcMotor(final String name, final DcMotorSimple.Direction direction,
+                               final DcMotor.RunMode runMode, final DcMotor.ZeroPowerBehavior zpb) {
         final DcMotor motor = hwMap.get(DcMotor.class, name);
+
         motor.setDirection(direction);
         motor.setMode(runMode);
         motor.setZeroPowerBehavior(zpb);
 
         return motor;
     }
-    private DcMotor initializeMotor(final DcMotorConfig motorConfig) {
-        return initializeMotor(
+    private DcMotor getDcMotor(final DcMotorConfig motorConfig) {
+        return getDcMotor(
                 motorConfig.name, motorConfig.direction,
                 motorConfig.runMode, motorConfig.zpb
         );
@@ -127,13 +83,13 @@ public class MadHardware {
 
     //these method names start with init, not initialize.
     private DcMotor initWheel(final String name, final DcMotorSimple.Direction direction) {
-        return initializeMotor(
+        return getDcMotor(
                 name, direction,
                 DcMotor.RunMode.RUN_USING_ENCODER, DcMotor.ZeroPowerBehavior.BRAKE
         );
     }
     private DcMotor initLaunchMotor(final String name, final DcMotorSimple.Direction direction) {
-        return initializeMotor(
+        return getDcMotor(
                 name, direction,
                 DcMotor.RunMode.RUN_WITHOUT_ENCODER, DcMotor.ZeroPowerBehavior.FLOAT
         );
