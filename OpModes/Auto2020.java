@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Backend.MadHardware;
-import org.firstinspires.ftc.teamcode.LithiumCore.*;
-import org.firstinspires.ftc.teamcode.LithiumCore.SharedState.*;
+
+import org.firstinspires.ftc.teamcode.LithiumCore.Main;
 
 @Autonomous(name = "Yeongjin's autonomous \"yay!\"", group = "Autos")   // How opmode is displayed on phones
 public class Auto2020 extends LinearOpMode
@@ -13,17 +13,11 @@ public class Auto2020 extends LinearOpMode
 
     // Initializing the motor-control class.
     public static MadHardware mhw = new MadHardware();
-    //public static ElapsedTime runtime = new ElapsedTime();
-
+    
     // This method is run once when the "INIT" button is pressed on the phone.
     @Override
     public void runOpMode()
     {
-
-        {
-          //mhw.flywheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        }
-
         mhw.initHardware(hardwareMap);
 
         final Main robotLib = new Main(mhw, new MadMachinesConstants());
