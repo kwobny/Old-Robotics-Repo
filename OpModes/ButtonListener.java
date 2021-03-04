@@ -9,8 +9,7 @@ public class ButtonListener extends ToggleListener {
         super(value);
     }
 
-    // The trigger state is the value when the listener should indicate that
-    // The value has changed.
+    // The trigger state is the value when the listener should indicate that the value has changed.
     // By default, it is false, which means that the listener triggers
     // when the boolean goes from true to false (button is pressed to not pressed).
     public boolean triggerState = false;
