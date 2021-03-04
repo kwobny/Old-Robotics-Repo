@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.Backend.MadHardware;
 
 import org.firstinspires.ftc.teamcode.LithiumCore.Main;
 
-@Autonomous(name = "Yeongjin's autonomous \"yay!\"", group = "Autos")   // How opmode is displayed on phones
+@Autonomous(name = "Servo test", group = "Autos")   // How opmode is displayed on phones
 public class Auto2020 extends LinearOpMode
 {
 
@@ -26,15 +26,11 @@ public class Auto2020 extends LinearOpMode
 
         robotLib.startAutonomous();
 
-        // robotLib.move.translate(0, 1);
-        // robotLib.move.syncMotors();
-
-        // robotLib.wait.waitFor(robotLib.time.getWait(3.14159265).start());
-
-        // robotLib.move.clearAll();
-        // robotLib.move.syncMotors();
-        
-        
+        for (double i : new double[]{0.25, -0.5, 0.75, -1.0}) {
+            mhw.tempServo.setPower(i);
+            robotLib.wait.waitFor(robotLib.time.getWait(2).start());
+        }
+        mhw.tempServo.setPower(0.0);
 
         robotLib.endAutonomous();
     }
