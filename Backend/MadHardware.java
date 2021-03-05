@@ -13,14 +13,17 @@ class DcMotorConfig {
 
 public class MadHardware {
 
-    // Constructor
-    public MadHardware() {
-        // Currently a default constructor
-    }
+    // Steps to declaring a hardware device:
+    // 1. Declare the field for device to be accessed.
+    // 2. Initialize the device object and assign it to the field.
+    // 3. If needed, reset the hardware device associated with the object.
+    // This step is often done together with step 2 through the autoReset parameter.
 
     // Declare hardware map
     HardwareMap hwMap;
-
+    
+    // HARDWARE DEVICE FIELDS
+    
     private DcMotor[] dcMotors;
 
     public DcMotor leftFront;
@@ -41,11 +44,7 @@ public class MadHardware {
     }
 
     public void initHardware(HardwareMap hwMap) {
-
-    }
-
-    public void stopMovement() {
-
+        
     }
 
     private DcMotor getDcMotor (String name, boolean autoReset,
