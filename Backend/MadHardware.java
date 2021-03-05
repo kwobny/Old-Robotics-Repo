@@ -21,13 +21,6 @@ public class MadHardware {
     // Declare hardware map
     HardwareMap hwMap;
 
-    // Declare physical hardware devices
-    /*
-    public DcMotor exampleMotor;
-    public CRServo exampleServo;
-    public SensorREV2mDistance exampleSensor;
-    */
-
     private DcMotor[] dcMotors;
 
     public DcMotor leftFront;
@@ -47,38 +40,34 @@ public class MadHardware {
         bottomConveyorPart.setPower(power);
     }
 
-    /**
-     * Initialize all hardware devices & set their default states.
-     * @param hwMap
-     * @return void
-     */
     public void initHardware(HardwareMap hwMap) {
 
     }
 
-    /**
-     * Set all motors and servos to zero power.
-     * @return void
-     */
     public void stopMovement() {
 
     }
 
-    private DcMotor getDcMotor(final String name, final DcMotorSimple.Direction direction,
-                               final DcMotor.RunMode runMode, final DcMotor.ZeroPowerBehavior zpb) {
-        final DcMotor motor = hwMap.get(DcMotor.class, name);
+    private DcMotor getDcMotor (String name, boolean autoReset,
+                                DcMotorSimple.Direction direction,
+                                DcMotor.RunMode runMode,
+                                DcMotor.ZeroPowerBehavior zpb)
+    {
+        DcMotor motor = hwMap.get(DcMotor.class, name);
 
         motor.setDirection(direction);
         motor.setMode(runMode);
         motor.setZeroPowerBehavior(zpb);
 
+        if (autoReset) resetDcMotorSimple(motor);
+
         return motor;
     }
-    private DcMotor getDcMotor(final DcMotorConfig motorConfig) {
-        return getDcMotor(
-                motorConfig.name, motorConfig.direction,
-                motorConfig.runMode, motorConfig.zpb
-        );
+    private void resetDcMotorSimple(DcMotorSimple motor, double power) {
+        motor.setPower(power);
+    }
+    private void resetDcMotorSimple(DcMotorSimple motor) {
+        resetDcMotorSimple(motor, 0.0);
     }
 
     //these method names start with init, not initialize.
@@ -95,3 +84,11 @@ public class MadHardware {
         );
     }
 }
+
+
+// Declare physical hardware devices
+/*
+public DcMotor exampleMotor;
+public CRServo exampleServo;
+public SensorREV2mDistance exampleSensor;
+*/
