@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Backend.MadHardware;
 import org.firstinspires.ftc.teamcode.Backend.Notifier;
-import org.firstinspires.ftc.teamcode.LithiumCore.*;
-import org.firstinspires.ftc.teamcode.LithiumCore.SharedState.*;
+
+import org.firstinspires.ftc.teamcode.LithiumCore.Main;
 import org.firstinspires.ftc.teamcode.LithiumCore.Utils.Vector;
 import org.firstinspires.ftc.teamcode.LithiumCore.Wait_Package.WaitCondition;
 
@@ -25,11 +25,6 @@ public class Auto2020 extends LinearOpMode
     @Override
     public void runOpMode()
     {
-
-        {
-          //mhw.flywheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        }
-
         mhw.initHardware(hardwareMap);
 
         waitForStart();
