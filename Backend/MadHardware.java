@@ -17,7 +17,8 @@ public class MadHardware extends HardwareInterface {
     public DcMotor bottomConveyorPart;
     //public DcMotor leftFlywheel;
     //public DcMotor rightFlywheel;
-
+    
+    // INITIALIZE DEVICE OBJECTS
     @Override
     void _subclassInit() {
         // Initialize physical hardware devices
@@ -30,26 +31,26 @@ public class MadHardware extends HardwareInterface {
         bottomConveyorPart = initLaunchMotor("bottom conveyor part", DcMotorSimple.Direction.FORWARD);
         //leftFlywheel = initLaunchMotor("left flywheel", DcMotorSimple.Direction.FORWARD);
         //rightFlywheel = initLaunchMotor("right flywheel", DcMotorSimple.Direction.REVERSE);
-
-        dcMotors = new DcMotor[]{
-                leftFront, leftRear, rightFront, rightRear,
-                bottomConveyorPart
-        };
     }
 
-    //these method names start with init, not initialize.
+    // HELPER METHODS FOR PARTIAL PARAMETERS
+    
     private DcMotor initWheel(final String name, final DcMotorSimple.Direction direction) {
         return getDcMotor(
-                name, direction,
-                DcMotor.RunMode.RUN_USING_ENCODER, DcMotor.ZeroPowerBehavior.BRAKE
+            name, true,
+            direction,
+            DcMotor.RunMode.RUN_USING_ENCODER, DcMotor.ZeroPowerBehavior.BRAKE
         );
     }
     private DcMotor initLaunchMotor(final String name, final DcMotorSimple.Direction direction) {
         return getDcMotor(
-                name, direction,
-                DcMotor.RunMode.RUN_WITHOUT_ENCODER, DcMotor.ZeroPowerBehavior.FLOAT
+            name, true,
+            direction,
+            DcMotor.RunMode.RUN_WITHOUT_ENCODER, DcMotor.ZeroPowerBehavior.FLOAT
         );
     }
+    
+    // USER METHODS
     
     //positive power launches the rings.
     //0 power stops the launcher wheels.
