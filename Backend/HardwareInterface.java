@@ -4,9 +4,9 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-// Base class for mad hardware
+// Base class for mad hardware. Has default access.
 
-public abstract class MadHardware {
+abstract class HardwareInterface {
 
     // Steps to declaring a hardware device:
     // 1. Declare the field for device to be accessed.
@@ -26,11 +26,12 @@ public abstract class MadHardware {
         _subclassInit();
     }
 
-    DcMotor getDcMotor (String name, boolean autoReset,
-                                DcMotorSimple.Direction direction,
-                                DcMotor.RunMode runMode,
-                                DcMotor.ZeroPowerBehavior zpb)
-    {
+    DcMotor getDcMotor (
+        String name, boolean autoReset,
+        DcMotorSimple.Direction direction,
+        DcMotor.RunMode runMode,
+        DcMotor.ZeroPowerBehavior zpb
+    ) {
         DcMotor motor = hwMap.get(DcMotor.class, name);
 
         motor.setDirection(direction);
@@ -49,10 +50,35 @@ public abstract class MadHardware {
     }
 }
 
-
-// Declare physical hardware devices
 /*
+Examples of new way:
+
+Declaring fields
 public DcMotor exampleMotor;
 public CRServo exampleServo;
 public SensorREV2mDistance exampleSensor;
+
+Use provided get methods to initialize, configure, and maybe reset device objects
+
+Use provided reset methods to explicitely reset devices
+*/
+
+/*
+Examples from old way of doing madhardware:
+
+Declaring fields
+public DcMotor exampleMotor;
+public CRServo exampleServo;
+public SensorREV2mDistance exampleSensor;
+
+Initialize devices
+exampleMotor = hwMap.get(DcMotor.class, "exampleMotor");
+exampleServo = hwMap.get(CRServo.class, "exampleServo");
+exampleSensor = hwMap.get(SensorREV2mDistance.class, "exampleSensor");
+
+Configure devices
+exampleMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+exampleMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+exampleMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+exampleServo.setDirection(DcMotorSimple.Direction.FORWARD);
 */

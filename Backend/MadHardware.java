@@ -7,8 +7,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class MadHardware extends HardwareInterface {
     
     // HARDWARE DEVICE FIELDS
-    
-    private DcMotor[] dcMotors;
 
     public DcMotor leftFront;
     public DcMotor leftRear;
@@ -20,16 +18,23 @@ public class MadHardware extends HardwareInterface {
     //public DcMotor leftFlywheel;
     //public DcMotor rightFlywheel;
 
-    //positive power launches the rings.
-    //0 power stops the launcher wheels.
-    //negative power, idk what that does. Spits the ring out from collection side i guess.
-    public void setLauncherPower(final double power) {
-        bottomConveyorPart.setPower(power);
-    }
-
     @Override
     void _subclassInit() {
-        //
+        // Initialize physical hardware devices
+        leftFront = initWheel("leftFront", DcMotorSimple.Direction.REVERSE);
+        leftRear = initWheel("leftRear", DcMotorSimple.Direction.REVERSE);
+        rightFront = initWheel("rightFront", DcMotorSimple.Direction.FORWARD);
+        rightRear = initWheel("rightRear", DcMotorSimple.Direction.FORWARD);
+
+        //conveyorMotor = initLaunchMotor("conveyor motor", DcMotorSimple.Direction.FORWARD);
+        bottomConveyorPart = initLaunchMotor("bottom conveyor part", DcMotorSimple.Direction.FORWARD);
+        //leftFlywheel = initLaunchMotor("left flywheel", DcMotorSimple.Direction.FORWARD);
+        //rightFlywheel = initLaunchMotor("right flywheel", DcMotorSimple.Direction.REVERSE);
+
+        dcMotors = new DcMotor[]{
+                leftFront, leftRear, rightFront, rightRear,
+                bottomConveyorPart
+        };
     }
 
     //these method names start with init, not initialize.
@@ -44,5 +49,12 @@ public class MadHardware extends HardwareInterface {
                 name, direction,
                 DcMotor.RunMode.RUN_WITHOUT_ENCODER, DcMotor.ZeroPowerBehavior.FLOAT
         );
+    }
+    
+    //positive power launches the rings.
+    //0 power stops the launcher wheels.
+    //negative power, idk what that does. Spits the ring out from collection side i guess.
+    public void setLauncherPower(final double power) {
+        bottomConveyorPart.setPower(power);
     }
 }
