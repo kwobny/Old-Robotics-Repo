@@ -10,7 +10,6 @@ import org.firstinspires.ftc.teamcode.Backend.MadHardware;
 import org.firstinspires.ftc.teamcode.Backend.Notifier;
 import org.firstinspires.ftc.teamcode.LithiumCore.*;
 import org.firstinspires.ftc.teamcode.LithiumCore.SharedState.*;
-import org.firstinspires.ftc.teamcode.LithiumCore.Utils.BooleanConsumer;
 import org.firstinspires.ftc.teamcode.LithiumCore.Utils.Vector;
 
 @TeleOp(name = "Yeongjin's Teleop \"Yayyyy!\"", group = "TeleOp")
@@ -40,16 +39,9 @@ public class MainTeleOp extends OpMode {
     }
 
     private boolean usingAdvancedDrive = false;
-    private ToggleListener switchButtonListener = new ToggleListener(new BooleanConsumer() {
-        @Override
-        public void accept(final boolean value) {
-            usingAdvancedDrive = !usingAdvancedDrive;
-            if (value) {
-                //
-            }
-        }
-    });
-    private boolean switchButtonPressed = false;
+    private boolean isSlowedDown = false; // This is false because the translational speed buffer is already at 1.0.
+    private final ButtonListener slowDownListener = new ButtonListener();
+    private final ButtonListener switchDrivingListener = new ButtonListener();
 
     //The main driving code should never directly interface with controllers
     @Override
@@ -61,24 +53,41 @@ public class MainTeleOp extends OpMode {
         robotLib.loopAtBeginning();
 
         // The "b" button is the "slow down" button.
-        // If it is pressed, the translation is slowed down by a factor of
+        // If it is toggled, the translation is slowed down by a factor of
         // 0.5.
-        if (gamepad1.b) {
-            robotLib.move.translateBuffer.set(0.25);
+        if (slowDownListener.set(gamepad1.b)) {
+            isSlowedDown = !isSlowedDown;
+            if (isSlowedDown) {
+                robotLib.move.translateBuffer.set(0.25);
+            }
+            else {
+                robotLib.move.translateBuffer.set(1.0);
+            }
         }
-        else {
-            robotLib.move.translateBuffer.set(1.0);
+
+        // Check to see if you should switch the driving mode.
+        // Switch driving mode when y button is toggled on gamepad 1
+        if (switchDrivingListener.set(gamepad1.y)) {
+            usingAdvancedDrive = !usingAdvancedDrive; // Switch driving modes.
+            if (!usingAdvancedDrive) {
+                // Stop rotational translate if switching to normal driving mode.
+                robotLib.move.clearRT();
+            }
         }
 
         // For now, right trigger makes the rings go up the ramp,
         // left trigger makes the rings go down the ramp.
         // right trigger (intake) has higher precedence than left trigger (spit out).
 
-        if (gamepad1.right_trigger > 0.1) {
-            mhw.setLauncherPower(0.5);
+        final double launcherPower = 0.75; // The power value for intake
+        final boolean intakeButtonPressed = gamepad2.right_trigger > 0.1;
+        final boolean outtakeButtonPressed = gamepad2.left_trigger > 0.1;
+
+        if (intakeButtonPressed) {
+            mhw.setLauncherPower(launcherPower);
         }
-        else if (gamepad1.left_trigger > 0.1) {
-            mhw.setLauncherPower(-0.5);
+        else if (outtakeButtonPressed) {
+            mhw.setLauncherPower(-launcherPower);
         }
         else {
             mhw.setLauncherPower(0.0);
@@ -93,28 +102,6 @@ public class MainTeleOp extends OpMode {
             handleRotate(gamepad1);
         }
         robotLib.move.syncMotors();
-
-        //Check to see if you should switch the driving mode
-        //switch driving mode button is y button on gamepad 1
-        if (switchButtonPressed != gamepad1.y) { //see if button has been pressed or released
-            switchButtonPressed = !switchButtonPressed; //set switch button pressed to correct state
-            if (!switchButtonPressed) { //check if switch button is not pressed (switched from pressed to not pressed)
-                //switch driving modes
-                usingAdvancedDrive = !usingAdvancedDrive;
-                if (!usingAdvancedDrive) { //stop rotational translate if switching to normal driving mode
-                    robotLib.move.clearRT();
-                }
-            }
-        }
-
-        //If the y button on gamepad 2 (auxiliary and turning controller) is pressed, then run the launcher.
-        //Else, power down the launcher.
-        if (gamepad2.y) {
-            mhw.setLauncherPower(0.3);
-        }
-        else {
-            mhw.setLauncherPower(0.0);
-        }
 
         robotLib.loopAtEnd();
     }
