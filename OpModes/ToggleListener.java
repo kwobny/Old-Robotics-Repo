@@ -1,28 +1,33 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
-import org.firstinspires.ftc.teamcode.LithiumCore.Utils.BooleanConsumer;
-
-//this is a listener that listens for whenever a boolean value is toggled.
+// This is a listener that listens for whenever a boolean value is toggled.
+// You continually provide a boolean into the listener and when the boolean transitions states,
+// The set function notifies you by returning true.
 public class ToggleListener {
-    // Whenever the callback gets executed, it is provided the latest value (value provided into set function).
-    public BooleanConsumer callback;
-    private boolean lastValue = false; //default last value is false.
-
-    public ToggleListener() {
-        //
-    }
-    public ToggleListener(final BooleanConsumer callback) {
-        this.callback = callback;
+    
+    public ToggleListener() {}
+    // The constructor below lets you initialize the boolean value in the listener.
+    public ToggleListener(final boolean value) {
+        this.value = value;
     }
 
-    //the callback is provided the value provided into the set function.
-    public void set(final boolean value) {
-        if (value != lastValue) {
-            lastValue = value;
-            callback.accept(value);
+    private boolean value = false; //default value at beginning is false.
+
+    // Sets the current value.
+    // Returns true when a value that is opposite from the current value is inputted,
+    // i.e. when the value inputted is different from the last value.
+    // Returns false if not.
+    public boolean set(final boolean value) {
+        if (this.value != value) {
+            this.value = value;
+            return true;
         }
+        return false;
     }
-    public void setLastValue(final boolean value) {
-        lastValue = value;
+
+    // Returns the current value in the toggle listener.
+    public boolean get() {
+        return value;
     }
+
 }
