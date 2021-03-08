@@ -13,8 +13,12 @@ public class MadHardware extends HardwareInterface {
     public DcMotor rightFront;
     public DcMotor rightRear;
     
-    private DcMotor[] ringLaunchingMotors;
+    private DcMotor[] ringIntakeMotors;
+    private DcMotor[] ringLaunchMotors;
     public DcMotor ringIntakeBottom;
+    public DcMotor conveyor;
+    public DcMotor leftFlywheel;
+    public DcMotor rightFlywheel;
     
     // INITIALIZE DEVICE OBJECTS
     @Override
@@ -26,8 +30,13 @@ public class MadHardware extends HardwareInterface {
         rightRear = initWheel("rightRear", DcMotorSimple.Direction.FORWARD);
         
         // Ring launching system.
-        ringIntakeBottom = initLaunchMotor("RIB", DcMotorSimple.Direction.FORWARD);
-        ringLaunchingMotors = new DcMotor[]{ringIntakeBottom};
+        ringIntakeBottom = initLaunchMotor("bottom conveyor part", DcMotorSimple.Direction.FORWARD);
+        conveyor = initLaunchMotor("conveyor", DcMotorSimple.Direction.FORWARD);
+        leftFlywheel = initLaunchMotor("leftFlywheel", DcMotorSimple.Direction.FORWARD);
+        rightFlywheel = initLaunchMotor("rightFlywheel", DcMotorSimple.Direction.FORWARD);
+
+        ringIntakeMotors = new DcMotor[]{ringIntakeBottom, conveyor};
+        ringLaunchMotors = new DcMotor[]{leftFlywheel, rightFlywheel};
     }
 
     // HELPER METHODS FOR PARTIAL PARAMETERS
@@ -52,8 +61,16 @@ public class MadHardware extends HardwareInterface {
     // Positive power launches the rings.
     // 0 power stops the launcher wheels.
     // Negative power spits the ring out from collection side.
-    public void setLauncherPower(final double power) {
-        for (DcMotor motor : ringLaunchingMotors) {
+
+    // Ring intake.
+    public void setIntakePower(double power) {
+        for (DcMotor motor : ringIntakeMotors) {
+            motor.setPower(power);
+        }
+    }
+    // Ring launcher.
+    public void setLauncherPower(double power) {
+        for (DcMotor motor : ringLaunchMotors) {
             motor.setPower(power);
         }
     }
