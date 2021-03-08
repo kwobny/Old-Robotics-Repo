@@ -14,7 +14,7 @@ abstract class HardwareInterface {
     // 3. If needed, reset the hardware device associated with the object.
     // This step is often done together with step 2 through the autoReset parameter.
 
-    // Properties are declared with default access so that they can only be accessed by mad hardware
+    // Properties are declared with default access so that they can only be accessed by mad hardware.
 
     abstract void _subclassInit();
 
