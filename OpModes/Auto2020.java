@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.Backend.MadHardware;
 
 import org.firstinspires.ftc.teamcode.LithiumCore.Main;
-package org.firstinspires.ftc.teamcode.LithiumCore.Utils.Vector;
+import org.firstinspires.ftc.teamcode.LithiumCore.Utils.Vector;
 
 @Autonomous(name = "Yeongjin's autonomous \"yay!\"", group = "Autos")   // How opmode is displayed on phones
 public class Auto2020 extends LinearOpMode
