@@ -32,7 +32,7 @@ public class MadHardware extends HardwareInterface {
         // Ring launching system.
         ringIntakeBottom = initLaunchMotor("bottom conveyor part", DcMotorSimple.Direction.FORWARD);
         conveyor = initLaunchMotor("conveyor", DcMotorSimple.Direction.FORWARD);
-        leftFlywheel = initLaunchMotor("leftFlywheel", DcMotorSimple.Direction.FORWARD);
+        leftFlywheel = initLaunchMotor("leftFlywheel", DcMotorSimple.Direction.REVERSE);
         rightFlywheel = initLaunchMotor("rightFlywheel", DcMotorSimple.Direction.FORWARD);
 
         ringIntakeMotors = new DcMotor[]{ringIntakeBottom, conveyor};
