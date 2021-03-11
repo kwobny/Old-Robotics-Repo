@@ -14,7 +14,8 @@ public class Auto2020 extends LinearOpMode
 
     // Initializing the motor-control class.
     public static MadHardware mhw = new MadHardware();
-    
+    private final Main robotLib = new Main(mhw, new MadMachinesConstants());
+
     // The velocity (meters/second) traveled per power (no units).
     // dx/(dt*power)
     final double velocityPerPower = 0.3;
@@ -33,8 +34,6 @@ public class Auto2020 extends LinearOpMode
     public void runOpMode()
     {
         mhw.initHardware(hardwareMap);
-
-        final Main robotLib = new Main(mhw, new MadMachinesConstants());
 
         waitForStart();
 
