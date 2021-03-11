@@ -93,16 +93,6 @@ public class MainTeleOp extends OpMode {
             mhw.setLauncherPower(0.0);
         }
 
-        if (gamepad1.a) {
-            mhw.tempServo.setPower(0.8);
-        }
-        else if (gamepad1.x) {
-            mhw.tempServo.setPower(-0.5);
-        }
-        else {
-            mhw.tempServo.setPower(0.0);
-        }
-
         if (usingAdvancedDrive) {
             robotLib.move.translateRel(getTranslateDirection(gamepad1));
             handleRotate(gamepad2);
