@@ -20,9 +20,13 @@ public class MadHardware extends HardwareInterface {
     public DcMotor leftFlywheel;
     public DcMotor rightFlywheel;
     
+    public CRServo servoMotor;
+    public DcMotor servoDcMotor;
+    
     // INITIALIZE DEVICE OBJECTS
     @Override
     void _subclassInit() {
+
         // Wheels.
         leftFront = initWheel("leftFront", DcMotorSimple.Direction.REVERSE);
         leftRear = initWheel("leftRear", DcMotorSimple.Direction.REVERSE);
@@ -37,6 +41,12 @@ public class MadHardware extends HardwareInterface {
 
         ringIntakeMotors = new DcMotor[]{ringIntakeBottom, conveyor};
         ringLaunchMotors = new DcMotor[]{leftFlywheel, rightFlywheel};
+        
+        servoMotor = hwMap.get(CRServo.class, "servo");
+        servoDcMotor = hwMap.get(CRServo.class, "servoDc");
+        servoMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        servoDcMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        
     }
 
     // HELPER METHODS FOR PARTIAL PARAMETERS
