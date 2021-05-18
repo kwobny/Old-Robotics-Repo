@@ -75,28 +75,6 @@ public class MainTeleOp extends OpMode {
             }
         }
 
-        // For now, right trigger makes the rings go up the ramp,
-        // left trigger makes the rings go down the ramp.
-        // right trigger (intake) has higher precedence than left trigger (spit out).
-
-        final double intakePower = 0.75; // The power value for intake.
-        final double launcherPower = 0.65; // The power value for launching rings.
-        final boolean intakeButtonPressed = gamepad2.left_trigger > 0.1;
-        final boolean launchButtonPressed = gamepad2.right_trigger > 0.1;
-
-        if (intakeButtonPressed) {
-            mhw.setIntakePower(intakePower);
-        }
-        else {
-            mhw.setIntakePower(0.0);
-        }
-        if (launchButtonPressed) {
-            mhw.setLauncherPower(launcherPower);
-        }
-        else {
-            mhw.setLauncherPower(0.0);
-        }
-
         if (usingAdvancedDrive) {
             robotLib.move.translateRel(getTranslateDirection(gamepad1));
             handleRotate(gamepad2);
