@@ -37,11 +37,9 @@ public class MainTeleOp extends OpMode {
 
         noto.message("Teleop start complete.");
     }
-
-    private boolean usingAdvancedDrive = false;
+    
     private boolean isSlowedDown = false; // This is false because the translational speed buffer is already at 1.0.
     private final ButtonListener slowDownListener = new ButtonListener();
-    private final ButtonListener switchDrivingListener = new ButtonListener();
 
     //The main driving code should never directly interface with controllers
     @Override
@@ -65,24 +63,8 @@ public class MainTeleOp extends OpMode {
             }
         }
 
-        // Check to see if you should switch the driving mode.
-        // Switch driving mode when y button is toggled on gamepad 1
-        if (switchDrivingListener.set(gamepad1.y)) {
-            usingAdvancedDrive = !usingAdvancedDrive; // Switch driving modes.
-            if (!usingAdvancedDrive) {
-                // Stop rotational translate if switching to normal driving mode.
-                robotLib.move.clearRT();
-            }
-        }
-
-        if (usingAdvancedDrive) {
-            robotLib.move.translateRel(getTranslateDirection(gamepad1));
-            handleRotate(gamepad2);
-        }
-        else {
-            robotLib.move.translate(getTranslateDirection(gamepad1));
-            handleRotate(gamepad1);
-        }
+        robotLib.move.translate(0, getTranslateY(gamepad1));
+        handleRotate(gamepad1);
         robotLib.move.syncMotors();
 
         robotLib.loopAtEnd();
